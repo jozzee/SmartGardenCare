@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgarnencare;
+package com.sitthiphong.smartgardencare;
 
 import org.junit.Test;
 

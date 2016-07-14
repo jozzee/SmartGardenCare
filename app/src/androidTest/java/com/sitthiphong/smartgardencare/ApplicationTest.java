@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgarnencare;
+package com.sitthiphong.smartgardencare;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

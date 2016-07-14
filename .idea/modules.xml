@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartGarnenCare.iml" filepath="$PROJECT_DIR$/SmartGarnenCare.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartGardenCare.iml" filepath="$PROJECT_DIR$/SmartGardenCare.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/netpiegear/netpiegear.iml" filepath="$PROJECT_DIR$/netpiegear/netpiegear.iml" />
     </modules>
