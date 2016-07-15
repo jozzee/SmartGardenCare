@@ -25,4 +25,7 @@
     <string name="sendImageValue3">ทุก 3 ชั่วโมง</string>
     <string name="sendImageValue4">ทุก 6 ชั่วโมง</string>
     <string name="sendImageValue5">ทุก 12 ชั่วโมง</string>
+
+    <!--image fragment -->
+    <string name="water">รดน้ำ</string>
 </resources>

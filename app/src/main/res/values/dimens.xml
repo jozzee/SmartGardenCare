@@ -37,6 +37,11 @@
 
     <dimen name="margin_top_pain_pie_chart">16dp</dimen>
     <dimen name="margin_bottom_pain_pie_chart">16dp</dimen>
+    <dimen name="margin_top_btn_water_pain_pie_chart">32dp</dimen>
+    <dimen name="margin_left_btn_water_pain_pie_chart">16dp</dimen>
+    <dimen name="margin_right_btn_water_pain_pie_chart">16dp</dimen>
+
+
 
 
 

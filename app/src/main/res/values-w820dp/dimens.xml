@@ -35,7 +35,12 @@
 
     <!--image moisture -->
     <dimen name="size_pain_pie_chart">384dp</dimen>
+
+
     <dimen name="margin_top_pain_pie_chart">64dp</dimen>
     <dimen name="margin_bottom_pain_pie_chart">64dp</dimen>
+    <dimen name="margin_top_btn_water_pain_pie_chart">64dp</dimen>
+    <dimen name="margin_left_btn_water_pain_pie_chart">64dp</dimen>
+    <dimen name="margin_right_btn_water_pain_pie_chart">64dp</dimen>
 
 </resources>

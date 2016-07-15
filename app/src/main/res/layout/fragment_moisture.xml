@@ -15,5 +15,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_top_pain_pie_chart"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCancelSetNETPIE"
+        android:text="@string/water"
+        android:layout_below="@+id/pieView_huFrag"
+        android:layout_marginTop="@dimen/margin_top_btn_water_pain_pie_chart"
+        android:layout_marginLeft="@dimen/margin_left_btn_water_pain_pie_chart"/>
+
 
 </RelativeLayout>

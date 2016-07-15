@@ -26,5 +26,8 @@
     <string name="sendImageValue4">Every 6 Hour</string>
     <string name="sendImageValue5">Every 12 Hour</string>
 
+    <!--image fragment -->
+    <string name="water">Water</string>
+
 </resources>
 
