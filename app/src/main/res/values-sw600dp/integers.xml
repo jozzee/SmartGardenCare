@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--moisture fragment -->
+    <integer name="inner_pie_padding">36</integer>
+    <integer name="percentage_size_moisture">75</integer>
+</resources>

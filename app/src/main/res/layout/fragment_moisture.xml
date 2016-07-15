@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:plainpie="http://schemas.android.com/apk/res-auto"
+    tools:context="com.sitthiphong.smartgardencare.main.MoistureFragment">
+    <az.plainpie.PieView
+        android:id="@+id/pieView_huFrag"
+        android:layout_width="@dimen/size_pain_pie_chart"
+        android:layout_height="@dimen/size_pain_pie_chart"
+        plainpie:inner_pie_padding="@integer/inner_pie_padding"
+        plainpie:percentage="75"
+        plainpie:percentage_size="@integer/percentage_size_moisture"
+        plainpie:inner_text_visibility="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_top_pain_pie_chart"/>
+
+
+</RelativeLayout>

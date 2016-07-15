@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Smart Garden Care</string>
+
+
+    <!--TAG-->
+    <string name="imFragmentTag">ImageFragment</string>
+    <string name="moisFragmentTag">MoistureFragment</string>
+    <string name="tempFragmentTag">TempFragment</string>
+    <string name="lightFragmentTag">LightFragment</string>
+    <string name="logFragmentTag">LogFragment</string>
+
+    <!--set up netpie -->
+    <string name="appId">Application ID</string>
+    <string name="appKey">Key</string>
+    <string name="appSecret">Secret</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="setupNETPIE">Setup to NETPIE</string>
+
+    <!--image fragment -->
+    <string name="lastUpdate">Last Update</string>
+    <string name="sendImage">Send Image</string>
+    <string name="sendImageValue1">Every 1 Hour</string>
+    <string name="sendImageValue2">Every 2 Hour</string>
+    <string name="sendImageValue3">Every 3 Hour</string>
+    <string name="sendImageValue4">Every 6 Hour</string>
+    <string name="sendImageValue5">Every 12 Hour</string>
+
 </resources>
+

@@ -1,2 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">ระบบดูแลสวนหย่อม</string>
+
+    <!--TAG-->
+    <string name="imFragmentTag">ImageFragment</string>
+    <string name="moisFragmentTag">MoistureFragment</string>
+    <string name="tempFragmentTag">TempFragment</string>
+    <string name="lightFragmentTag">LightFragment</string>
+    <string name="logFragmentTag">LogFragment</string>
+
+    <!--set up netpie -->
+    <string name="appId">แอป ไอดี</string>
+    <string name="appKey">คีย์</string>
+    <string name="appSecret">ซีเคร็ท</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="submit">ตกลง</string>
+    <string name="setupNETPIE">ตั้งค่า NETPIE</string>
+
+    <!--image fragment -->
+    <string name="lastUpdate">เวลาล่าสุด</string>
+    <string name="sendImage">ส่งรูปภาพ</string>
+    <string name="sendImageValue1">ทุก 1 ชั่วโมง</string>
+    <string name="sendImageValue2">ทุก 2 ชั่วโมง</string>
+    <string name="sendImageValue3">ทุก 3 ชั่วโมง</string>
+    <string name="sendImageValue4">ทุก 6 ชั่วโมง</string>
+    <string name="sendImageValue5">ทุก 12 ชั่วโมง</string>
+</resources>

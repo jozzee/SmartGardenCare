@@ -2,4 +2,42 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="margin_line">16dp</dimen>
+    <dimen name="text_size">18sp</dimen>
+    <dimen name="text_size_btn">16sp</dimen>
+
+    <!--set up netpie -->
+    <dimen name="margin_left_layout_setup_netpie">16dp</dimen>
+    <dimen name="margin_right_layout_setup_netpie">16dp</dimen>
+    <dimen name="margin_btn_setup_ntpie">16dp</dimen>
+
+    <dimen name="padding_layout_setup_netpie">16dp</dimen>
+    <dimen name="padding_btn_setup_nrtpie">8dp</dimen>
+
+    <dimen name="text_size_logoNETPIE">10sp</dimen>
+
+    <dimen name="image_width_setup_netpie">200dp</dimen>
+    <dimen name="image_height_setup_netpie">112dp</dimen>
+
+    <!--image fragment -->
+    <dimen name="margin_layout_control_im_garden">16dp</dimen>
+    <dimen name="margin_detail_im_garden">16dp</dimen>
+
+    <dimen name="padding_im_garden">16dp</dimen>
+    <dimen name="padding_layout_control_im_garden">16dp</dimen>
+    <dimen name="padding_layout_setting_im_garden">16dp</dimen>
+    <dimen name="padding_title_im_garden_last_update">16dp</dimen>
+    <dimen name="padding_value_setting_im_garden">16dp</dimen>
+
+    <dimen name="btn_im_garden_size">44dp</dimen>
+
+    <!--image moisture -->
+    <dimen name="size_pain_pie_chart">200dp</dimen>
+
+    <dimen name="margin_top_pain_pie_chart">16dp</dimen>
+    <dimen name="margin_bottom_pain_pie_chart">16dp</dimen>
+
+
+
 </resources>

@@ -43,12 +43,12 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
 
     compile project(':netpiegear')
 
     //compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.1'
+    compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
@@ -64,4 +64,5 @@ dependencies {
     compile 'com.github.zurche:plain-pie:v0.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.roughike:bottom-bar:1.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }
