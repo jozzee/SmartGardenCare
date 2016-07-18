@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.netpierestapi;
+package com.sitthiphong.smartgardencare.core;
 
 import android.util.Log;
 

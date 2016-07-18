@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Smart Garden Care</string>
+    <string name="lineChart">Line Chart</string>
+    <string name="more">More</string>
 
 
     <!--TAG-->
     <string name="imFragmentTag">ImageFragment</string>
-    <string name="moisFragmentTag">MoistureFragment</string>
+    <string name="moistureFragmentTag">MoistureFragment</string>
     <string name="tempFragmentTag">TempFragment</string>
     <string name="lightFragmentTag">LightFragment</string>
     <string name="logFragmentTag">LogFragment</string>
@@ -26,8 +28,19 @@
     <string name="sendImageValue4">Every 6 Hour</string>
     <string name="sendImageValue5">Every 12 Hour</string>
 
-    <!--image fragment -->
+    <!--moisture fragment -->
     <string name="water">Water</string>
+    <string name="autoWater">Auto Water</string>
+    <string name="moistureStandard">Moisture Standard Value</string>
+
+    <!--temp fragment -->
+    <string name="shower">Shower</string>
+    <string name="autoShower">Auto Shower</string>
+    <string name="tempStandard">Temp Standard Value</string>
+
+    <!--light fragment -->
+    <string name="slatOpen">Slat Opened</string>
+    <string name="slatClose">Slat Closed</string>
 
 </resources>
 

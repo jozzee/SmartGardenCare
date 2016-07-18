@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.magscreen;
+package com.sitthiphong.smartgardencare.core;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -57,6 +57,22 @@ public class MagScreen {
 
         getSizePlainPi();
 
+    }
+    public int getWidthLineChart(){
+        if(widthDp<heightDp){
+            return (int)(widthDp*density);
+        }
+        else{
+            return (int)(heightDp*density);
+        }
+    }
+    public int getHeightLineChart(){
+        if(widthDp<heightDp){
+            return (int)((widthDp/(float)1.7777)*density);
+        }
+        else{
+            return (int)(heightDp*density);
+        }
     }
 
     public int getWidthGardenImage(){

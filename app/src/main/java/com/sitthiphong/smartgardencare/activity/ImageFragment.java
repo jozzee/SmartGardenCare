@@ -1,7 +1,6 @@
-package com.sitthiphong.smartgardencare.main;
+package com.sitthiphong.smartgardencare.activity;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.magscreen.MagScreen;
+import com.sitthiphong.smartgardencare.core.MagScreen;
 
 /**
  * A simple {@link Fragment} subclass.

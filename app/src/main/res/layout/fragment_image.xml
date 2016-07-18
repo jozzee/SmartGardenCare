@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sitthiphong.smartgardencare.main.ImageFragment">
+    tools:context="com.sitthiphong.smartgardencare.activity.ImageFragment">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,10 +69,10 @@
         android:text="@string/lastUpdate"
         android:textSize="@dimen/text_size"
         android:layout_below="@+id/layoutControlImageGarden"
-        android:paddingLeft="@dimen/padding_title_im_garden_last_update"
-        android:paddingRight="@dimen/padding_title_im_garden_last_update"
-        android:layout_marginTop="@dimen/margin_detail_im_garden"
-        android:layout_marginBottom="@dimen/margin_detail_im_garden"/>
+        android:paddingLeft="@dimen/padding_left_details"
+        android:paddingRight="@dimen/padding_right_details"
+        android:layout_marginTop="@dimen/margin_top_details"
+        android:layout_marginBottom="@dimen/margin_bottom_details"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,9 +84,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:gravity="right"
-        android:paddingRight="@dimen/padding_title_im_garden_last_update"
-        android:layout_marginTop="@dimen/margin_detail_im_garden"
-        android:layout_marginBottom="@dimen/margin_detail_im_garden"/>
+        android:paddingRight="@dimen/padding_right_details"
+        android:layout_marginTop="@dimen/margin_top_details"
+        android:layout_marginBottom="@dimen/margin_bottom_details"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -114,13 +114,16 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"/>
+            android:layout_marginRight="@dimen/padding_right_details"
+            android:paddingLeft="@dimen/padding_left_details"
+            android:paddingRight="@dimen/padding_right_details"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/setting_value_im_garden"
             android:layout_toLeftOf="@+id/btn_setting_send_im_garden"
+            android:layout_toRightOf="@+id/title_setting_im_garden"
+            android:gravity="right"
             android:textSize="@dimen/text_size"
             android:paddingRight="@dimen/padding_value_setting_im_garden"
             android:text="@string/sendImageValue1"/>
