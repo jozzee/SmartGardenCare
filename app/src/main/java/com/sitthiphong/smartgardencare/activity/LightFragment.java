@@ -25,31 +25,26 @@ import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
 import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 import com.sitthiphong.smartgardencare.core.MagDiscreteSeekBar;
-import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
 import com.sitthiphong.smartgardencare.core.MagPieView;
 import com.sitthiphong.smartgardencare.core.MagScreen;
+import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MoistureFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MoistureFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MoistureFragment extends Fragment {
+public class LightFragment extends Fragment {
+
     private String TAG = "MoistureFragment";
     private View rootView;
     private OnFragmentInteractionListener mListener;
-    private Button btnWater;
+    private Button btnCtrlSlat;
     private TextView lastTime;
     private TextView autoSwitchTitle;
     private Switch autoSwitch;
-    private TextView moistureValue;
+    private TextView lightValue;
     private TextView more;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -59,21 +54,20 @@ public class MoistureFragment extends Fragment {
     private NestedScrollView scrollView;
     private ProgressBar progressBar;
     private TextView exception;
+    private TextView slatStatus;
 
-
-    public MoistureFragment() {
+    public LightFragment() {
         // Required empty public constructor
     }
 
-    public static MoistureFragment newInstance() {
-        MoistureFragment fragment = new MoistureFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+    public static LightFragment newInstance() {
+        LightFragment fragment = new LightFragment();
+        //Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        //fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach");
@@ -95,44 +89,50 @@ public class MoistureFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         Log.i(TAG, "onCreateView");
-        rootView = inflater.inflate(R.layout.fragment_moisture, container, false);
+        rootView = inflater.inflate(R.layout.fragment_light, container, false);
 
         pieView = new MagPieView(
                 getActivity(),
                 rootView,
                 R.id.pieView,
                 -1,
-                getActivity().getResources().getString(R.string.unitMoisture),
-                ContextCompat.getColor(getActivity(),R.color.blue));
+                getActivity().getResources().getString(R.string.unitLight),
+                ContextCompat.getColor(getActivity(),R.color.amber));
 
-        btnWater = (Button)rootView.findViewById(R.id.btnAction);
-        btnWater.setText(getActivity().getResources().getString(R.string.water));
+        slatStatus = (TextView)rootView.findViewById(R.id.slatStatus);
+        slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
+        slatStatus.setVisibility(View.VISIBLE);
+
+        btnCtrlSlat = (Button)rootView.findViewById(R.id.btnAction);
+        btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
+
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
 
         autoSwitchTitle = (TextView)rootView.findViewById(R.id.auto_title);
-        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoWater));
+        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoSlat));
 
         autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+        autoSwitch.setChecked(sharedPreferences.getBoolean("autoSlat",true));
 
-        moistureValue = (TextView)rootView.findViewById(R.id.value_standard);
+        lightValue = (TextView)rootView.findViewById(R.id.value_standard);
         seekBar = new MagDiscreteSeekBar(
                 rootView,
                 R.id.seekBarValue,
-                moistureValue,
-                " %",//unit
-                ContextCompat.getColor(getActivity(),R.color.blue),//color
-                80,//max
-                10,//min
-                20);//progress
+                lightValue,
+                getActivity().getResources().getString(R.string.unitLight),//unit
+                ContextCompat.getColor(getActivity(),R.color.amber),//color
+                20000,//max
+                1000,//min
+                5000);//progress
         seekBar.createSeekBar();
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
-        more.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+        more.setTextColor(ContextCompat.getColor(getActivity(),R.color.amber));
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -154,20 +154,20 @@ public class MoistureFragment extends Fragment {
                 getActivity(),
                 rootView,
                 R.id.lineChart,
-                1, //type chart 1=moisture,2=temp,3=light
+                3, //type chart 1=moisture,2=temp,3=light
                 null);
         //lineChart.setRawList(rawList);
         if(lineChart.getRawList()!=null){
             lineChart.createLineChart(screen);
             lineChart.drawLineChart();
         }
-        scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewMoisture);
+        scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewLight);
         scrollView.setVisibility(View.GONE);
 
-        exception = (TextView)rootView.findViewById(R.id.exceptionMoisture);
+        exception = (TextView)rootView.findViewById(R.id.exceptionLight);
         exception.setVisibility(View.GONE);
 
-        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarMoisture);
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarLight);
         progressBar.setVisibility(View.VISIBLE);
 
         return  rootView;
@@ -226,6 +226,7 @@ public class MoistureFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

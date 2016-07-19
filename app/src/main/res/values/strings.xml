@@ -2,6 +2,7 @@
     <string name="app_name">Smart Garden Care</string>
     <string name="lineChart">Line Chart</string>
     <string name="more">More</string>
+    <string name="exception">Exception</string>
 
 
     <!--TAG-->
@@ -32,15 +33,24 @@
     <string name="water">Water</string>
     <string name="autoWater">Auto Water</string>
     <string name="moistureStandard">Moisture Standard Value</string>
+    <string name="unitMoisture"> %</string>
 
     <!--temp fragment -->
     <string name="shower">Shower</string>
     <string name="autoShower">Auto Shower</string>
     <string name="tempStandard">Temp Standard Value</string>
+    <string name="unitTemp"> °C</string>
 
     <!--light fragment -->
     <string name="slatOpen">Slat Opened</string>
     <string name="slatClose">Slat Closed</string>
+    <string name="unitLight"> Lux</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="autoSlat">Auto Slat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
 

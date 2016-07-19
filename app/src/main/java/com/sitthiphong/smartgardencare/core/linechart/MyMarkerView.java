@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.activity;
+package com.sitthiphong.smartgardencare.core.linechart;
 
 import android.content.Context;
 import android.widget.TextView;

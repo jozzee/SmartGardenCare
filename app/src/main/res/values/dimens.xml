@@ -3,9 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="padding_exception">16dp</dimen>
+
     <dimen name="margin_line">16dp</dimen>
     <dimen name="text_size">18sp</dimen>
     <dimen name="text_size_btn">16sp</dimen>
+    <dimen name="progressBar_size">48dp</dimen>
 
     <!--set up netpie -->
     <dimen name="margin_left_layout_setup_netpie">16dp</dimen>
@@ -48,9 +51,6 @@
 
     <!--light fragment-->
     <dimen name="padding_slat_status">16dp</dimen>
-
-
-
 
 
 </resources>

@@ -21,6 +21,9 @@ public class MagPieView {
     private String unit;
     private int colorId;
 
+    public MagPieView(Context context,View view, int pieViewId,String unit, int colorId){
+
+    }
     public MagPieView(Context context,View view, int pieViewId, float value, String unit, int colorId) {
         this.context = context;
         this.view = view;
@@ -28,14 +31,30 @@ public class MagPieView {
         this.value = value;
         this.unit = unit;
         this.colorId = colorId;
-
         pieView = (PieView)view.findViewById(pieViewId);
-
-    }
-    public void createPieView(){
-        pieView.setmPercentage(value);
-        pieView.setInnerText(String.valueOf(value)+unit);
         pieView.setPercentageBackgroundColor(colorId);
-        pieView.setPercentageTextSize(context.getResources().getInteger(R.integer.percentage_size_moisture));
+        pieView.setPercentageTextSize(context.getResources()
+                .getInteger(R.integer.percentage_size_moisture));
+
+        if(value>0){
+            pieView.setmPercentage(value);
+            pieView.setInnerText(String.valueOf(value)+unit);
+        }
+        else {
+            pieView.setmPercentage(0);
+            pieView.setInnerText("0 %");
+        }
+    }
+
+    public void setValue(float value) {
+        this.value = value;
+        if(value>0){
+            pieView.setmPercentage(value);
+            pieView.setInnerText(String.valueOf(value)+unit);
+        }
+        else {
+            pieView.setmPercentage(0);
+            pieView.setInnerText("0 %");
+        }
     }
 }

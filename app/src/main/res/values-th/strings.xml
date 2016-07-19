@@ -3,6 +3,7 @@
     <string name="app_name">ระบบดูแลสวนหย่อม</string>
     <string name="lineChart">กราฟ</string>
     <string name="more">เพิ่มเติม</string>
+    <string name="exception">ผิดพลาด</string>
 
     <!--TAG-->
     <string name="imFragmentTag">ImageFragment</string>
@@ -32,15 +33,21 @@
     <string name="water">รดน้ำ</string>
     <string name="autoWater">รดน้ำอัตโนมัติ</string>
     <string name="moistureStandard">ค่าความชื้นมาตรฐาน</string>
+    <string name="unitMoisture"> %</string>
 
 
     <!--temp fragment -->
     <string name="shower">เปิดฝักบัว</string>
     <string name="autoShower">เปิดฝักบัวอัตโนมัติ</string>
     <string name="tempStandard">ค่าอุณหภูมิมาตรฐาน</string>
+    <string name="unitTemp"> °C</string>
 
     <!--light fragment -->
     <string name="slatOpen">ไม้ระแนงเปิดไว้อยู่</string>
     <string name="slatClose">ไม้ระแนงไม่ได้ถูกเปิดไว้</string>
+    <string name="unitLight"> Lux</string>
+    <string name="open">เปิด</string>
+    <string name="close">ปิด</string>
+    <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
 
 </resources>

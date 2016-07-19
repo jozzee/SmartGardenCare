@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.core;
+package com.sitthiphong.smartgardencare.core.linechart;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -23,15 +23,11 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.activity.MyMarkerView;
+import com.sitthiphong.smartgardencare.core.MagScreen;
+import com.sitthiphong.smartgardencare.core.linechart.MyMarkerView;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
-import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +52,15 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         this.type = type;
         this.rawList = rawList;
     }
+
+    public void setRawList(List<RawDataBean> rawList) {
+        this.rawList = rawList;
+    }
+
+    public List<RawDataBean> getRawList() {
+        return rawList;
+    }
+
     public void createLineChart(MagScreen magScreen){
         mChart =  (LineChart)view.findViewById(lineChartId);
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
