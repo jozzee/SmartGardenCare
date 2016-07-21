@@ -5,30 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.MainActivity">
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/coordinatorToolbarMain">
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/appBarLayoutMain"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:id="@+id/toolbarMain"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-        </android.support.design.widget.AppBarLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    tools:context=".activity.MainActivity"
+    android:id="@+id/rootLayoutMain">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragmentContain"
-        android:layout_below="@+id/coordinatorToolbarMain">
+        android:id="@+id/fragmentContain">
 
     </FrameLayout>
 </RelativeLayout>

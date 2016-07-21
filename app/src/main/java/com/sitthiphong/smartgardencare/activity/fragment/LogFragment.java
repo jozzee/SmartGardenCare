@@ -1,42 +1,34 @@
-package com.sitthiphong.smartgardencare.activity;
+package com.sitthiphong.smartgardencare.activity.fragment;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.core.MagScreen;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ImageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ImageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ImageFragment extends Fragment {
-    private String TAG = getActivity().getString(R.string.imFragmentTag);
+public class LogFragment extends Fragment {
+    private String TAG = "LogFragment";
+    private OnFragmentInteractionListener mListener;
     private View rootView;
 
-    private OnFragmentInteractionListener mListener;
+    private ProgressBar progressBar;
+    private TextView exception;
 
-    public ImageFragment() {
+    public LogFragment() {
         // Required empty public constructor
     }
 
-    public static ImageFragment newInstance() {
-        ImageFragment fragment = new ImageFragment();
+
+    public static LogFragment newInstance() {
+        LogFragment fragment = new LogFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
@@ -51,7 +43,7 @@ public class ImageFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
+        Log.i(TAG, "onAttach");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
 
@@ -62,24 +54,15 @@ public class ImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         Log.i(TAG, "onCreateView");
-        rootView = inflater.inflate(R.layout.fragment_image, container, false);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        MagScreen magScreen = new MagScreen(getActivity(),metrics);
-
-        ImageView imageView = (ImageView)rootView.findViewById(R.id.imGarden);
-
-        RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
-                magScreen.getWidthGardenImage(),magScreen.getHeightGardenImage());
-        imageView.setLayoutParams(param);
-
-        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.bg_garden_im));
+        rootView = inflater.inflate(R.layout.fragment_log, container, false);
 
 
+        exception = (TextView)rootView.findViewById(R.id.exceptionLog);
+        exception.setVisibility(View.GONE);
 
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarLog);
+        progressBar.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -138,12 +121,13 @@ public class ImageFragment extends Fragment {
         }
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.activity;
+package com.sitthiphong.smartgardencare.activity.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,11 +23,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
+import com.sitthiphong.smartgardencare.bean.StatusBean;
 import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 import com.sitthiphong.smartgardencare.core.MagDiscreteSeekBar;
+import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
 import com.sitthiphong.smartgardencare.core.MagPieView;
 import com.sitthiphong.smartgardencare.core.MagScreen;
-import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
+import com.sitthiphong.smartgardencare.listener.ActionListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -36,20 +38,21 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TempFragment.OnFragmentInteractionListener} interface
+ * {@link MoistureFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TempFragment#newInstance} factory method to
+ * Use the {@link MoistureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TempFragment extends Fragment {
-    private String TAG = "TempFragment";
-    private OnFragmentInteractionListener mListener;
+public class MoistureFragment extends Fragment {
+    private String TAG = "MoistureFragment";
     private View rootView;
-    private Button btnShower;
+    private OnFragmentInteractionListener mListener;
+    private ActionListener actionListener = new ActionListener();
+    private Button btnWater;
     private TextView lastTime;
     private TextView autoSwitchTitle;
     private Switch autoSwitch;
-    private TextView tempValue;
+    private TextView moistureValue;
     private TextView more;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -60,17 +63,20 @@ public class TempFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView exception;
 
-    public TempFragment() {
+
+    public MoistureFragment() {
         // Required empty public constructor
     }
-    public static TempFragment newInstance() {
-        TempFragment fragment = new TempFragment();
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
+
+    public static MoistureFragment newInstance() {
+        MoistureFragment fragment = new MoistureFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach");
@@ -93,44 +99,43 @@ public class TempFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.i(TAG, "onCreateView");
-
-        rootView =  inflater.inflate(R.layout.fragment_temp, container, false);
+        rootView = inflater.inflate(R.layout.fragment_moisture, container, false);
 
         pieView = new MagPieView(
                 getActivity(),
                 rootView,
                 R.id.pieView,
                 -1,
-                getActivity().getResources().getString(R.string.unitTemp),
-                ContextCompat.getColor(getActivity(),R.color.deepOrange));
+                getActivity().getResources().getString(R.string.unitMoisture),
+                ContextCompat.getColor(getActivity(),R.color.blue));
 
-        btnShower = (Button)rootView.findViewById(R.id.btnAction);
-        btnShower.setText(getActivity().getResources().getString(R.string.shower));
+        btnWater = (Button)rootView.findViewById(R.id.btnAction);
+        btnWater.setText(getActivity().getResources().getString(R.string.water));
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
 
         autoSwitchTitle = (TextView)rootView.findViewById(R.id.auto_title);
-        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoShower));
+        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoWater));
 
         autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
+        autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
 
-        tempValue = (TextView)rootView.findViewById(R.id.value_standard);
+        moistureValue = (TextView)rootView.findViewById(R.id.value_standard);
         seekBar = new MagDiscreteSeekBar(
                 rootView,
                 R.id.seekBarValue,
-                tempValue,
-                getActivity().getResources().getString(R.string.unitTemp),//unit
-                ContextCompat.getColor(getActivity(),R.color.deepOrange),//color
-                50,//max
+                moistureValue,
+                " %",//unit
+                ContextCompat.getColor(getActivity(),R.color.blue),//color
+                80,//max
                 10,//min
-                40);//progress
+                20);//progress
         seekBar.createSeekBar();
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
-        more.setTextColor(ContextCompat.getColor(getActivity(),R.color.deepOrange));
+        more.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -152,21 +157,23 @@ public class TempFragment extends Fragment {
                 getActivity(),
                 rootView,
                 R.id.lineChart,
-                2, //type chart 1=moisture,2=temp,3=light
+                1, //type chart 1=moisture,2=temp,3=light
                 null);
         //lineChart.setRawList(rawList);
         if(lineChart.getRawList()!=null){
             lineChart.createLineChart(screen);
             lineChart.drawLineChart();
         }
-        scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewTemp);
+        scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewMoisture);
         scrollView.setVisibility(View.GONE);
 
-        exception = (TextView)rootView.findViewById(R.id.exceptionTemp);
+        exception = (TextView)rootView.findViewById(R.id.exceptionMoisture);
         exception.setVisibility(View.GONE);
 
-        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarTemp);
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarMoisture);
         progressBar.setVisibility(View.VISIBLE);
+
+        setActionListener();
 
         return  rootView;
     }
@@ -174,6 +181,7 @@ public class TempFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
+        actionListener.onRequestRawData.OnRequestRawData();
 
     }
     @Override
@@ -218,13 +226,43 @@ public class TempFragment extends Fragment {
         mListener = null;
     }
 
+    public void setActionListener(){
+        actionListener.setOnException(new ActionListener.OnException() {
+            @Override
+            public void onException(String error) {
+                Log.e(TAG,"onException");
+                scrollView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                exception.setText(error);
+                exception.setVisibility(View.VISIBLE);
+            }
+        });
+        actionListener.setOnUpdateRawData(new ActionListener.OnUpdateRawData() {
+            @Override
+            public void OnUpdateRawDat(StatusBean statusBean, RawDataBean rawDataBean) {
+                if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+
+                }
+                else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
+                    scrollView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    exception.setText(statusBean.getException());
+                    exception.setVisibility(View.VISIBLE);
+
+                }
+                else if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.NO_INTERNET)){
+
+                }
+            }
+        });
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

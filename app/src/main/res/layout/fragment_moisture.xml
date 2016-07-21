@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:plainpie="http://schemas.android.com/apk/res-auto"
-    tools:context="com.sitthiphong.smartgardencare.activity.MoistureFragment"
+    tools:context=".activity.fragment.MoistureFragment"
     app:theme="@style/AppThemeMoisture">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

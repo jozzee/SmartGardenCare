@@ -55,4 +55,22 @@
     <!--light fragment-->
     <dimen name="padding_slat_status">32dp</dimen>
 
+
+    <!--log fragment-->
+    <dimen name="margin_left_right_gard_view">128dp</dimen>
+    <dimen name="text_size_action_log">32sp</dimen>
+    <dimen name="test_size_time_log">18sp</dimen>
+
+    <!--setting activity-->
+    <dimen name="margin_left_right_layout_setting">128dp</dimen>
+
+
+    <dimen name="padding_top_setting">16dp</dimen>
+    <dimen name="padding_bottom_setting">16dp</dimen>
+    <dimen name="title_textView_size">18sp</dimen>
+    <dimen name="padding_layout_setting">32dp</dimen>
+    <dimen name="margin_top_value_setting">16dp</dimen>
+    <dimen name="margin_bottom_value_setting">32dp</dimen>
+
+
 </resources>

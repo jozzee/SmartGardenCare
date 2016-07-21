@@ -3,8 +3,6 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -12,6 +10,18 @@
     <style name="AppThemeMoisture" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/blue</item>
+    </style>
+    <style name="AppThemeTemp" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/deepOrange</item>
+    </style>
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/yellow</item>
+    </style>
+    <style name="AppThemeLog" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/grey</item>
     </style>
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/textColorPrimary</item>

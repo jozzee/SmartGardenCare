@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.activity;
+package com.sitthiphong.smartgardencare.activity.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,13 +23,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
+import com.sitthiphong.smartgardencare.bean.StatusBean;
 import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 import com.sitthiphong.smartgardencare.core.MagDiscreteSeekBar;
 import com.sitthiphong.smartgardencare.core.MagPieView;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
-
-import org.w3c.dom.Text;
+import com.sitthiphong.smartgardencare.listener.ActionListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,9 +37,10 @@ import java.util.List;
 
 public class LightFragment extends Fragment {
 
-    private String TAG = "MoistureFragment";
+    private String TAG = "LightFragment";
     private View rootView;
     private OnFragmentInteractionListener mListener;
+    private ActionListener actionListener = new ActionListener();
     private Button btnCtrlSlat;
     private TextView lastTime;
     private TextView autoSwitchTitle;
@@ -61,6 +62,7 @@ public class LightFragment extends Fragment {
     }
 
     public static LightFragment newInstance() {
+
         LightFragment fragment = new LightFragment();
         //Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
@@ -170,12 +172,15 @@ public class LightFragment extends Fragment {
         progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarLight);
         progressBar.setVisibility(View.VISIBLE);
 
+        setActionListener();
+
         return  rootView;
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
+        actionListener.onRequestRawData.OnRequestRawData();
 
     }
     @Override
@@ -219,6 +224,37 @@ public class LightFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+    public void setActionListener(){
+        actionListener.setOnException(new ActionListener.OnException() {
+            @Override
+            public void onException(String error) {
+                Log.e(TAG,"onException");
+                scrollView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                exception.setText(error);
+                exception.setVisibility(View.VISIBLE);
+            }
+        });
+        actionListener.setOnUpdateRawData(new ActionListener.OnUpdateRawData() {
+            @Override
+            public void OnUpdateRawDat(StatusBean statusBean, RawDataBean rawDataBean) {
+                if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+
+                }
+                else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
+                    scrollView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    exception.setText(statusBean.getException());
+                    exception.setVisibility(View.VISIBLE);
+
+                }
+                else if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.NO_INTERNET)){
+
+                }
+            }
+        });
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

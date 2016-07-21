@@ -3,7 +3,13 @@
     <string name="app_name">ระบบดูแลสวนหย่อม</string>
     <string name="lineChart">กราฟ</string>
     <string name="more">เพิ่มเติม</string>
-    <string name="exception">ผิดพลาด</string>
+    <string name="exception">ผิดพลาด!</string>
+    <string name="setting">ตั้งค่า</string>
+    <string name="changeLanguage">เปลี่ยนภาษา</string>
+    <string name="warning">คำเตือน</string>
+    <string name="ok">ตกลง</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="choose">เลือก</string>
 
     <!--TAG-->
     <string name="imFragmentTag">ImageFragment</string>
@@ -16,11 +22,12 @@
     <string name="appId">แอป ไอดี</string>
     <string name="appKey">คีย์</string>
     <string name="appSecret">ซีเคร็ท</string>
-    <string name="cancel">ยกเลิก</string>
     <string name="submit">ตกลง</string>
     <string name="setupNETPIE">ตั้งค่า NETPIE</string>
+    <string name="warningExitSetupNetPie">การตั้งค่า NETPIE ยังไม่สำเร็จ</string>
 
     <!--image fragment -->
+    <string name="image">รูปภาพ</string>
     <string name="lastUpdate">เวลาล่าสุด</string>
     <string name="sendImage">ส่งรูปภาพ</string>
     <string name="sendImageValue1">ทุก 1 ชั่วโมง</string>
@@ -30,6 +37,7 @@
     <string name="sendImageValue5">ทุก 12 ชั่วโมง</string>
 
     <!--moisture fragment -->
+    <string name="moisture">ความชื้น</string>
     <string name="water">รดน้ำ</string>
     <string name="autoWater">รดน้ำอัตโนมัติ</string>
     <string name="moistureStandard">ค่าความชื้นมาตรฐาน</string>
@@ -37,17 +45,81 @@
 
 
     <!--temp fragment -->
+    <string name="temp">อุณหภูมิ</string>
     <string name="shower">เปิดฝักบัว</string>
     <string name="autoShower">เปิดฝักบัวอัตโนมัติ</string>
     <string name="tempStandard">ค่าอุณหภูมิมาตรฐาน</string>
     <string name="unitTemp"> °C</string>
 
     <!--light fragment -->
+    <string name="light">ความเข้มแสง</string>
     <string name="slatOpen">ไม้ระแนงเปิดไว้อยู่</string>
     <string name="slatClose">ไม้ระแนงไม่ได้ถูกเปิดไว้</string>
     <string name="unitLight"> Lux</string>
     <string name="open">เปิด</string>
     <string name="close">ปิด</string>
     <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
+
+    <!--log fragment -->
+    <string name="log">ประวัติการทำงาน</string>
+
+    <!--setting activity-->
+    <string name="transmissions">การส่งข้อมูล</string>
+    <string name="senDataSensor">ส่งข้อมูลเซนเซอร์</string>
+    <string name="data">ข้อมูล</string>
+    <string name="insertData">เก็บข้อมูลเซนเซอร์</string>
+    <string name="TimeDataStorage">ระยะเวลาการเก็บข้อมูล</string>
+    <string name="every">ทุกๆ</string>
+    <string name="minute">นาที</string>
+    <string name="hour">ชั่วโมง</string>
+    <string name="day">วัน</string>
+
+    <string name="editAppId">แก้ไข App ID</string>
+    <string name="textHintAppId">กรอก App ID ของคุณ</string>
+    <string name="editAppKey">แก้ไข App Key</string>
+    <string name="textHintAppKey">กรอก App Key ของคุณ</string>
+    <string name="editAppSecret">แก้ไข App Secret</string>
+    <string name="textHintAppSecret">กรอก App secret ของคุณ</string>
+    <string name="frequencySendData">ความถี่ของการส่งข้อมูล</string>
+    <string name="frequencyInsertData">ความถี่ของการเก็บข้อมูล</string>
+    <string name="dayStorageData">ระยะเวลการเก็บข้อมูล</string>
+
+    <string-array name="ftPubRDArray">
+        <item>ทุกๆ 1 นาที</item>
+        <item>ทุกๆ 5 นาท</item>
+        <item>ทุกๆ 10 นาท</item>
+        <item>ทุกๆ 20 นาท</item>
+        <item>ทุกๆ 30 นาท</item>
+        <item>ทุกๆ 60 นาท</item>
+    </string-array>
+    <string-array name="ftPubIM_IRDArray">
+        <item>ทุกๆ 1 ชั่วโมง</item>
+        <item>ทุกๆ 2 ชั่วโมง</item>
+        <item>ทุกๆ 3 ชั่วโมง</item>
+        <item>ทุกๆ 6 ชั่วโมง</item>
+        <item>ทุกๆ 12 ชั่วโมง</item>
+        <item>ทุกๆ 24 ชั่วโมง</item>
+    </string-array>
+    <string-array name="dayOfStorageArray">
+        <item>1 วัน</item>
+        <item>2 วัน</item>
+        <item>3 วัน</item>
+        <item>4 วัน</item>
+        <item>5 วัน</item>
+        <item>6 วัน</item>
+        <item>7 วัน</item>
+    </string-array>
+
+
+    <!--listener-->
+    <string name="notSetupNETPIE">ไม่มีการตั้งค่า NETPIE</string>
+    <string name="noInternet">ไม่มีการเชื่อมต่ออินเตอร์เน็ต</string>
+    <string name="notConnectedNETPIE">ไม่สามารถเชื่อมต่อ NETPIE</string>
+
+    <string name="connectedNETPIE">เชื่อมต่อ NETPIE แล้ว</string>
+
+    <!--notification-->
+    <string name="piNotResponse">Raspberry Pi ไม่ตอบสนอง</string>
+
 
 </resources>

@@ -6,4 +6,13 @@
     <integer name="max_moisture">80</integer>
     <integer name="min_moisture">10</integer>
     <integer name="value_moisture">20</integer>
+
+
+    <integer name="waitPublish">20000</integer>
+
+    <integer name="IS_CONNECT_NETPIE">200</integer>
+    <integer name="ERROR">199</integer>
+    <integer name="NO_INTERNET">198</integer>
+    <integer name="WAIT">201</integer>
+    <integer name="REQUEST_CODE_ASK_PERMISSIONSc">123</integer>
 </resources>

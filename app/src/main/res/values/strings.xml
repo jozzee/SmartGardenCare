@@ -2,25 +2,26 @@
     <string name="app_name">Smart Garden Care</string>
     <string name="lineChart">Line Chart</string>
     <string name="more">More</string>
-    <string name="exception">Exception</string>
+    <string name="exception">Exception!</string>
+    <string name="setting">Setting</string>
+    <string name="changeLanguage">Change Language</string>
+    <string name="warning">Warning</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose">Choose</string>
 
-
-    <!--TAG-->
-    <string name="imFragmentTag">ImageFragment</string>
-    <string name="moistureFragmentTag">MoistureFragment</string>
-    <string name="tempFragmentTag">TempFragment</string>
-    <string name="lightFragmentTag">LightFragment</string>
-    <string name="logFragmentTag">LogFragment</string>
 
     <!--set up netpie -->
     <string name="appId">Application ID</string>
     <string name="appKey">Key</string>
     <string name="appSecret">Secret</string>
-    <string name="cancel">Cancel</string>
     <string name="submit">Submit</string>
     <string name="setupNETPIE">Setup to NETPIE</string>
+    <string name="warningExitSetupNetPie">The settings key not completed</string>
+
 
     <!--image fragment -->
+    <string name="image">Image</string>
     <string name="lastUpdate">Last Update</string>
     <string name="sendImage">Send Image</string>
     <string name="sendImageValue1">Every 1 Hour</string>
@@ -30,24 +31,88 @@
     <string name="sendImageValue5">Every 12 Hour</string>
 
     <!--moisture fragment -->
+    <string name="moisture">Moisture</string>
     <string name="water">Water</string>
     <string name="autoWater">Auto Water</string>
     <string name="moistureStandard">Moisture Standard Value</string>
     <string name="unitMoisture"> %</string>
 
     <!--temp fragment -->
+    <string name="temp">Temp</string>
     <string name="shower">Shower</string>
     <string name="autoShower">Auto Shower</string>
     <string name="tempStandard">Temp Standard Value</string>
     <string name="unitTemp"> °C</string>
 
     <!--light fragment -->
+    <string name="light">Light</string>
     <string name="slatOpen">Slat Opened</string>
     <string name="slatClose">Slat Closed</string>
     <string name="unitLight"> Lux</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="autoSlat">Auto Slat</string>
+
+    <!--log fragment -->
+    <string name="log">Log</string>
+
+    <!--setting activity-->
+    <string name="transmissions">Transmissions</string>
+    <string name="senDataSensor">Send Sensor Data</string>
+    <string name="data">Data</string>
+    <string name="insertData">Insert Data Sensor</string>
+    <string name="TimeDataStorage">Time Data storage</string>
+    <string name="every">Every</string>
+    <string name="minute">minute</string>
+    <string name="hour">Hour</string>
+    <string name="day">Days</string>
+    <string name="editAppId">Edit App ID</string>
+    <string name="textHintAppId">Enter you app ID</string>
+    <string name="editAppKey">Edit App Key</string>
+    <string name="textHintAppKey">Enter you app Key</string>
+    <string name="editAppSecret">Edit App Secret</string>
+    <string name="textHintAppSecret">Enter you app secret</string>
+    <string name="frequencySendData">Frequency of send data</string>
+    <string name="frequencyInsertData">Frequency of insert data</string>
+    <string name="dayStorageData">Day storage data</string>
+
+    <string-array name="ftPubRDArray">
+        <item>Every 1 minute</item>
+        <item>Every 5 minute</item>
+        <item>Every 10 minute</item>
+        <item>Every 20 minute</item>
+        <item>Every 30 minute</item>
+        <item>Every 60 minute</item>
+    </string-array>
+    <string-array name="ftPubIM_IRDArray">
+        <item>Every 1 hour</item>
+        <item>Every 2 hour</item>
+        <item>Every 3 hour</item>
+        <item>Every 6 hour</item>
+        <item>Every 12 hour</item>
+        <item>Every 24 hour</item>
+    </string-array>
+    <string-array name="dayOfStorageArray">
+        <item>1 day</item>
+        <item>2 day</item>
+        <item>3 day</item>
+        <item>4 day</item>
+        <item>5 day</item>
+        <item>6 day</item>
+        <item>7 day</item>
+    </string-array>
+
+
+    <!--listener-->
+    <string name="notSetupNETPIE">Not setup NETPIE</string>
+    <string name="noInternet">No Internet connection</string>
+    <string name="notConnectedNETPIE">Can not connect to NETPIE</string>
+
+    <string name="connectedNETPIE">Connected to NETPIE</string>
+
+    <!--notification-->
+    <string name="piNotResponse">Raspberry Pi Not Response</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
