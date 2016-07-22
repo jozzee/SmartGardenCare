@@ -15,6 +15,7 @@ public class SubscribeBean {
     private int qos;
     private boolean retain;
     private long lastUpdated;
+    private String[] topicList;
 
     public SubscribeBean() {
     }
@@ -24,6 +25,9 @@ public class SubscribeBean {
         JsonObject jsonObject = gson.fromJson(jsonArray.get(0), JsonObject.class);
         if(jsonObject.get("topic")!= null){
             this.topic = jsonObject.get("topic").getAsString();
+            topic = topic.substring(1);
+            topicList = topic.split("/");
+            topic = topicList[1];
         }
         if(jsonObject.get("payload")!= null){
             this.payload = jsonObject.get("payload").getAsString();

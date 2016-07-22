@@ -96,11 +96,11 @@ public class Microgear extends Activity {
                     disconnect();
                 } else {
                     Log.e("Micorgear","Not math other function");
-                    //brokerconnect(appid, key, secret);
-                    //context.bindService(new Intent(context, MicrogearService.class), serviceConnection, 0);
-                    eventListener.mError.onException("Please Check your App id,Key,Secret");
-                    eventListener.mConnect.onConnect(false);
-                    disconnect();
+                    brokerconnect(appid, key, secret);
+                    context.bindService(new Intent(context, MicrogearService.class), serviceConnection, 0);
+                    //eventListener.mError.onException("Please Check your App id,Key,Secret");
+                    //eventListener.mConnect.onConnect(false);
+                    //disconnect();
                 }
 
 

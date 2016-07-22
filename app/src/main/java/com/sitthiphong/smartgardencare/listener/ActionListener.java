@@ -17,6 +17,9 @@ public class ActionListener {
     public static OnUpdateImage onUpdateImage =null;
     public static OnRequestRawData onRequestRawData = null;
     public static OnUpdateRawData onUpdateRawData = null;
+    public static OnRequestLog onRequestLog = null;
+    public static OnUpdateLog onUpdateLog = null;
+    public static OnConnectedToNETPIE onConnectedToNETPIE = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -70,6 +73,27 @@ public class ActionListener {
     public void setOnUpdateRawData(OnUpdateRawData listener){
         onUpdateRawData = listener;
     }
+
+    public interface OnRequestLog{
+        public void onRequestLog();
+    }
+    public void setOnRequestLog(OnRequestLog listener){
+        onRequestLog = listener;
+    }
+    public interface OnUpdateLog{
+        public void onUpdateLog(StatusBean statusBean,String logListAsJsonString);
+    }
+    public void setOnUpdateLog(OnUpdateLog listener){
+        onUpdateLog = listener;
+    }
+
+    public interface OnConnectedToNETPIE{
+        public void onConnectedToNETPIE();
+    }
+    public void setOnConnectedToNETPIE(OnConnectedToNETPIE listener){
+        onConnectedToNETPIE = listener;
+    }
+
 
 
 

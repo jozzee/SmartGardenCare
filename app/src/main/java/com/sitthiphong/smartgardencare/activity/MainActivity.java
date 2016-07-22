@@ -49,6 +49,10 @@ import com.sitthiphong.smartgardencare.provider.GsonProvider;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+    private final int IS_CONNECT_NETPIE = 200;
+    private final int ERROR = 199;
+    private final int WAIT  = 201;
+    private final int REQUEST_CODE_ASK_PERMISSIONSc = 123;
 
 
     private SharedPreferences sharedPreferences;
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomBar mBottomBar;
     private ActionListener actionListener = new ActionListener();
     private NetworkChangeListener networkChangeListener = new NetworkChangeListener();
-    private StatusBean statusBean;
+    private StatusBean statusBean = new StatusBean(WAIT,"");
     private RawDataBean rawDataBean;
     private ImageBean imageBean;
     private ProgressDialog progressDialog;
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment;
     private LogFragment logFragment;
     private android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
+    private String logListAsJsonString;
 
 
 
@@ -311,13 +316,52 @@ public class MainActivity extends AppCompatActivity {
         actionListener.setOnRequestUpdateImage(new ActionListener.OnRequestUpdateImage() {
             @Override
             public void onRequestUpdateImage() {
-                actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
+                if(statusBean.getStatus()==getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+                    if(imageBean.getTimeStamp()>0){
+                        actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
+                    }
+                    else {
+                        //load
+                        new SubscribeTask(getResources().getString(R.string.fetching))
+                                .execute(appID = sharedPreferences.getString("appID",""),
+                                        appKey = sharedPreferences.getString("appKey",""),
+                                        sharedPreferences.getString("appSecret",""),
+                                        "photo");
+                    }
+                }
+                else {
+                    actionListener.onException.onException(statusBean.getException());
+                }
+
             }
         });
         actionListener.setOnRequestRawData(new ActionListener.OnRequestRawData() {
             @Override
             public void OnRequestRawData() {
                 actionListener.onUpdateRawData.OnUpdateRawDat(statusBean,rawDataBean);
+            }
+        });
+
+        actionListener.setOnRequestLog(new ActionListener.OnRequestLog() {
+            @Override
+            public void onRequestLog() {
+               if(statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+                   if(logListAsJsonString != null){
+                       actionListener.onUpdateLog.onUpdateLog(statusBean,logListAsJsonString);
+                   }
+                   else{
+                       //load
+                       new SubscribeTask(getResources().getString(R.string.fetching))
+                               .execute(appID = sharedPreferences.getString("appID",""),
+                                        appKey = sharedPreferences.getString("appKey",""),
+                                        sharedPreferences.getString("appSecret",""),
+                                        "logDataList");
+                   }
+               }
+                else{
+                   actionListener.onException.onException(statusBean.getException());
+               }
+
             }
         });
 
@@ -331,7 +375,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
                     notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
-
+                    if(actionListener.onConnectedToNETPIE != null){
+                        actionListener.onConnectedToNETPIE.onConnectedToNETPIE();
+                    }
                 }
                 else{
                     Log.i(TAG,"NETPIE Event Listener: onConnectFalse: Can't connect to NETPIE!!");
@@ -663,6 +709,66 @@ public class MainActivity extends AppCompatActivity {
             new SubscribeCallBackListener()
                     .onSubscribeRawDataListCallBackListener
                     .onSubRawDataListCallBackListener(new SubscribeBean(result));
+        }
+    }
+    private class SubscribeTask extends AsyncTask<String,Void,String> {
+        private final String TAG = "SubscribeTask";
+        private ProgressDialog progressDialog;
+        private String dialogMessage;
+
+        public SubscribeTask(String dialogMessage) {
+            this.dialogMessage = dialogMessage;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute");
+            //super.onPreExecute();
+            progressDialog = new ProgressDialog(getContextManual());
+            progressDialog.setMessage(dialogMessage);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            return new NetPieRestApi(params[0],params[1],params[2]).subscribe(params[3]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute");
+            Log.e(TAG,"result: "+result);
+
+            //super.onPostExecute(result);
+            if(progressDialog != null){
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+
+            if(!result.equals("connectionLost")
+                    && !result.equals("Unauthorized.")
+                    && !result.equals("[]")
+                    && !result.equals("{\"code\":401,\"message\":\"Unauthorized\"}")){
+                Log.e(TAG,"has result");
+                SubscribeBean bean = new SubscribeBean(result);
+                Log.e(TAG,"topic:"+bean.getTopic());
+                if(bean.getTopic().equals("logDataList")){
+                    logListAsJsonString = bean.getPayload();
+                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
+                    actionListener.onUpdateLog.onUpdateLog(statusBean,logListAsJsonString);
+                }
+                if(bean.getTopic().equals("photo")){
+                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
+                    imageBean = new ImageBean(bean.getPayload());
+                    actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
+                }
+            }
+            else {
+                Log.e(TAG,"error: "+result);
+                statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),result);
+                actionListener.onException.onException(result);
+            }
         }
     }
     public void alertDialog(String title,String message){
