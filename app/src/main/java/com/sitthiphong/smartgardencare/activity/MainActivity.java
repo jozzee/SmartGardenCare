@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     private StatusBean statusBean = new StatusBean(WAIT,"");
     private RawDataBean rawDataBean;
-    private ImageBean imageBean;
+    private ImageBean imageBean = new ImageBean();
     private ProgressDialog progressDialog;
 
     private JsonObject objSetting;
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRequestUpdateImage() {
                 if(statusBean.getStatus()==getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
-                    if(imageBean.getTimeStamp()>0){
+                    if(imageBean.getTimeStamp()>0l){
                         actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
                     }
                     else {

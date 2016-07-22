@@ -22,6 +22,9 @@ import com.sitthiphong.smartgardencare.bean.ImageBean;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
+import com.sitthiphong.smartgardencare.provider.SimpleDateProvider;
+
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +41,7 @@ public class ImageFragment extends Fragment {
     private CoordinatorLayout rootLayout;
     private ProgressBar progressBar;
     private TextView exception;
+    private TextView dateTime;
 
     private ActionListener actionListener = new ActionListener();
     private OnFragmentInteractionListener mListener;
@@ -88,6 +92,8 @@ public class ImageFragment extends Fragment {
         imageGarden.setLayoutParams(param);
 
         imageGarden.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.bg_garden_im));
+
+        dateTime = (TextView)rootView.findViewById(R.id.time_im_garden);
 
         rootLayout = (CoordinatorLayout) rootView.findViewById(R.id.containImage);
         rootLayout.setVisibility(View.GONE);
@@ -180,8 +186,11 @@ public class ImageFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     exception.setVisibility(View.GONE);
                     imageGarden.setImageBitmap(imageBean.getBitmap());
+
+                    dateTime.setText(SimpleDateProvider.getInstance()
+                            .format(new Date(imageBean.getTimeStamp()*1000)));
                     rootLayout.setVisibility(View.VISIBLE);
-                    
+
                 }
                 else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
                     rootLayout.setVisibility(View.GONE);

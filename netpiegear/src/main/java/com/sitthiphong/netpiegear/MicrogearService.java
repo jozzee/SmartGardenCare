@@ -35,7 +35,10 @@ public class MicrogearService extends Service {
             connection = new MQTTConnection();
         } catch (IllegalArgumentException e) {
             if(eventListener != null){
-                eventListener.mError.onException("Check format App id ,key and Secret");
+                if(eventListener.mError != null){
+                    eventListener.mError.onException("Check format App id ,key and Secret");
+                }
+
             }
 
         }
@@ -67,7 +70,9 @@ public class MicrogearService extends Service {
             connection.start();
         } catch (NullPointerException e) {
             if(eventListener != null){
-                eventListener.mError.onException("Error Check appid,appkey or appsecret");
+                if(eventListener.mError != null){
+                    eventListener.mError.onException("Error Check appid,appkey or appsecret");
+                }
             }
         }
         return START_STICKY;
