@@ -36,6 +36,7 @@
     <!--moisture fragment-->
     <dimen name="size_pain_pie_chart">200dp</dimen>
 
+    <dimen name="margin_sensor_error">72dp</dimen>
     <dimen name="margin_top_pain_pie_chart">16dp</dimen>
     <dimen name="margin_bottom_pain_pie_chart">16dp</dimen>
     <dimen name="margin_top_btn_water_pain_pie_chart">32dp</dimen>

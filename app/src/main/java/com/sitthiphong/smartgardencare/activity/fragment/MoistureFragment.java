@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -30,9 +31,12 @@ import com.sitthiphong.smartgardencare.core.linechart.MagLineChart;
 import com.sitthiphong.smartgardencare.core.MagPieView;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
+import com.sitthiphong.smartgardencare.provider.GsonProvider;
+import com.sitthiphong.smartgardencare.provider.SimpleDateProvider;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,8 +64,11 @@ public class MoistureFragment extends Fragment {
     private MagDiscreteSeekBar seekBar;
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
+    private RelativeLayout layoutContainLinChart;
     private ProgressBar progressBar;
     private TextView exception;
+    private TextView sensorError;
+    private MagScreen screen;
 
 
     public MoistureFragment() {
@@ -101,6 +108,8 @@ public class MoistureFragment extends Fragment {
         Log.i(TAG, "onCreateView");
         rootView = inflater.inflate(R.layout.fragment_moisture, container, false);
 
+        sensorError = (TextView)rootView.findViewById(R.id.sensorError);
+
         pieView = new MagPieView(
                 getActivity(),
                 rootView,
@@ -120,9 +129,10 @@ public class MoistureFragment extends Fragment {
         autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoWater));
 
         autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+        autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
 
         moistureValue = (TextView)rootView.findViewById(R.id.value_standard);
+        moistureValue.setText(String.valueOf((int)sharedPreferences.getFloat("humidity",20))+" %");
         seekBar = new MagDiscreteSeekBar(
                 rootView,
                 R.id.seekBarValue,
@@ -134,12 +144,13 @@ public class MoistureFragment extends Fragment {
                 20);//progress
         seekBar.createSeekBar();
 
+
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
         more.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        MagScreen screen = new MagScreen(getActivity(),metrics);
+        screen = new MagScreen(getActivity(),metrics);
 
         //------------------------------------------------------------------------------------------
         String payload = "1467477960,20,-1,-1";
@@ -153,6 +164,9 @@ public class MoistureFragment extends Fragment {
         List<RawDataBean> rawList = gson.fromJson(jsonArray, listType);
         //------------------------------------------------------------------------------------------
 
+        layoutContainLinChart = (RelativeLayout)rootView.findViewById(R.id.layoutContainLinChart);
+        layoutContainLinChart.setVisibility(View.GONE);
+
         lineChart = new MagLineChart(
                 getActivity(),
                 rootView,
@@ -164,6 +178,9 @@ public class MoistureFragment extends Fragment {
             lineChart.createLineChart(screen);
             lineChart.drawLineChart();
         }
+        //lineChart.createLineChart(screen);
+        //lineChart.setVisibility(View.GONE);
+
         scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewMoisture);
         scrollView.setVisibility(View.GONE);
 
@@ -181,7 +198,10 @@ public class MoistureFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-        actionListener.onRequestRawData.OnRequestRawData();
+        //Log.e(TAG,"OnRequestRawData");
+        //actionListener.onRequestRawData.OnRequestRawData();
+        actionListener.onRequestRawBean.onRequestRawBean();
+        actionListener.onRequestRawList.onRequestRawList();
 
     }
     @Override
@@ -237,22 +257,65 @@ public class MoistureFragment extends Fragment {
                 exception.setVisibility(View.VISIBLE);
             }
         });
-        actionListener.setOnUpdateRawData(new ActionListener.OnUpdateRawData() {
+//        actionListener.setOnUpdateRawData(new ActionListener.OnUpdateRawData() {
+//            @Override
+//            public void OnUpdateRawDat(StatusBean statusBean, RawDataBean rawDataBean) {
+//                if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+//
+//                }
+//                else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
+//                    scrollView.setVisibility(View.GONE);
+//                    progressBar.setVisibility(View.GONE);
+//                    exception.setText(statusBean.getException());
+//                    exception.setVisibility(View.VISIBLE);
+//
+//                }
+//                else if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.NO_INTERNET)){
+//
+//                }
+//            }
+//        });
+        actionListener.setOnUpdateRawBean(new ActionListener.OnUpdateRawBean() {
             @Override
-            public void OnUpdateRawDat(StatusBean statusBean, RawDataBean rawDataBean) {
-                if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+            public void onUpdateRawBean(RawDataBean rawBean) {
 
-                }
-                else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
-                    scrollView.setVisibility(View.GONE);
+                if(rawBean.getHumidity()>0){
+                    exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
-                    exception.setText(statusBean.getException());
-                    exception.setVisibility(View.VISIBLE);
-
+                    sensorError.setVisibility(View.GONE);
+                    pieView.setValue(rawBean.getHumidity());
+                    lastTime.setText(SimpleDateProvider.getInstance()
+                            .format(new Date(rawBean.getTime()*1000)));
+                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
+                    seekBar.setProgress((int)sharedPreferences.getFloat("humidity",20));
+                    scrollView.setVisibility(View.VISIBLE);
                 }
-                else if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.NO_INTERNET)){
-
+                else{
+                    exception.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    pieView.setVisibility(View.GONE);
+                    sensorError.setText(getResources().getString(R.string.errorSensorMoisture));
+                    sensorError.setVisibility(View.VISIBLE);
+                    lastTime.setText(SimpleDateProvider.getInstance()
+                            .format(new Date(rawBean.getTime()*1000)));
+                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
+                    seekBar.setProgress((int)sharedPreferences.getFloat("humidity",20));
+                    scrollView.setVisibility(View.VISIBLE);
                 }
+
+
+
+            }
+        });
+        actionListener.setOnUpdateRawList(new ActionListener.OnUpdateRawList() {
+            @Override
+            public void onUpdateRawList(String rawListAsJsonString) {
+                lineChart.setRawList(getRawList(rawListAsJsonString));
+                if(lineChart.getRawList()!=null){
+                    lineChart.createLineChart(screen);
+                    lineChart.drawLineChart();
+                }
+                layoutContainLinChart.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -276,5 +339,10 @@ public class MoistureFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public List<RawDataBean> getRawList(String rawListAsJsonString){
+        JsonArray jsonArray = GsonProvider.getInstance().fromJson(rawListAsJsonString, JsonArray.class);
+        Type listType = new TypeToken<ArrayList<RawDataBean>>(){}.getType();
+        return GsonProvider.getInstance().fromJson(jsonArray, listType);
     }
 }

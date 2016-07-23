@@ -43,6 +43,7 @@ public class MagPieView {
         else {
             pieView.setmPercentage(0);
             pieView.setInnerText("0 %");
+
         }
     }
 
@@ -55,6 +56,11 @@ public class MagPieView {
         else {
             pieView.setmPercentage(0);
             pieView.setInnerText("0 %");
+        }
+    }
+    public void setVisibility(int visibility){
+        if(pieView != null){
+            pieView.setVisibility(visibility);
         }
     }
 }

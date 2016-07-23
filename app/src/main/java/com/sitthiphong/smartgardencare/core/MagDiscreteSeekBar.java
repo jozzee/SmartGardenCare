@@ -65,5 +65,8 @@ public class MagDiscreteSeekBar {
             }
         });
     }
+    public void setProgress(int progress){
+        seekBar.setProgress(progress);
+    }
 
 }

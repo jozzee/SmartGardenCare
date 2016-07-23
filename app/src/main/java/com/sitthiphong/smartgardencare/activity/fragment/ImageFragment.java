@@ -212,7 +212,7 @@ public class ImageFragment extends Fragment {
         actionListener.setOnException(new ActionListener.OnException() {
             @Override
             public void onException(String error) {
-                Log.e(TAG,"onException");
+                Log.e(TAG,"onException: "+error);
                 rootLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 exception.setText(error);
@@ -222,26 +222,21 @@ public class ImageFragment extends Fragment {
         actionListener.setOnUpdateImage(new ActionListener.OnUpdateImage() {
             @Override
             public void onUpdateImage(StatusBean statusBean, ImageBean imageBean) {
+                Log.i(TAG,"onUpdateImage");
                 if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
                     //ถ้าคอนเน็คเสร็จ เมื่อขออัพเดทไปแล้ว แต่มันยังเสือกไม่มี จะไปโหลดข้อมผผูลโดยใช้ Asynctask  พอได้ข้อมูล
                     // เมื่อได้ข้อม฿ลมา ก็จะนำข้อมูลไป update view และส่งข้อมูลไปเก็ยที่ mainactivity
                     progressBar.setVisibility(View.GONE);
                     exception.setVisibility(View.GONE);
-                    imageGarden.setImageBitmap(imageBean.getBitmap());
+                    Log.i(TAG,"exception GONE");
 
+
+                    imageGarden.setImageBitmap(imageBean.getBitmap());
                     dateTime.setText(SimpleDateProvider.getInstance()
                             .format(new Date(imageBean.getTimeStamp()*1000)));
                     rootLayout.setVisibility(View.VISIBLE);
-
-                }
-                else if (statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.ERROR)){
-                    rootLayout.setVisibility(View.GONE);
+                    exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
-                    exception.setText(statusBean.getException());
-                    exception.setVisibility(View.VISIBLE);
-
-                }
-                else if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.NO_INTERNET)){
 
                 }
             }

@@ -32,8 +32,8 @@ public class MagScreen {
 
         widthDp = ((double)widthPixels/(double)density);
         heightDp = ((double)heightPixels/(double)density);
-        Log.e(TAG,"widthDp: "+widthDp);
-        Log.e(TAG,"heightDp: "+heightDp);
+        //Log.e(TAG,"widthDp: "+widthDp);
+        //Log.e(TAG,"heightDp: "+heightDp);
 
         display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         screenOrientation = display.getRotation();

@@ -147,12 +147,7 @@ public class LogFragment extends Fragment {
 
     private void setActionListener(){
         Log.i(TAG, "setActionListener");
-        actionListener.setOnConnectedToNETPIE(new ActionListener.OnConnectedToNETPIE() {
-            @Override
-            public void onConnectedToNETPIE() {
 
-            }
-        });
         actionListener.setOnException(new ActionListener.OnException() {
             @Override
             public void onException(String error) {

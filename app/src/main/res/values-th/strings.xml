@@ -11,6 +11,9 @@
     <string name="cancel">ยกเลิก</string>
     <string name="choose">เลือก</string>
     <string name="fetching">กำลังโหลดข้อมูล</string>
+    <string name="errorSensorMoisture">เซ็นเซอร์วัดความชื้นในดินผิดพลาด!</string>
+    <string name="errorSensorDHT22">เซ็นเซอร์วัดอุณหภูมิผิดพลาด!</string>
+    <string name="errorSensorBH1750">ซ็นเซอร์วัดความเข้มแสงผิดพลาด!</string>
 
     <!--TAG-->
     <string name="imFragmentTag">ImageFragment</string>
@@ -121,7 +124,7 @@
     <string name="notSetupNETPIE">ไม่มีการตั้งค่า NETPIE</string>
     <string name="noInternet">ไม่มีการเชื่อมต่ออินเตอร์เน็ต</string>
     <string name="notConnectedNETPIE">ไม่สามารถเชื่อมต่อ NETPIE</string>
-
+    <string name="connectionLost">ไม่มีการเชื่อมต่อ</string>
     <string name="connectedNETPIE">เชื่อมต่อ NETPIE แล้ว</string>
 
     <!--notification-->

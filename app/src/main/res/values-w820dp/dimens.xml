@@ -36,6 +36,7 @@
 
     <!--image moisture -->
     <dimen name="size_pain_pie_chart">384dp</dimen>
+    <dimen name="margin_sensor_error">184dp</dimen>
 
     <dimen name="padding_title_moisture_last_update">32dp</dimen>
 

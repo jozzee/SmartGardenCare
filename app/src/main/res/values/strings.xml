@@ -10,6 +10,9 @@
     <string name="cancel">Cancel</string>
     <string name="choose">Choose</string>
     <string name="fetching">Fetching</string>
+    <string name="errorSensorMoisture">Moisture Sensor Error</string>
+    <string name="errorSensorDHT22">Temperature Sensor Error</string>
+    <string name="errorSensorBH1750">Light Sensor Error</string>
 
 
     <!--set up netpie -->
@@ -113,7 +116,7 @@
     <string name="notSetupNETPIE">Not setup NETPIE</string>
     <string name="noInternet">No Internet connection</string>
     <string name="notConnectedNETPIE">Can not connect to NETPIE</string>
-
+    <string name="connectionLost">Connection Lost</string>
     <string name="connectedNETPIE">Connected to NETPIE</string>
 
     <!--notification-->

@@ -23,7 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.sitthiphong.netpiegear.EventListener;
@@ -47,6 +49,10 @@ import com.sitthiphong.smartgardencare.core.NetPieRestApi;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private final int IS_CONNECT_NETPIE = 200;
@@ -58,14 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private RelativeLayout rootLayout;
-    private Toolbar toolbar;
     private BottomBar mBottomBar;
     private ActionListener actionListener = new ActionListener();
     private NetworkChangeListener networkChangeListener = new NetworkChangeListener();
-    private StatusBean statusBean = new StatusBean(WAIT,"");
-    private RawDataBean rawDataBean;
-    private ImageBean imageBean = new ImageBean();
-    private ProgressDialog progressDialog;
 
     private JsonObject objSetting;
 
@@ -87,7 +88,14 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment;
     private LogFragment logFragment;
     private android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
+
+
+    private StatusBean statusBean = new StatusBean(WAIT,"");
+    private RawDataBean rawDataBean;
+    private ImageBean imageBean = new ImageBean();
+    private ProgressDialog progressDialog;
     private String logListAsJsonString;
+    private String rawListAsJsonString;
 
 
 
@@ -125,6 +133,15 @@ public class MainActivity extends AppCompatActivity {
                         // if topic not math
                     }
                 }
+                else if(topic.equals("rawData")){
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
+                    rawDataBean = new RawDataBean(message);
+                    if(actionListener.onUpdateRawBean != null){
+                        Log.e(TAG,"update RawBean");
+                        actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
+                    }
+
+                }
             }
             else if(head.equals("connect")){
                 boolean status = bundle.getBoolean("status");
@@ -133,8 +150,26 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
                     notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
-                    if(actionListener.onConnectedToNETPIE != null){
-                        actionListener.onConnectedToNETPIE.onConnectedToNETPIE();
+                    if(mBottomBar != null){
+                        Log.e(TAG,"create BottomBar: position "+mBottomBar.getCurrentTabPosition());
+                        if(mBottomBar.getCurrentTabPosition() == 0){
+                            actionListener.onRequestUpdateImage.onRequestUpdateImage();
+                        }
+                        else if(mBottomBar.getCurrentTabPosition() == 1){
+                            actionListener.onRequestRawData.OnRequestRawData();
+                        }
+                        else if(mBottomBar.getCurrentTabPosition() == 2){
+                            actionListener.onRequestRawData.OnRequestRawData();
+                        }
+                        else if(mBottomBar.getCurrentTabPosition() == 3){
+                            actionListener.onRequestRawData.OnRequestRawData();
+                        }
+                        else if(mBottomBar.getCurrentTabPosition() == 4){
+                            actionListener.onRequestLog.onRequestLog();
+                        }
+                    }
+                    else{
+                        Log.e(TAG,"not create BottomBar");
                     }
                 }
                 else{
@@ -160,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        checkFirstOpenApp();
+
         setContentView(R.layout.activity_main);
 
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayoutMain);
@@ -169,9 +204,12 @@ public class MainActivity extends AppCompatActivity {
         setActionListener();
         setNetPieEventListener();
         setNetworkChangeListener();
-        connectNETPIE();
-        Log.e(TAG,"5555555555555555");
+        if(checkFirstOpenApp()){
 
+        }
+        else{
+            connectNETPIE();
+        }
         mBottomBar = BottomBar.attach(this,savedInstanceState);
 //        mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinatorLayout),
 //                findViewById(R.id.nestedScrollView), savedInstanceState);
@@ -360,10 +398,40 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        actionListener.setOnRequestRawData(new ActionListener.OnRequestRawData() {
+
+        actionListener.setOnRequestRawBean(new ActionListener.OnRequestRawBean() {
             @Override
-            public void OnRequestRawData() {
-                actionListener.onUpdateRawData.OnUpdateRawDat(statusBean,rawDataBean);
+            public void onRequestRawBean() {
+                if(statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+                    actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
+
+                }else if(statusBean.getStatus() == getResources().getInteger(R.integer.NO_INTERNET)){
+                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
+
+                }else if(statusBean.getStatus() == getResources().getInteger(R.integer.ERROR)){
+                    actionListener.onException.onException(statusBean.getException());
+                }
+            }
+        });
+        actionListener.setOnRequestRawList(new ActionListener.OnRequestRawList() {
+            @Override
+            public void onRequestRawList() {
+                if(statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+                    if(rawListAsJsonString != null){
+                        actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+                    }
+                    else{
+                        //load
+                        new SubscribeTask(getResources().getString(R.string.fetching))
+                                .execute(appID = sharedPreferences.getString("appID",""),
+                                        appKey = sharedPreferences.getString("appKey",""),
+                                        sharedPreferences.getString("appSecret",""),
+                                        "rawDataList");
+                    }
+                }
+                else{
+                    actionListener.onException.onException(statusBean.getException());
+                }
             }
         });
 
@@ -412,9 +480,9 @@ public class MainActivity extends AppCompatActivity {
                 topic = topic.substring(1);
                 topicList = topic.split("/");
                 topic = topicList[1];
-                Log.e(TAG,"NETPIE Event Listener: onMessage");
-                Log.e(TAG,"NETPIE Event Listener:    topic: "+topic);
-                Log.e(TAG,"NETPIE Event Listener:    message: "+message);
+//                Log.e(TAG,"NETPIE Event Listener: onMessage");
+//                Log.e(TAG,"NETPIE Event Listener:    topic: "+topic);
+//                Log.e(TAG,"NETPIE Event Listener:    message: "+message);
                 Message msg = handler.obtainMessage();
                 Bundle bundle = new Bundle();
                 bundle.putString("head", "subscribe");
@@ -601,7 +669,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
                     getResources().getString(R.string.noInternet));
-            actionListener.onNoInternet.onNoInternet();
+            actionListener.onNoInternet.onNoInternet(statusBean.getException());
             notificationSnackBar(getResources().getString(R.string.noInternet));
         }
     }
@@ -672,12 +740,13 @@ public class MainActivity extends AppCompatActivity {
                 microgear.subscribe("response");
                 microgear.subscribe("STSlat");
                 microgear.subscribe("hasPhoto");
-                microgear.subscribe("hasLog");
+                microgear.subscribe("hasLogList");
+                microgear.subscribe("hasRawList");
             }
             else{
                 statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
                                             getResources().getString(R.string.noInternet));
-                actionListener.onNoInternet.onNoInternet();
+                actionListener.onNoInternet.onNoInternet(statusBean.getException());
             }
         }
         else{
@@ -778,11 +847,25 @@ public class MainActivity extends AppCompatActivity {
                     imageBean = new ImageBean(bean.getPayload());
                     actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
                 }
+                if(bean.getTopic().equals("rawDataList")){
+                    rawListAsJsonString = bean.getPayload();
+                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
+                    actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+
+                }
             }
             else {
                 Log.e(TAG,"error: "+result);
-                statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),result);
-                actionListener.onException.onException(result);
+                if(result.equals("connectionLost")){
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
+                            getResources().getString(R.string.connectionLost));
+                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
+
+                }else {
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),result);
+                    actionListener.onException.onException(result);
+                }
+
             }
         }
     }

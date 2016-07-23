@@ -24,7 +24,7 @@
 
     <!--image fragment -->
     <dimen name="margin_layout_control_im_garden">64dp</dimen>
-
+    <dimen name="margin_sensor_error">152dp</dimen>
     <dimen name="padding_im_garden">32dp</dimen>
     <dimen name="padding_layout_control_im_garden">64dp</dimen>
     <dimen name="padding_layout_setting_im_garden">32dp</dimen>

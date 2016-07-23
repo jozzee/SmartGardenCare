@@ -4,6 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/tools">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sensorError"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_size"
+        android:layout_marginTop="@dimen/margin_sensor_error"
+        android:layout_marginBottom="@dimen/margin_sensor_error"
+        android:visibility="gone"
+        android:gravity="center"/>
     <az.plainpie.PieView
         android:id="@+id/pieView"
         android:layout_width="@dimen/size_pain_pie_chart"
@@ -13,7 +23,8 @@
         plainpie:percentage_size="@integer/percentage_size_moisture"
         plainpie:inner_text_visibility="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_top_pain_pie_chart"/>
+        android:layout_marginTop="@dimen/margin_top_pain_pie_chart"
+        android:layout_below="@id/sensorError"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,46 +166,53 @@
             app:dsb_progressColor="@color/blue"
             app:dsb_indicatorColor="@color/blue"/>
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#4D000000"
-        android:id="@+id/line4"
-        android:layout_below="@+id/layoutSeekBar"
-        android:layout_marginLeft="@dimen/margin_line"
-        android:layout_marginRight="@dimen/margin_line"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lineChart_title"
-        android:textSize="@dimen/text_size"
-        android:layout_below="@+id/line4"
-        android:text="@string/lineChart"
-        android:textColor="@color/textColorPrimary"
-        android:paddingLeft="@dimen/padding_left_details"
-        android:paddingRight="@dimen/padding_right_details"
-        android:layout_marginTop="@dimen/margin_top_details"
-        android:layout_marginBottom="@dimen/margin_bottom_details"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/more_raw_data"
-        android:text="@string/more"
-        android:textSize="@dimen/text_size"
-        android:layout_below="@+id/line4"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/padding_right_details"
-        android:layout_marginTop="@dimen/margin_top_details"
-        android:layout_marginBottom="@dimen/margin_bottom_details"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layoutContainLineChart"
-        android:layout_below="@+id/lineChart_title">
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
+        android:layout_height="match_parent"
+        android:id="@+id/layoutContainLinChart"
+        android:layout_below="@+id/layoutSeekBar">
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"/>
+            android:layout_height="1dp"
+            android:background="#4D000000"
+            android:id="@+id/line4"
+            android:layout_marginLeft="@dimen/margin_line"
+            android:layout_marginRight="@dimen/margin_line"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lineChart_title"
+            android:textSize="@dimen/text_size"
+            android:text="@string/lineChart"
+            android:textColor="@color/textColorPrimary"
+            android:paddingLeft="@dimen/padding_left_details"
+            android:paddingRight="@dimen/padding_right_details"
+            android:layout_marginTop="@dimen/margin_top_details"
+            android:layout_marginBottom="@dimen/margin_bottom_details"
+            android:layout_below="@+id/line4"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/more_raw_data"
+            android:text="@string/more"
+            android:textSize="@dimen/text_size"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/padding_right_details"
+            android:layout_marginTop="@dimen/margin_top_details"
+            android:layout_marginBottom="@dimen/margin_bottom_details"
+            android:layout_below="@+id/line4"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutContainLineChart"
+            android:layout_below="@+id/lineChart_title">
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
     </RelativeLayout>
+
 </RelativeLayout>

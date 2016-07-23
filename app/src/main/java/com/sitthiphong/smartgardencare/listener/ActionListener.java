@@ -5,6 +5,8 @@ import com.sitthiphong.smartgardencare.bean.ImageBean;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
 
+import java.util.List;
+
 /**
  * Created by Sitthiphong on 7/20/2016 AD.
  */
@@ -19,7 +21,10 @@ public class ActionListener {
     public static OnUpdateRawData onUpdateRawData = null;
     public static OnRequestLog onRequestLog = null;
     public static OnUpdateLog onUpdateLog = null;
-    public static OnConnectedToNETPIE onConnectedToNETPIE = null;
+    public static OnRequestRawBean onRequestRawBean = null;
+    public static OnRequestRawList onRequestRawList = null;
+    public static OnUpdateRawBean onUpdateRawBean = null;
+    public static OnUpdateRawList onUpdateRawList = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -43,7 +48,7 @@ public class ActionListener {
     }
 
     public interface OnNoInternet{
-        public void onNoInternet();
+        public void onNoInternet(String error);
     }
     public void setOnNoInternet(OnNoInternet listener){
         onNoInternet = listener;
@@ -86,13 +91,33 @@ public class ActionListener {
     public void setOnUpdateLog(OnUpdateLog listener){
         onUpdateLog = listener;
     }
+    public interface OnRequestRawBean{
+        public void onRequestRawBean();
+    }
+    public void setOnRequestRawBean(OnRequestRawBean listener){
+        onRequestRawBean = listener;
+    }
 
-    public interface OnConnectedToNETPIE{
-        public void onConnectedToNETPIE();
+    public interface OnRequestRawList{
+        public void onRequestRawList();
     }
-    public void setOnConnectedToNETPIE(OnConnectedToNETPIE listener){
-        onConnectedToNETPIE = listener;
+    public void setOnRequestRawList(OnRequestRawList listener){
+        onRequestRawList = listener;
     }
+    public interface OnUpdateRawBean{
+        public void onUpdateRawBean(RawDataBean rawBean);
+    }
+    public void setOnUpdateRawBean(OnUpdateRawBean listener){
+        onUpdateRawBean = listener;
+    }
+    public interface OnUpdateRawList{
+        public void onUpdateRawList(String rawListAsJsonString);
+    }
+    public void setOnUpdateRawList(OnUpdateRawList listener){
+        onUpdateRawList = listener;
+    }
+
+
 
 
 

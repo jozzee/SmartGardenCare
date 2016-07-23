@@ -53,6 +53,19 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         this.rawList = rawList;
     }
 
+    public void setVisibility(int visibility) {
+        if(visibility == View.GONE){
+            if(mChart != null){
+                mChart.setVisibility(View.GONE);
+            }
+        }
+        else if(visibility == View.VISIBLE){
+            if(mChart != null){
+                mChart.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     public void setRawList(List<RawDataBean> rawList) {
         this.rawList = rawList;
     }
@@ -62,6 +75,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
     }
 
     public void createLineChart(MagScreen magScreen){
+        Log.e("TAG","createLineChart");
         mChart =  (LineChart)view.findViewById(lineChartId);
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
                 magScreen.getWidthLineChart(),magScreen.getHeightLineChart());
