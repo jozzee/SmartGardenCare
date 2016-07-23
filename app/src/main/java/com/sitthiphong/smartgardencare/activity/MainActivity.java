@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String logListAsJsonString;
     private String rawListAsJsonString;
+    private int STSlat;
 
 
 
@@ -122,7 +123,69 @@ public class MainActivity extends AppCompatActivity {
                                 Log.e(TAG,"remove task");
                                 publishHandle.removeCallbacks(publistask);
                             }
-                            alertDialog("","");
+                            if(responseBean.getTopic().equals("settingDetails")){
+                                JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(),JsonObject.class);
+                                if(objDetails.get("FTRawData")!= null){
+                                    editor.putInt("ftPubRD",objDetails.get("FTRawData").getAsInt());
+                                }
+                                if(objDetails.get("FIRawData")!= null){
+                                    editor.putInt("ftIRD",objDetails.get("FIRawData").getAsInt());
+                                }
+                                if(objDetails.get("DOStorage")!= null){
+                                    editor.putInt("dayStore",objDetails.get("DOStorage").getAsInt());
+
+                                }
+                                if(objDetails.get("FTImage")!= null){
+                                    editor.putInt("ftPubIM",objDetails.get("FTImage").getAsInt());
+                                }
+                                editor.commit();
+
+//                                editor.putBoolean("first",false); //open first app
+//                                editor.putBoolean("autoWater",true);
+//                                editor.putFloat("moisture", (float) 20.00); //persen
+//                                editor.putBoolean("autoShower",true);
+//                                editor.putFloat("temp", (float) 40.00); //°C
+//                                editor.putBoolean("autoSlat",true);
+//                                editor.putFloat("light", (float) 5000.00);//Lux
+//                                editor.putInt("dayStore",7); //unit day
+//                                editor.putInt("ftPubRD",1); // unit minute
+//                                editor.putInt("ftPubIM",1); // unit hour
+//                                editor.putInt("ftIRD",1); // unit hour
+//                                editor.commit()
+                                alertDialog("Save Setting","Success");
+
+                            }
+                            else if(responseBean.getTopic().equals("settingStandard")){
+                                JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(),JsonObject.class);
+                                int value = object.get("value").getAsInt();
+                                boolean auto = object.get("auto").getAsBoolean();
+                                if(object.get("sensor")!= null){
+                                    String sensor = object.get("sensor").getAsString();
+                                    if(sensor.equals("SoilMoisture")){
+                                        editor.putFloat("moisture",(float)value);
+                                        if(actionListener.onSetVisibilitySeekBar!= null){
+                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
+                                        }
+
+
+                                    }
+                                    else if(sensor.equals("dht22")){
+                                        editor.putFloat("temp",(float)value);
+                                        if(actionListener.onSetVisibilitySeekBar!= null){
+                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
+                                        }
+                                    }
+                                    else if(sensor.equals("bh1750")){
+                                        editor.putFloat("light",(float)value);
+                                        if(actionListener.onSetVisibilitySeekBar!= null){
+                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
+                                        }
+                                    }
+                                    editor.commit();
+                                    alertDialog("Save Setting","Success");
+                                }
+                            }
+
                         }
                         else {
                             Log.e(TAG,responseBean.getMessage());
@@ -142,11 +205,37 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+                else if(topic.equals("STSlat")){
+                    STSlat = Integer.parseInt(message);
+                    if(actionListener.onUpdateSlatStatus != null){
+                        actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
+                    }
+                }
+                else if(topic.equals("hasPhoto")){
+                    new SubscribeTask(getResources().getString(R.string.fetching))
+                            .execute(appID = sharedPreferences.getString("appID",""),
+                                    appKey = sharedPreferences.getString("appKey",""),
+                                    sharedPreferences.getString("appSecret",""),
+                                    "photo");
+                }
+                else if(topic.equals("hasRawList")){
+                    new SubscribeTask(getResources().getString(R.string.fetching))
+                            .execute(appID = sharedPreferences.getString("appID",""),
+                                    appKey = sharedPreferences.getString("appKey",""),
+                                    sharedPreferences.getString("appSecret",""),
+                                    "rawDataList");
+                }
+                else if(topic.equals("hasLogList")){
+                    new SubscribeTask(getResources().getString(R.string.fetching))
+                            .execute(appID = sharedPreferences.getString("appID",""),
+                                    appKey = sharedPreferences.getString("appKey",""),
+                                    sharedPreferences.getString("appSecret",""),
+                                    "logDataList");
+                }
             }
             else if(head.equals("connect")){
                 boolean status = bundle.getBoolean("status");
                 if(status == true){
-
                     Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
                     notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
@@ -352,9 +441,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSaveSetting(boolean changeNETPIE, boolean changeDetails, JsonObject objNETPIE, JsonObject objDetails) {
                 if(changeNETPIE && changeDetails){
                     objDetails.addProperty("objNETPIE", GsonProvider.getInstance().toJson(objNETPIE));
-                    objSetting = new JsonObject();
-                    objSetting.addProperty("settingDetails",GsonProvider.getInstance().toJson(objDetails));
-                    publish("setting",GsonProvider.getInstance().toJson(objSetting));
+                    Log.e(TAG,"gson: "+GsonProvider.getInstance().toJson(objDetails));
+                    publish("settingDetails",GsonProvider.getInstance().toJson(objDetails));
                 }
                 else if(changeNETPIE){
                     if(objNETPIE.get("appID")!=null){
@@ -370,10 +458,15 @@ public class MainActivity extends AppCompatActivity {
                     reStartActivity();
                 }
                 else if(changeDetails){
-                    objSetting = new JsonObject();
-                    objSetting.addProperty("settingDetails",GsonProvider.getInstance().toJson(objDetails));
-                    publish("setting",GsonProvider.getInstance().toJson(objSetting));
+                    Log.e(TAG,"gson: "+GsonProvider.getInstance().toJson(objDetails));
+                    publish("settingDetails",GsonProvider.getInstance().toJson(objDetails));
                 }
+            }
+        });
+        actionListener.setOnSaveStandard(new ActionListener.OnSaveStandard() {
+            @Override
+            public void onSaveStandard(JsonObject obj) {
+                publish("settingStandard",GsonProvider.getInstance().toJson(obj));
             }
         });
         actionListener.setOnRequestUpdateImage(new ActionListener.OnRequestUpdateImage() {
@@ -455,6 +548,12 @@ public class MainActivity extends AppCompatActivity {
                    actionListener.onException.onException(statusBean.getException());
                }
 
+            }
+        });
+        actionListener.setOnRequestSlatStatus(new ActionListener.OnRequestSlatStatus() {
+            @Override
+            public void onRequestSlatStatus() {
+                actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
             }
         });
 
@@ -676,8 +775,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkFirstOpenApp(){Log.i(TAG,"checkFirstOpenApp");
         if(sharedPreferences.getBoolean("first",true)){
             editor.putBoolean("first",false); //open first app
-            editor.putBoolean("autoFaucet",true);
-            editor.putFloat("humidity", (float) 20.00); //persen
+            editor.putBoolean("autoWater",true);
+            editor.putFloat("moisture", (float) 20.00); //persen
             editor.putBoolean("autoShower",true);
             editor.putFloat("temp", (float) 40.00); //°C
             editor.putBoolean("autoSlat",true);
@@ -845,13 +944,16 @@ public class MainActivity extends AppCompatActivity {
                 if(bean.getTopic().equals("photo")){
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
                     imageBean = new ImageBean(bean.getPayload());
-                    actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
+                    if(actionListener.onUpdateImage != null){
+                        actionListener.onUpdateImage.onUpdateImage(statusBean,imageBean);
+                    }
                 }
                 if(bean.getTopic().equals("rawDataList")){
                     rawListAsJsonString = bean.getPayload();
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
-
+                    if(actionListener.onUpdateRawList != null ){
+                        actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+                    }
                 }
             }
             else {

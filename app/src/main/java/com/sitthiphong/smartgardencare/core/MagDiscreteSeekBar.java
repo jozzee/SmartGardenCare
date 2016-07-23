@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
+import com.sitthiphong.smartgardencare.listener.ActionListener;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -23,11 +25,14 @@ public class MagDiscreteSeekBar {
     private int maxValue;
     private int minValue;
     private int progress;
+    private int val;
+    private boolean onAuto;
+    private String sensor;
 
 
     public MagDiscreteSeekBar(View view, int seekBarId,
                               TextView tvValue, String unit, int colorId,
-                              int maxValue, int minValue, int progress){
+                              int maxValue, int minValue, int progress,boolean onAuto,String sensor){
         this.view = view;
         this.seekBarId = seekBarId;
         this.tvValue = tvValue;
@@ -36,6 +41,9 @@ public class MagDiscreteSeekBar {
         this.maxValue = maxValue;
         this.minValue = minValue;
         this.progress = progress;
+        this.onAuto = onAuto;
+        this.sensor = sensor;
+        val = progress;
 
         seekBar = (DiscreteSeekBar)view.findViewById(seekBarId);
 
@@ -50,7 +58,9 @@ public class MagDiscreteSeekBar {
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                val = value;
                 tvValue.setText(String.valueOf(value)+unit);
+
 
             }
 
@@ -62,11 +72,26 @@ public class MagDiscreteSeekBar {
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
                 Log.e("TAG","จบแล้ววววว");
+                JsonObject obj = new JsonObject();
+                obj.addProperty("sensor",sensor);
+                obj.addProperty("auto",onAuto);
+                obj.addProperty("value",getValue());
+                new ActionListener().onSaveStandard.onSaveStandard(obj);
             }
         });
     }
     public void setProgress(int progress){
         seekBar.setProgress(progress);
     }
+    public int getValue(){
+        return val;
+    }
 
+    public boolean isOnAuto() {
+        return onAuto;
+    }
+
+    public void setOnAuto(boolean onAuto) {
+        this.onAuto = onAuto;
+    }
 }

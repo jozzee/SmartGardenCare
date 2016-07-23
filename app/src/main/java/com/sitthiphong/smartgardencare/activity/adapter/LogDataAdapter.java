@@ -39,29 +39,29 @@ public class LogDataAdapter extends RecyclerView.Adapter{
         if(holder instanceof LogDataViewHolder){
             LogDataBean bean = logList.get(position);
 
-            if(bean.getAction().equals("faucet")){
+            if(bean.getAction().equals("Water")){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.water));
             }
-            else if(bean.getAction().equals("shower")){
+            else if(bean.getAction().equals("Shower")){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.shower));
             }
-            else if(bean.getAction().equals("open slat")){
+            else if(bean.getAction().equals("Open Slat")){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acOpenSlat));
             }
-            else if(bean.getAction().equals("close slat")){
+            else if(bean.getAction().equals("Close Slat")){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acCloseSlat));
             }
 
-            if(bean.getTypeAction().equals("Auto")){
+            if(bean.getActionType().equals("Auto")){
                 ((LogDataViewHolder)holder).typeAction.setText(context.getResources().getString(R.string.typeActionAuto));
             }
-            else if(bean.getTypeAction().equals("Manual")){
+            else if(bean.getActionType().equals("Manual")){
                 ((LogDataViewHolder)holder).typeAction.setText(context.getResources().getString(R.string.typeActionManual));
             }
 
 
             ((LogDataViewHolder)holder).dateTime.setText(SimpleDateProvider.getInstance()
-                                                            .format(new Date(bean.getTimeStamp()*1000)));
+                                                            .format(new Date(bean.getTime()*1000)));
 
 
             if(bean.getNote() != null){

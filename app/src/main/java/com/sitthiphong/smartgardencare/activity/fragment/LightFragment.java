@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
@@ -63,6 +65,7 @@ public class LightFragment extends Fragment {
     private TextView sensorError;
     private MagScreen screen;
     private RelativeLayout layoutContainLinChart;
+    private RelativeLayout layoutSeekBar;
 
     public LightFragment() {
         // Required empty public constructor
@@ -112,11 +115,10 @@ public class LightFragment extends Fragment {
                 ContextCompat.getColor(getActivity(),R.color.amber));
 
         slatStatus = (TextView)rootView.findViewById(R.id.slatStatus);
-        slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
         slatStatus.setVisibility(View.VISIBLE);
 
         btnCtrlSlat = (Button)rootView.findViewById(R.id.btnAction);
-        btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
+        //btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
 
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
@@ -130,6 +132,7 @@ public class LightFragment extends Fragment {
         autoSwitch.setChecked(sharedPreferences.getBoolean("autoSlat",true));
 
         lightValue = (TextView)rootView.findViewById(R.id.value_standard);
+        lightValue.setText(String.valueOf((int)sharedPreferences.getFloat("light",5000))+" Lux");
         seekBar = new MagDiscreteSeekBar(
                 rootView,
                 R.id.seekBarValue,
@@ -138,8 +141,22 @@ public class LightFragment extends Fragment {
                 ContextCompat.getColor(getActivity(),R.color.amber),//color
                 20000,//max
                 1000,//min
-                5000);//progress
+                5000,
+                autoSwitch.isChecked(),
+                "bh1750");//progress
         seekBar.createSeekBar();
+        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
+        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                seekBar.setOnAuto(b);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("sensor","bh1750");
+                obj.addProperty("auto",b);
+                obj.addProperty("value",seekBar.getValue());
+                actionListener.onSaveStandard.onSaveStandard(obj);
+            }
+        });
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
         more.setTextColor(ContextCompat.getColor(getActivity(),R.color.amber));
@@ -193,6 +210,7 @@ public class LightFragment extends Fragment {
         //actionListener.onRequestRawData.OnRequestRawData();
         actionListener.onRequestRawBean.onRequestRawBean();
         actionListener.onRequestRawList.onRequestRawList();
+        actionListener.onRequestSlatStatus.onRequestSlatStatus();
 
     }
     @Override
@@ -274,6 +292,7 @@ public class LightFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
                     pieView.setValue(rawBean.getLight());
+                    pieView.setVisibility(View.VISIBLE);
                 }
                 else{
                     exception.setVisibility(View.GONE);
@@ -302,6 +321,30 @@ public class LightFragment extends Fragment {
                     lineChart.drawLineChart();
                 }
                 layoutContainLinChart.setVisibility(View.VISIBLE);
+            }
+        });
+        actionListener.setOnUpdateSlatStatus(new ActionListener.OnUpdateSlatStatus() {
+            @Override
+            public void onUpdateSlatStatus(int stStatus) {
+                if(stStatus == 1){
+                    slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
+                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.close));
+                }
+                else {
+                    slatStatus.setText(getActivity().getResources().getString(R.string.slatClose));
+                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
+                }
+            }
+        });
+        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
+            @Override
+            public void onSetVisibilitySeekBar(boolean b) {
+                if(b){
+                    layoutSeekBar.setVisibility(View.VISIBLE);
+                }
+                else{
+                    layoutSeekBar.setVisibility(View.GONE);
+                }
             }
         });
     }

@@ -158,19 +158,33 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         // add data
         if(type == 1){
             Log.e(TAG,"1---");
-            setData(10, 100);
+            if(rawList.size()<10){
+                setData(rawList.size(), 100);
+            }else {
+                setData(10, 100);
+            }
             leftAxis.setAxisMaxValue(100f);
             leftAxis.setAxisMinValue(0f);
         }
         else if(type == 2){
             Log.e(TAG,"2---");
-            setData(10, 50);
+            if(rawList.size()<10){
+                setData(rawList.size(), 50);
+            }
+            else{
+                setData(10, 50);
+            }
             leftAxis.setAxisMaxValue(50f);
             leftAxis.setAxisMinValue(0f);
         }
         else if(type == 3){
             Log.e(TAG,"3---");
-            setData(10, 20000);
+            if(rawList.size()<10){
+                setData(rawList.size(), 20000);
+            }
+            else{
+                setData(10, 20000);
+            }
             leftAxis.setAxisMaxValue(20000f);
             leftAxis.setAxisMinValue(0f);
 
@@ -201,44 +215,55 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<Entry> yVals = new ArrayList<Entry>();
 
-        RawDataBean bean;
+        RawDataBean bean = null;
+
 
         int position = 0;
         int length = 0;
+        Log.e(TAG,"size rawList: "+rawList.size());
         while(length<10){
-            bean = rawList.get(position);
-            if(type == 1){
-                if(bean.getHumidity()>0){
-                    length++;
+            if(position<rawList.size()){
+                bean = rawList.get(position);
+                if(type == 1){
+                    if(bean.getMoisture()>0){
+                        length++;
+                    }
                 }
-            }
-            else if(type == 2){
-                if(bean.getTemp()>0){
-                    length++;
+                else if(type == 2){
+                    if(bean.getTemp()>0){
+                        length++;
+                    }
                 }
-            }
-            else if(type == 3){
-                if(bean.getLight()>0){
-                    length++;
+                else if(type == 3){
+                    if(bean.getLight()>0){
+                        length++;
+                    }
                 }
+
             }
+            Log.e(TAG,"position: "+position);
             position++;
+            if(position>rawList.size()){
+                length = 11;
+            }
         }
+        Log.e(TAG,"---------------------");
         Log.e(TAG,"position: "+position);
         Log.e(TAG,"length: "+length);
 
-        position--;
+        position-=2;
         int i =0;
         while (position>=0){
             Log.e(TAG,"position: "+position);
             bean = rawList.get(position);
             Log.e(TAG,"time: "+bean.getTime());
             if(type == 1){
-                if(bean.getHumidity()>0){
+                if(bean.getMoisture()>0){
                     xVals.add(new SimpleDateFormat("HH:mm",java.util.Locale.US)
                             .format(new Date(bean.getTime()*1000)));
-                    yVals.add(new Entry(bean.getHumidity(),i));
+                    yVals.add(new Entry(bean.getMoisture(),i));
                     i++;
+                    Log.e(TAG,"Time: "+bean.getTime());
                 }
             }
             else if(type == 2){
@@ -254,7 +279,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                     xVals.add(new SimpleDateFormat("HH:mm",java.util.Locale.US)
                             .format(new Date(bean.getTime()*1000)));
                     yVals.add(new Entry(bean.getLight(),i));
-                    i--;
+                    i++;
                 }
             }
             position--;

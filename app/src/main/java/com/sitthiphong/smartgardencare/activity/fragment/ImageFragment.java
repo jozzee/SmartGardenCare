@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.ImageBean;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
@@ -133,6 +134,13 @@ public class ImageFragment extends Fragment {
                                             ftPubIM = value;
                                             timeFrequencyValue.setText(text);
                                             Log.e(TAG,"publish data to net pie");
+                                            JsonObject object = new JsonObject();
+                                            object.addProperty("FTImage",ftPubIM);
+                                            actionListener.onSaveSetting.onSaveSetting(
+                                                    false,
+                                                    true,
+                                                    null,
+                                                    object);
                                         }
                                         else{
                                         }

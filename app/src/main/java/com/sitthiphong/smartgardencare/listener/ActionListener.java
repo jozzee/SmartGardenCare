@@ -25,6 +25,10 @@ public class ActionListener {
     public static OnRequestRawList onRequestRawList = null;
     public static OnUpdateRawBean onUpdateRawBean = null;
     public static OnUpdateRawList onUpdateRawList = null;
+    public static OnRequestSlatStatus onRequestSlatStatus = null;
+    public static OnUpdateSlatStatus onUpdateSlatStatus = null;
+    public static OnSaveStandard onSaveStandard = null;
+    public static OnSetVisibilitySeekBar onSetVisibilitySeekBar = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -115,6 +119,33 @@ public class ActionListener {
     }
     public void setOnUpdateRawList(OnUpdateRawList listener){
         onUpdateRawList = listener;
+    }
+
+    public interface OnRequestSlatStatus{
+        public void onRequestSlatStatus();
+    }
+    public void setOnRequestSlatStatus(OnRequestSlatStatus listener){
+        onRequestSlatStatus = listener;
+    }
+    public interface OnUpdateSlatStatus{
+        public void onUpdateSlatStatus(int slatStatus);
+    }
+    public void setOnUpdateSlatStatus(OnUpdateSlatStatus listener){
+        onUpdateSlatStatus = listener;
+    }
+
+    public interface OnSaveStandard{
+        public void onSaveStandard(JsonObject obj);
+    }
+    public void setOnSaveStandard(OnSaveStandard listener){
+        onSaveStandard = listener;
+    }
+
+    public interface OnSetVisibilitySeekBar{
+        public void onSetVisibilitySeekBar(boolean b);
+    }
+    public void setOnSetVisibilitySeekBar(OnSetVisibilitySeekBar listener){
+        onSetVisibilitySeekBar = listener;
     }
 
 

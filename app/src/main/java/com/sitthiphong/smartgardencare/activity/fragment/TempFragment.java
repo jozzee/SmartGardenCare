@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
@@ -65,6 +67,7 @@ public class TempFragment extends Fragment {
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
     private RelativeLayout layoutContainLinChart;
+    private RelativeLayout layoutSeekBar;
     private ProgressBar progressBar;
     private TextView exception;
     private TextView sensorError;
@@ -139,8 +142,22 @@ public class TempFragment extends Fragment {
                 ContextCompat.getColor(getActivity(),R.color.deepOrange),//color
                 50,//max
                 10,//min
-                40);//progress
+                40,
+                autoSwitch.isChecked(),
+                "dht22");//progress
         seekBar.createSeekBar();
+        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
+        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                seekBar.setOnAuto(b);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("sensor","dht22");
+                obj.addProperty("auto",b);
+                obj.addProperty("value",seekBar.getValue());
+                actionListener.onSaveStandard.onSaveStandard(obj);
+            }
+        });
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
         more.setTextColor(ContextCompat.getColor(getActivity(),R.color.deepOrange));
@@ -277,11 +294,8 @@ public class TempFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
                     pieView.setValue(rawBean.getTemp());
-                    lastTime.setText(SimpleDateProvider.getInstance()
-                            .format(new Date(rawBean.getTime()*1000)));
-                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
-                    seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
-                    scrollView.setVisibility(View.VISIBLE);
+                    pieView.setVisibility(View.VISIBLE);
+
                 }
                 else{
                     exception.setVisibility(View.GONE);
@@ -289,13 +303,14 @@ public class TempFragment extends Fragment {
                     pieView.setVisibility(View.GONE);
                     sensorError.setText(getResources().getString(R.string.errorSensorDHT22));//getResources().getString(R.string.errorSensorDHT22)
                     sensorError.setVisibility(View.VISIBLE);
-                    lastTime.setText(SimpleDateProvider.getInstance()
-                            .format(new Date(rawBean.getTime()*1000)));
-                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
-                    seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
-                    scrollView.setVisibility(View.VISIBLE);
+
 
                 }
+                lastTime.setText(SimpleDateProvider.getInstance()
+                        .format(new Date(rawBean.getTime()*1000)));
+                autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
+                seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
+                scrollView.setVisibility(View.VISIBLE);
 
 
             }
@@ -309,6 +324,17 @@ public class TempFragment extends Fragment {
                     lineChart.drawLineChart();
                 }
                 layoutContainLinChart.setVisibility(View.VISIBLE);
+            }
+        });
+        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
+            @Override
+            public void onSetVisibilitySeekBar(boolean b) {
+                if(b){
+                    layoutSeekBar.setVisibility(View.VISIBLE);
+                }
+                else{
+                    layoutSeekBar.setVisibility(View.GONE);
+                }
             }
         });
     }

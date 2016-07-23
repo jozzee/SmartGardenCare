@@ -423,15 +423,15 @@ public class SettingActivity extends AppCompatActivity {
             changeNETPIE = true;
         }
         if(ftPubRD != sharedPreferences.getInt("ftPubRD",1)){
-            objDetails.addProperty("ftPubRD",ftPubRD);
+            objDetails.addProperty("FTRawData",ftPubRD);
             changeDetails = true;
         }
         if(ftIRD != sharedPreferences.getInt("ftIRD",1)){
-            objDetails.addProperty("ftIRD",ftIRD);
+            objDetails.addProperty("FIRawData",ftIRD);
             changeDetails = true;
         }
         if(dayStore != sharedPreferences.getInt("dayStore",1)){
-            objDetails.addProperty("dayOfStorage",dayStore);
+            objDetails.addProperty("DOStorage",dayStore);
             changeDetails =true;
         }
         new ActionListener().onSaveSetting.onSaveSetting(

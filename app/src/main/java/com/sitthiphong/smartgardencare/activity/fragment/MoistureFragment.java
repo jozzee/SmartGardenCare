@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
@@ -65,6 +67,7 @@ public class MoistureFragment extends Fragment {
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
     private RelativeLayout layoutContainLinChart;
+    private RelativeLayout layoutSeekBar;
     private ProgressBar progressBar;
     private TextView exception;
     private TextView sensorError;
@@ -129,10 +132,10 @@ public class MoistureFragment extends Fragment {
         autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoWater));
 
         autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
+        autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
 
         moistureValue = (TextView)rootView.findViewById(R.id.value_standard);
-        moistureValue.setText(String.valueOf((int)sharedPreferences.getFloat("humidity",20))+" %");
+        moistureValue.setText(String.valueOf((int)sharedPreferences.getFloat("moisture",20))+" %");
         seekBar = new MagDiscreteSeekBar(
                 rootView,
                 R.id.seekBarValue,
@@ -141,8 +144,22 @@ public class MoistureFragment extends Fragment {
                 ContextCompat.getColor(getActivity(),R.color.blue),//color
                 80,//max
                 10,//min
-                20);//progress
+                20,
+                autoSwitch.isChecked(),
+                "SoilMoisture");//progress
         seekBar.createSeekBar();
+        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
+        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                seekBar.setOnAuto(b);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("sensor","SoilMoisture");
+                obj.addProperty("auto",b);
+                obj.addProperty("value",seekBar.getValue());
+                actionListener.onSaveStandard.onSaveStandard(obj);
+            }
+        });
 
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
@@ -180,6 +197,7 @@ public class MoistureFragment extends Fragment {
         }
         //lineChart.createLineChart(screen);
         //lineChart.setVisibility(View.GONE);
+
 
         scrollView = (NestedScrollView)rootView.findViewById(R.id.scrollViewMoisture);
         scrollView.setVisibility(View.GONE);
@@ -279,16 +297,12 @@ public class MoistureFragment extends Fragment {
             @Override
             public void onUpdateRawBean(RawDataBean rawBean) {
 
-                if(rawBean.getHumidity()>0){
+                if(rawBean.getMoisture()>0){
                     exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
-                    pieView.setValue(rawBean.getHumidity());
-                    lastTime.setText(SimpleDateProvider.getInstance()
-                            .format(new Date(rawBean.getTime()*1000)));
-                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
-                    seekBar.setProgress((int)sharedPreferences.getFloat("humidity",20));
-                    scrollView.setVisibility(View.VISIBLE);
+                    pieView.setValue(rawBean.getMoisture());
+                    pieView.setVisibility(View.VISIBLE);
                 }
                 else{
                     exception.setVisibility(View.GONE);
@@ -296,12 +310,13 @@ public class MoistureFragment extends Fragment {
                     pieView.setVisibility(View.GONE);
                     sensorError.setText(getResources().getString(R.string.errorSensorMoisture));
                     sensorError.setVisibility(View.VISIBLE);
-                    lastTime.setText(SimpleDateProvider.getInstance()
-                            .format(new Date(rawBean.getTime()*1000)));
-                    autoSwitch.setChecked(sharedPreferences.getBoolean("autoFaucet",true));
-                    seekBar.setProgress((int)sharedPreferences.getFloat("humidity",20));
-                    scrollView.setVisibility(View.VISIBLE);
                 }
+
+                lastTime.setText(SimpleDateProvider.getInstance()
+                        .format(new Date(rawBean.getTime()*1000)));
+                autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+                seekBar.setProgress((int)sharedPreferences.getFloat("moisture",20));
+                scrollView.setVisibility(View.VISIBLE);
 
 
 
@@ -316,6 +331,17 @@ public class MoistureFragment extends Fragment {
                     lineChart.drawLineChart();
                 }
                 layoutContainLinChart.setVisibility(View.VISIBLE);
+            }
+        });
+        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
+            @Override
+            public void onSetVisibilitySeekBar(boolean b) {
+                if(b){
+                    layoutSeekBar.setVisibility(View.VISIBLE);
+                }
+                else{
+                    layoutSeekBar.setVisibility(View.GONE);
+                }
             }
         });
     }
