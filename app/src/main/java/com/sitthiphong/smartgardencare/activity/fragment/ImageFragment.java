@@ -1,6 +1,7 @@
 package com.sitthiphong.smartgardencare.activity.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.ImageBean;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
@@ -42,6 +44,11 @@ public class ImageFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView exception;
     private TextView dateTime;
+    private TextView timeFrequencyValue;
+    private ImageView setTimeFrequency;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private int ftPubIM;
 
     private ActionListener actionListener = new ActionListener();
     private OnFragmentInteractionListener mListener;
@@ -71,6 +78,9 @@ public class ImageFragment extends Fragment {
         if (getArguments() != null) {
 
         }
+        sharedPreferences = getActivity().getSharedPreferences("Details", getActivity().MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        ftPubIM = sharedPreferences.getInt("ftPubIM",1);
     }
 
     @Override
@@ -92,6 +102,9 @@ public class ImageFragment extends Fragment {
         imageGarden.setLayoutParams(param);
 
         imageGarden.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.bg_garden_im));
+        setTimeFrequency = (ImageView)rootView.findViewById(R.id.btn_setting_send_im_garden);
+        timeFrequencyValue = (TextView)rootView.findViewById(R.id.setting_value_im_garden);
+
 
         dateTime = (TextView)rootView.findViewById(R.id.time_im_garden);
 
@@ -103,6 +116,35 @@ public class ImageFragment extends Fragment {
 
         progressBar = (ProgressBar)rootView.findViewById(R.id.progressBarImage);
         progressBar.setVisibility(View.VISIBLE);
+
+        setTimeFrequency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialDialog.Builder(getActivity())
+                        .title(getResources().getString(R.string.frequencySendImage))
+                        .items(R.array.ftPubIM_IRDArray)
+                        .itemsCallbackSingleChoice(getWhichFromValueSendImage(ftPubIM),
+                                new MaterialDialog.ListCallbackSingleChoice() {
+                                    @Override
+                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        int value = getValueSendImageFromWhich(which);
+
+                                        if(value != (sharedPreferences.getInt("ftPubIM",1))){
+                                            ftPubIM = value;
+                                            timeFrequencyValue.setText(text);
+                                            Log.e(TAG,"publish data to net pie");
+                                        }
+                                        else{
+                                        }
+                                        return true;
+                                    }
+                                })
+                        .positiveText(R.string.choose)
+                        .negativeText(R.string.cancel)
+                        .show();
+            }
+        });
+
 
         setActionListener();
 
@@ -220,4 +262,49 @@ public class ImageFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    public int getValueSendImageFromWhich(int which){
+        if(which == 0){
+            return 1;
+        }
+        else if(which == 1){
+            return 2;
+        }
+        else if(which == 2){
+            return 3;
+        }
+        else if(which == 3){
+            return 6;
+        }
+        else if(which == 4){
+            return 12;
+        }
+        else if(which == 5){
+            return 24;
+        }else {
+            return 1;
+        }
+    }
+    public int getWhichFromValueSendImage(int insertDataValue){
+        if(insertDataValue == 1){
+            return 0;
+        }
+        else if(insertDataValue == 2){
+            return 1;
+        }
+        else if(insertDataValue == 3){
+            return 2;
+        }
+        else if(insertDataValue == 6){
+            return 3;
+        }
+        else if(insertDataValue == 12){
+            return 4;
+        }
+        else if(insertDataValue == 24){
+            return 5;
+        }else {
+            return 0;
+        }
+    }
+
 }

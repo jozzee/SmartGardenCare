@@ -96,31 +96,56 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            String topic = bundle.getString("topic");
-            String message = bundle.getString("message");
-            if(topic.equals("response")){
-                ResponseBean responseBean = new ResponseBean(message);
-                if(progressDialog != null){
-                    progressDialog.dismiss();
-                }
-                if(publishBean.getTopic().equals(responseBean.getTopic())){
-                    if(responseBean.isSuccess()){
-                        if(publishHandle != null){
-                            Log.e(TAG,"remove task");
-                            publishHandle.removeCallbacks(publistask);
-                        }
-                        alertDialog("","");
+            String head = bundle.getString("head");
+            if(head.equals("subscribe")){
+                Log.i(TAG,"NETPIE Event Listener: onSubscribe");
+                String topic = bundle.getString("topic");
+                String message = bundle.getString("message");
+                Log.i(TAG,"NETPIE Event Listener:    topic: "+topic);
+
+                if(topic.equals("response")){
+                    ResponseBean responseBean = new ResponseBean(message);
+                    if(progressDialog != null){
+                        progressDialog.dismiss();
                     }
-                    else {
-                        Log.e(TAG,responseBean.getMessage());
-                        notificationSnackBar(responseBean.getMessage());
+                    if(publishBean.getTopic().equals(responseBean.getTopic())){
+                        if(responseBean.isSuccess()){
+                            if(publishHandle != null){
+                                Log.e(TAG,"remove task");
+                                publishHandle.removeCallbacks(publistask);
+                            }
+                            alertDialog("","");
+                        }
+                        else {
+                            Log.e(TAG,responseBean.getMessage());
+                            notificationSnackBar(responseBean.getMessage());
+                        }
+                    }
+                    else{
+                        // if topic not math
+                    }
+                }
+            }
+            else if(head.equals("connect")){
+                boolean status = bundle.getBoolean("status");
+                if(status == true){
+
+                    Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
+                    notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
+                    if(actionListener.onConnectedToNETPIE != null){
+                        actionListener.onConnectedToNETPIE.onConnectedToNETPIE();
                     }
                 }
                 else{
-                    // if topic not math
+                    Log.i(TAG,"NETPIE Event Listener: onConnectFalse: Can't connect to NETPIE!!");
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
+                            getApplicationContext().getString(R.string.notConnectedNETPIE));
+                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
+                            getResources().getString(R.string.notConnectedNETPIE));
+                    notificationSnackBar(statusBean.getException());
+                    actionListener.onException.onException(statusBean.getException());
                 }
-
-
             }
         }
     };
@@ -371,23 +396,12 @@ public class MainActivity extends AppCompatActivity {
         eventListener.setConnectEventListener(new EventListener.OnServiceConnect() {
             @Override
             public void onConnect(Boolean status) {
-                if(status == true){
-                    Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
-                    notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
-                    if(actionListener.onConnectedToNETPIE != null){
-                        actionListener.onConnectedToNETPIE.onConnectedToNETPIE();
-                    }
-                }
-                else{
-                    Log.i(TAG,"NETPIE Event Listener: onConnectFalse: Can't connect to NETPIE!!");
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                                                getApplicationContext().getString(R.string.notConnectedNETPIE));
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                            getResources().getString(R.string.notConnectedNETPIE));
-                    notificationSnackBar(statusBean.getException());
-                    actionListener.onException.onException(statusBean.getException());
-                }
+                Message msg = handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("head", "connect");
+                bundle.putBoolean("status",status);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
             }
 
         });
@@ -403,6 +417,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG,"NETPIE Event Listener:    message: "+message);
                 Message msg = handler.obtainMessage();
                 Bundle bundle = new Bundle();
+                bundle.putString("head", "subscribe");
                 bundle.putString("topic", topic);
                 bundle.putString("message",message);
                 msg.setData(bundle);

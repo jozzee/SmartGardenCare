@@ -56,6 +56,10 @@
 
     <!--log fragment -->
     <string name="log">Log</string>
+    <string name="acCloseSlat">Close Slat</string>
+    <string name="acOpenSlat">OpenSlat</string>
+    <string name="typeActionAuto">Auto</string>
+    <string name="typeActionManual">Manual</string>
 
     <!--setting activity-->
     <string name="transmissions">Transmissions</string>
@@ -74,6 +78,7 @@
     <string name="editAppSecret">Edit App Secret</string>
     <string name="textHintAppSecret">Enter you app secret</string>
     <string name="frequencySendData">Frequency of send data</string>
+    <string name="frequencySendImage">Frequency of send image</string>
     <string name="frequencyInsertData">Frequency of insert data</string>
     <string name="dayStorageData">Day storage data</string>
 
@@ -113,6 +118,8 @@
 
     <!--notification-->
     <string name="piNotResponse">Raspberry Pi Not Response</string>
+
+    
 
 
     <!-- TODO: Remove or change this placeholder text -->

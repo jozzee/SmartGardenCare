@@ -63,6 +63,10 @@
 
     <!--log fragment -->
     <string name="log">ประวัติการทำงาน</string>
+    <string name="acCloseSlat">ปิดไม้ระแนง</string>
+    <string name="acOpenSlat">เปิดไม้ระแนง</string>
+    <string name="typeActionAuto">อัตโนมัติ</string>
+    <string name="typeActionManual">โดยผู้ใช้งาน</string>
 
     <!--setting activity-->
     <string name="transmissions">การส่งข้อมูล</string>
@@ -82,6 +86,7 @@
     <string name="editAppSecret">แก้ไข App Secret</string>
     <string name="textHintAppSecret">กรอก App secret ของคุณ</string>
     <string name="frequencySendData">ความถี่ของการส่งข้อมูล</string>
+    <string name="frequencySendImage">ความถี่ในการส่งรูปภาพ</string>
     <string name="frequencyInsertData">ความถี่ของการเก็บข้อมูล</string>
     <string name="dayStorageData">ระยะเวลการเก็บข้อมูล</string>
 
