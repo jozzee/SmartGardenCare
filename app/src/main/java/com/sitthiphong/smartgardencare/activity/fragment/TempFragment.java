@@ -121,6 +121,12 @@ public class TempFragment extends Fragment {
 
         btnShower = (Button)rootView.findViewById(R.id.btnAction);
         btnShower.setText(getActivity().getResources().getString(R.string.shower));
+        btnShower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionListener.onControlDevice.onControlDevice(2,true);
+            }
+        });
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)

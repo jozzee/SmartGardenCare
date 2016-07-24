@@ -14,6 +14,18 @@
     <string name="errorSensorMoisture">เซ็นเซอร์วัดความชื้นในดินผิดพลาด!</string>
     <string name="errorSensorDHT22">เซ็นเซอร์วัดอุณหภูมิผิดพลาด!</string>
     <string name="errorSensorBH1750">ซ็นเซอร์วัดความเข้มแสงผิดพลาด!</string>
+    <string name="saveSetting">บันทึกการตั้งค่า</string>
+    <string name="success">สำเร็จ</string>
+    <string name="onSaveSetting">กำลังบันทึกค่า...</string>
+    <string name="water...">กำลังรดน้ำ...</string>
+    <string name="shower...">กำลังฉีดฝักบัว...</string>
+    <string name="openSlat...">กำลังเปิดไม้ระแนง...</string>
+    <string name="closeSlat">กำลังปิดไม้ระแนง...</string>
+    <string name="notLoadIm">ไม่สามารถดาวน์โหลดรูปภาพได้</string>
+    <string name="PermissionWRITE_EXTERNALDenied">เนื่องจากไม่สามารถเข้าถึงรูปภาพ</string>
+    <string name="loadIMSuccess">โหลดรูปภาพเสร็จแล้ว</string>
+    <string name="waterFalse">น้ำไม่ไหล!</string>
+    <string name="refreshIM">โหลดรูปภาพ...</string>
 
     <!--TAG-->
     <string name="imFragmentTag">ImageFragment</string>
@@ -63,6 +75,7 @@
     <string name="open">เปิด</string>
     <string name="close">ปิด</string>
     <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
+
 
     <!--log fragment -->
     <string name="log">ประวัติการทำงาน</string>

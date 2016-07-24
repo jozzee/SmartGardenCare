@@ -94,7 +94,13 @@ public class Microgear extends Activity {
                     eventListener.mError.onException("App id,Key or Secret Invalid");
                     eventListener.mConnect.onConnect(false);
                     disconnect();
-                } else {
+                } else if(a.equals("null")){
+
+                    eventListener.mError.onException("Exception No Internet");
+                    eventListener.mConnect.onConnect(false);
+                    disconnect();
+                }
+                else {
                     Log.e("Micorgear","Not math other function");
                     brokerconnect(appid, key, secret);
                     context.bindService(new Intent(context, MicrogearService.class), serviceConnection, 0);

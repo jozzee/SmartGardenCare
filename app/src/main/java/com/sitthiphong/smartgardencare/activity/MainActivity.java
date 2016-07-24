@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     private String logListAsJsonString;
     private String rawListAsJsonString;
     private int STSlat;
+    private String methodUsePermission;
+
 
 
 
@@ -152,7 +155,8 @@ public class MainActivity extends AppCompatActivity {
 //                                editor.putInt("ftPubIM",1); // unit hour
 //                                editor.putInt("ftIRD",1); // unit hour
 //                                editor.commit()
-                                alertDialog("Save Setting","Success");
+                                alertDialog(getResources().getString(R.string.saveSetting),
+                                        getResources().getString(R.string.success));
 
                             }
                             else if(responseBean.getTopic().equals("settingStandard")){
@@ -163,31 +167,72 @@ public class MainActivity extends AppCompatActivity {
                                     String sensor = object.get("sensor").getAsString();
                                     if(sensor.equals("SoilMoisture")){
                                         editor.putFloat("moisture",(float)value);
+                                        editor.putBoolean("autoWater",auto);
                                         if(actionListener.onSetVisibilitySeekBar!= null){
                                             actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
                                         }
 
-
                                     }
                                     else if(sensor.equals("dht22")){
                                         editor.putFloat("temp",(float)value);
+                                        editor.putBoolean("autoShower",auto);
                                         if(actionListener.onSetVisibilitySeekBar!= null){
                                             actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
                                         }
                                     }
                                     else if(sensor.equals("bh1750")){
                                         editor.putFloat("light",(float)value);
+                                        editor.putBoolean("autoSlat",auto);
                                         if(actionListener.onSetVisibilitySeekBar!= null){
                                             actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
                                         }
                                     }
                                     editor.commit();
-                                    alertDialog("Save Setting","Success");
+                                    alertDialog(getResources().getString(R.string.saveSetting),
+                                            getResources().getString(R.string.success));
                                 }
                             }
+                            else if(responseBean.getTopic().equals("controlDevice")){
+                                JsonObject object = new JsonObject();
+                                object = GsonProvider.getInstance().fromJson(publishBean.getPayload(),JsonObject.class);
+                                if(object.get("1")!=null){
+                                    alertDialog(getResources().getString(R.string.water),
+                                            getResources().getString(R.string.success));
+                                }
+                                else if(object.get("2")!=null){
+                                    alertDialog(getResources().getString(R.string.shower),
+                                            getResources().getString(R.string.success));
+                                }
+                                else if(object.get("3")!=null){
+                                    alertDialog(getResources().getString(R.string.acOpenSlat),
+                                            getResources().getString(R.string.success));
+                                }
+                                else if(object.get("4")!=null){
+                                    alertDialog(getResources().getString(R.string.acCloseSlat),
+                                            getResources().getString(R.string.success));
+                                }
 
+                            }
+                            else if(responseBean.getTopic().equals("refreshIM")){
+
+                            }
                         }
                         else {
+                            //for error control device
+                            if(publishHandle != null){
+                                Log.e(TAG,"remove task");
+                                publishHandle.removeCallbacks(publistask);
+                            }
+                            if(responseBean.getTopic().equals("controlDevice")){
+                                if(responseBean.getMessage().equals("water falsed!")){
+                                    alertDialog(getResources().getString(R.string.exception),
+                                            getResources().getString(R.string.waterFalse));
+                                }
+                                else {
+                                    alertDialog(getResources().getString(R.string.warning),responseBean.getMessage());
+                                }
+
+                            }
                             Log.e(TAG,responseBean.getMessage());
                             notificationSnackBar(responseBean.getMessage());
                         }
@@ -442,7 +487,9 @@ public class MainActivity extends AppCompatActivity {
                 if(changeNETPIE && changeDetails){
                     objDetails.addProperty("objNETPIE", GsonProvider.getInstance().toJson(objNETPIE));
                     Log.e(TAG,"gson: "+GsonProvider.getInstance().toJson(objDetails));
-                    publish("settingDetails",GsonProvider.getInstance().toJson(objDetails));
+                    publish("settingDetails",
+                            GsonProvider.getInstance().toJson(objDetails),
+                            getResources().getString(R.string.onSaveSetting));
                 }
                 else if(changeNETPIE){
                     if(objNETPIE.get("appID")!=null){
@@ -459,14 +506,44 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(changeDetails){
                     Log.e(TAG,"gson: "+GsonProvider.getInstance().toJson(objDetails));
-                    publish("settingDetails",GsonProvider.getInstance().toJson(objDetails));
+                    publish("settingDetails",
+                            GsonProvider.getInstance().toJson(objDetails),
+                            getResources().getString(R.string.onSaveSetting));
                 }
             }
         });
         actionListener.setOnSaveStandard(new ActionListener.OnSaveStandard() {
             @Override
             public void onSaveStandard(JsonObject obj) {
-                publish("settingStandard",GsonProvider.getInstance().toJson(obj));
+                publish("settingStandard",
+                        GsonProvider.getInstance().toJson(obj),
+                        getResources().getString(R.string.onSaveSetting));
+            }
+        });
+        actionListener.setOnControlDevice(new ActionListener.OnControlDevice() {
+
+            @Override
+            public void onControlDevice(int device, boolean isOpen) {
+                JsonObject object = new JsonObject();
+                object.addProperty(String.valueOf(device),isOpen);
+                String message = "";
+                if(device == 1){
+                    message = getResources().getString(R.string.water___);
+                }
+                else if(device == 2){
+                    message = getResources().getString(R.string.shower___);
+                }
+                else if(device == 3){
+                    message = getResources().getString(R.string.openSlat___);
+                }
+                else if(device == 4){
+                    message = getResources().getString(R.string.closeSlat____);
+                }
+                publish("controlDevice",
+                        GsonProvider.getInstance().toJson(object),
+                        message);
+
+
             }
         });
         actionListener.setOnRequestUpdateImage(new ActionListener.OnRequestUpdateImage() {
@@ -556,6 +633,19 @@ public class MainActivity extends AppCompatActivity {
                 actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
             }
         });
+        actionListener.setOnCheckPermission(new ActionListener.OnCheckPermission() {
+            @Override
+            public void onCheckPermission(String method, String permission) {
+                methodUsePermission = method;
+            }
+        });
+        actionListener.setOnRefreshImage(new ActionListener.OnRefreshImage() {
+            @Override
+            public void onRefreshImage() {
+                publish("refreshIM","1",getResources().getString(R.string.refreshIM));
+            }
+        });
+
 
     }
     public void setNetPieEventListener(){
@@ -722,7 +812,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void publish(String topic,String payload){
+    public void publish(String topic,String payload,String messageDialog){
         Log.e(TAG,"publish");
         Log.e(TAG,"  topic: "+topic);
         Log.e(TAG,"  payload: "+payload);
@@ -743,7 +833,7 @@ public class MainActivity extends AppCompatActivity {
         //------------------------------------
         if(isConnectingToInternet(getContextManual())){
             progressDialog = new ProgressDialog(getContextManual());
-            progressDialog.setMessage("Publish "+topic +" topic...");
+            progressDialog.setMessage(messageDialog);
             progressDialog.setIndeterminate(false);
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -845,13 +935,18 @@ public class MainActivity extends AppCompatActivity {
             else{
                 statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
                                             getResources().getString(R.string.noInternet));
-                actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                if(actionListener.onNoInternet != null){
+                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                }
+
             }
         }
         else{
             statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
                                         getResources().getString(R.string.notSetupNETPIE));
-            actionListener.onException.onException(statusBean.getException());
+            if(actionListener.onException != null){
+                actionListener.onException.onException(statusBean.getException());
+            }
         }
 
 
@@ -939,7 +1034,10 @@ public class MainActivity extends AppCompatActivity {
                 if(bean.getTopic().equals("logDataList")){
                     logListAsJsonString = bean.getPayload();
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    actionListener.onUpdateLog.onUpdateLog(statusBean,logListAsJsonString);
+                    if(actionListener.onUpdateLog != null){
+                        actionListener.onUpdateLog.onUpdateLog(statusBean,logListAsJsonString);
+                    }
+
                 }
                 if(bean.getTopic().equals("photo")){
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
@@ -961,14 +1059,46 @@ public class MainActivity extends AppCompatActivity {
                 if(result.equals("connectionLost")){
                     statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
                             getResources().getString(R.string.connectionLost));
-                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                    if(actionListener.onNoInternet != null){
+                        actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                    }
+
 
                 }else {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),result);
-                    actionListener.onException.onException(result);
+                    if(actionListener.onException != null){
+                        actionListener.onException.onException(result);
+                    }
                 }
 
             }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Log.e(TAG,"onRequestPermissionsResult");
+        Log.e(TAG,"requestCode: "+requestCode);
+        Log.e(TAG,"permissions: "+permissions);
+        switch (requestCode) {
+            case 123:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e(TAG,"Permission Granted");
+
+                    if(actionListener.onPermissionResult != null){
+                        actionListener.onPermissionResult.onPermissionResult(methodUsePermission,true);
+                    }
+                } else {
+                    Log.e(TAG,"Permission Denied");
+                    if(actionListener.onPermissionResult != null){
+                        actionListener.onPermissionResult.onPermissionResult(methodUsePermission,false);
+                        alertDialog(getResources().getString(R.string.notLoadIm),
+                                getResources().getString(R.string.PermissionWRITE_EXTERNALDenied));
+                    }
+
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
     public void alertDialog(String title,String message){

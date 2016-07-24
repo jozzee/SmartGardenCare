@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -66,6 +67,7 @@ public class LightFragment extends Fragment {
     private MagScreen screen;
     private RelativeLayout layoutContainLinChart;
     private RelativeLayout layoutSeekBar;
+    private boolean STSlat;
 
     public LightFragment() {
         // Required empty public constructor
@@ -119,6 +121,32 @@ public class LightFragment extends Fragment {
 
         btnCtrlSlat = (Button)rootView.findViewById(R.id.btnAction);
         //btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
+
+        btnCtrlSlat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.open))){
+                    if(STSlat){
+                        notificationSnackBar("Slat is Opened");
+                    }
+                    else{
+
+                        actionListener.onControlDevice.onControlDevice(3,true);
+                    }
+
+
+                }
+                else if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.close))){
+                    if(STSlat){
+                        actionListener.onControlDevice.onControlDevice(4,false);
+                    }
+                    else {
+                        notificationSnackBar("Slat is Closed");
+                    }
+
+                }
+            }
+        });
 
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
@@ -327,10 +355,12 @@ public class LightFragment extends Fragment {
             @Override
             public void onUpdateSlatStatus(int stStatus) {
                 if(stStatus == 1){
+                    STSlat = true;
                     slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
                     btnCtrlSlat.setText(getActivity().getResources().getString(R.string.close));
                 }
                 else {
+                    STSlat = false;
                     slatStatus.setText(getActivity().getResources().getString(R.string.slatClose));
                     btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
                 }
@@ -375,5 +405,8 @@ public class LightFragment extends Fragment {
         JsonArray jsonArray = GsonProvider.getInstance().fromJson(rawListAsJsonString, JsonArray.class);
         Type listType = new TypeToken<ArrayList<RawDataBean>>(){}.getType();
         return GsonProvider.getInstance().fromJson(jsonArray, listType);
+    }
+    public void notificationSnackBar(String message){
+        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
 }

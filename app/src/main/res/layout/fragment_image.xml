@@ -50,18 +50,6 @@
                         android:background="@drawable/selector_load_button"/>
 
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-                    <Button
-                        android:layout_width="@dimen/btn_im_garden_size"
-                        android:layout_height="@dimen/btn_im_garden_size"
-                        android:id="@+id/btShareImageGarden"
-                        android:background="@drawable/selector_share_button"/>
-
-                </LinearLayout>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

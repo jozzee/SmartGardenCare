@@ -29,6 +29,10 @@ public class ActionListener {
     public static OnUpdateSlatStatus onUpdateSlatStatus = null;
     public static OnSaveStandard onSaveStandard = null;
     public static OnSetVisibilitySeekBar onSetVisibilitySeekBar = null;
+    public static OnControlDevice onControlDevice = null;
+    public static OnCheckPermission onCheckPermission = null;
+    public static OnPermissionResult onPermissionResult = null;
+    public static OnRefreshImage onRefreshImage = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -146,6 +150,31 @@ public class ActionListener {
     }
     public void setOnSetVisibilitySeekBar(OnSetVisibilitySeekBar listener){
         onSetVisibilitySeekBar = listener;
+    }
+    public interface OnControlDevice{
+        public void onControlDevice(int device,boolean isOpen);
+    }
+    public void setOnControlDevice(OnControlDevice listener){
+        onControlDevice = listener;
+    }
+
+    public interface OnCheckPermission{
+        public void onCheckPermission(String method,String permission);
+    }
+    public void setOnCheckPermission(OnCheckPermission listener){
+        onCheckPermission = listener;
+    }
+    public interface OnPermissionResult{
+        public void onPermissionResult(String method,boolean b);
+    }
+    public void setOnPermissionResult(OnPermissionResult listener){
+        onPermissionResult = listener;
+    }
+    public interface OnRefreshImage{
+        public void onRefreshImage();
+    }
+    public void setOnRefreshImage(OnRefreshImage listener){
+        onRefreshImage = listener;
     }
 
 

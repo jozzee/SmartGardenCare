@@ -1,11 +1,17 @@
 package com.sitthiphong.smartgardencare.activity.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -13,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -23,10 +30,16 @@ import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.bean.ImageBean;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
+import com.sitthiphong.smartgardencare.core.CheckPermission;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
 import com.sitthiphong.smartgardencare.provider.SimpleDateProvider;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
 /**
@@ -50,6 +63,8 @@ public class ImageFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private int ftPubIM;
+    private Button refresh,load;
+    private ImageBean imBean;
 
     private ActionListener actionListener = new ActionListener();
     private OnFragmentInteractionListener mListener;
@@ -106,8 +121,11 @@ public class ImageFragment extends Fragment {
         setTimeFrequency = (ImageView)rootView.findViewById(R.id.btn_setting_send_im_garden);
         timeFrequencyValue = (TextView)rootView.findViewById(R.id.setting_value_im_garden);
 
-
         dateTime = (TextView)rootView.findViewById(R.id.time_im_garden);
+
+        refresh = (Button)rootView.findViewById(R.id.btRefreshImageGarden);
+        load = (Button)rootView.findViewById(R.id.btLoadImageGarden);
+
 
         rootLayout = (CoordinatorLayout) rootView.findViewById(R.id.containImage);
         rootLayout.setVisibility(View.GONE);
@@ -150,6 +168,27 @@ public class ImageFragment extends Fragment {
                         .positiveText(R.string.choose)
                         .negativeText(R.string.cancel)
                         .show();
+            }
+        });
+
+        load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(new CheckPermission(getActivity()).checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                    new SaveIMTask().execute(imBean.getBitmap());
+                }
+                else{
+                    new CheckPermission(getActivity()).requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    actionListener.onCheckPermission.onCheckPermission("saveImage",android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+
+            }
+        });
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionListener.onRefreshImage.onRefreshImage();
             }
         });
 
@@ -246,7 +285,18 @@ public class ImageFragment extends Fragment {
                     exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
 
+                    imBean = imageBean;
+
                 }
+            }
+        });
+        actionListener.setOnPermissionResult(new ActionListener.OnPermissionResult() {
+            @Override
+            public void onPermissionResult(String method, boolean b) {
+                if(method.equals("saveImage") && b){
+                     new SaveIMTask().execute(imBean.getBitmap());
+                }
+
             }
         });
     }
@@ -308,6 +358,51 @@ public class ImageFragment extends Fragment {
         }else {
             return 0;
         }
+    }
+    public void saveBitmapTpFile(Bitmap bitmap, Context context){Log.i(TAG, "saveBitmapTpFile");
+        String imageName = "ECPSmartGardenIMG" +String.valueOf(SimpleDateProvider.getInstance()
+                .format(new Date(imBean.getTimeStamp()*1000))) +".jpg";
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imageName);
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+        Uri contentUri = Uri.fromFile(file);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
+        file = null;
+    }
+    public class SaveIMTask extends AsyncTask<Bitmap,Void,String> {
+
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute");
+            //super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            saveBitmapTpFile(params[0],getActivity());
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute");
+            notificationSnackBar(getActivity().getResources().getString(R.string.loadIMSuccess));
+
+        }
+    }
+    public void notificationSnackBar(String message){
+        Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
 }

@@ -123,6 +123,12 @@ public class MoistureFragment extends Fragment {
 
         btnWater = (Button)rootView.findViewById(R.id.btnAction);
         btnWater.setText(getActivity().getResources().getString(R.string.water));
+        btnWater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionListener.onControlDevice.onControlDevice(1,true);
+            }
+        });
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)

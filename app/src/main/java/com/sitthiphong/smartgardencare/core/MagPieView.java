@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.sitthiphong.smartgardencare.R;
 
+import java.math.BigDecimal;
+
 import az.plainpie.PieView;
 
 /**
@@ -50,8 +52,22 @@ public class MagPieView {
     public void setValue(float value) {
         this.value = value;
         if(value>0){
-            pieView.setmPercentage(value);
-            pieView.setInnerText(String.valueOf(value)+unit);
+            if(colorId == ContextCompat.getColor(context,R.color.blue)){
+                //BigDecimal v = new BigDecimal(value).setScale(2,BigDecimal.ROUND_HALF_UP);
+
+                pieView.setmPercentage(value);
+                pieView.setInnerText(String.valueOf(value)+unit);
+            }
+            else if(colorId == ContextCompat.getColor(context,R.color.deepOrange)){
+                pieView.setmPercentage((value*2));
+                pieView.setInnerText(String.valueOf(value)+unit);
+
+            }
+            else if(colorId == ContextCompat.getColor(context,R.color.amber)){
+                pieView.setmPercentage((value/200));
+                pieView.setInnerText(String.valueOf(value)+unit);
+            }
+
         }
         else {
             pieView.setmPercentage(0);

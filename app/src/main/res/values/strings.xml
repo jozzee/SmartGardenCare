@@ -13,6 +13,18 @@
     <string name="errorSensorMoisture">Moisture Sensor Error</string>
     <string name="errorSensorDHT22">Temperature Sensor Error</string>
     <string name="errorSensorBH1750">Light Sensor Error</string>
+    <string name="saveSetting">Save Setting</string>
+    <string name="success">Success</string>
+    <string name="onSaveSetting">Save Setting...</string>
+    <string name="water...">Water...</string>
+    <string name="shower...">Shower...</string>
+    <string name="openSlat...">Open Slat...</string>
+    <string name="closeSlat....">Close Slat...</string>
+    <string name="notLoadIm">Can not Download Image</string>
+    <string name="PermissionWRITE_EXTERNALDenied">because Permission Denied</string>
+    <string name="loadIMSuccess">Load Image Success</string>
+    <string name="waterFalse">Water False!</string>
+    <string name="refreshIM">Refresh Image...</string>
 
 
     <!--set up netpie -->
