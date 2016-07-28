@@ -20,19 +20,13 @@
     <string name="water...">กำลังรดน้ำ...</string>
     <string name="shower...">กำลังฉีดฝักบัว...</string>
     <string name="openSlat...">กำลังเปิดไม้ระแนง...</string>
-    <string name="closeSlat">กำลังปิดไม้ระแนง...</string>
+    <string name="closeSlat...">กำลังปิดไม้ระแนง...</string>
     <string name="notLoadIm">ไม่สามารถดาวน์โหลดรูปภาพได้</string>
     <string name="PermissionWRITE_EXTERNALDenied">เนื่องจากไม่สามารถเข้าถึงรูปภาพ</string>
     <string name="loadIMSuccess">โหลดรูปภาพเสร็จแล้ว</string>
     <string name="waterFalse">น้ำไม่ไหล!</string>
     <string name="refreshIM">โหลดรูปภาพ...</string>
 
-    <!--TAG-->
-    <string name="imFragmentTag">ImageFragment</string>
-    <string name="moistureFragmentTag">MoistureFragment</string>
-    <string name="tempFragmentTag">TempFragment</string>
-    <string name="lightFragmentTag">LightFragment</string>
-    <string name="logFragmentTag">LogFragment</string>
 
     <!--set up netpie -->
     <string name="appId">แอป ไอดี</string>
@@ -142,6 +136,11 @@
 
     <!--notification-->
     <string name="piNotResponse">Raspberry Pi ไม่ตอบสนอง</string>
+
+    <!--setting activity-->
+    <string name="logMoisture">ประวัติค่าความชื้นในดิน</string>
+    <string name="logTemp">ประวัติค่าอุณหภูมิ</string>
+    <string name="logLight">ประวัติค่าความเข้มแสง</string>
 
 
 </resources>

@@ -332,6 +332,8 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         }
     }
 
+
+
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
         Log.i("Gesture", "START, x: " + me.getX() + ", y: " + me.getY());

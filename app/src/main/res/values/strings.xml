@@ -19,7 +19,7 @@
     <string name="water...">Water...</string>
     <string name="shower...">Shower...</string>
     <string name="openSlat...">Open Slat...</string>
-    <string name="closeSlat....">Close Slat...</string>
+    <string name="closeSlat...">Close Slat...</string>
     <string name="notLoadIm">Can not Download Image</string>
     <string name="PermissionWRITE_EXTERNALDenied">because Permission Denied</string>
     <string name="loadIMSuccess">Load Image Success</string>
@@ -134,11 +134,15 @@
     <!--notification-->
     <string name="piNotResponse">Raspberry Pi Not Response</string>
 
+    <!--setting activity-->
+    <string name="logMoisture">Moisture History</string>
+    <string name="logTemp">Temp History</string>
+    <string name="logLight">Light Intensity History</string>
+
     
 
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
 

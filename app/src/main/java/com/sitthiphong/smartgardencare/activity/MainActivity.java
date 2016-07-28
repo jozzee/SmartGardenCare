@@ -204,11 +204,11 @@ public class MainActivity extends AppCompatActivity {
                                             getResources().getString(R.string.success));
                                 }
                                 else if(object.get("3")!=null){
-                                    alertDialog(getResources().getString(R.string.acOpenSlat),
+                                    alertDialog(getResources().getString(R.string.acCloseSlat),//acOpenSlat
                                             getResources().getString(R.string.success));
                                 }
                                 else if(object.get("4")!=null){
-                                    alertDialog(getResources().getString(R.string.acCloseSlat),
+                                    alertDialog(getResources().getString(R.string.acOpenSlat),//acCloseSlat
                                             getResources().getString(R.string.success));
                                 }
 
@@ -287,19 +287,29 @@ public class MainActivity extends AppCompatActivity {
                     if(mBottomBar != null){
                         Log.e(TAG,"create BottomBar: position "+mBottomBar.getCurrentTabPosition());
                         if(mBottomBar.getCurrentTabPosition() == 0){
-                            actionListener.onRequestUpdateImage.onRequestUpdateImage();
+                            if(actionListener.onRequestUpdateImage != null){
+                                actionListener.onRequestUpdateImage.onRequestUpdateImage();
+                            }
                         }
                         else if(mBottomBar.getCurrentTabPosition() == 1){
-                            actionListener.onRequestRawData.OnRequestRawData();
+                            if( actionListener.onRequestRawData != null){
+                                actionListener.onRequestRawData.OnRequestRawData();
+                            }
                         }
                         else if(mBottomBar.getCurrentTabPosition() == 2){
-                            actionListener.onRequestRawData.OnRequestRawData();
+                            if(actionListener.onRequestRawData != null){
+                                actionListener.onRequestRawData.OnRequestRawData();
+                            }
                         }
                         else if(mBottomBar.getCurrentTabPosition() == 3){
-                            actionListener.onRequestRawData.OnRequestRawData();
+                            if(actionListener.onRequestRawData != null){
+                                actionListener.onRequestRawData.OnRequestRawData();
+                            }
                         }
                         else if(mBottomBar.getCurrentTabPosition() == 4){
-                            actionListener.onRequestLog.onRequestLog();
+                            if(actionListener.onRequestLog != null){
+                                actionListener.onRequestLog.onRequestLog();
+                            }
                         }
                     }
                     else{
@@ -326,9 +336,6 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("Details", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
-
-
 
         setContentView(R.layout.activity_main);
 
@@ -471,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
                                                 getResources().getString(R.string.notSetupNETPIE));
                     actionListener.onException.onException(statusBean.getException());
 
+
                 }
             }
         });
@@ -534,10 +542,10 @@ public class MainActivity extends AppCompatActivity {
                     message = getResources().getString(R.string.shower___);
                 }
                 else if(device == 3){
-                    message = getResources().getString(R.string.openSlat___);
+                    message = getResources().getString(R.string.closeSlat___);//openSlat___
                 }
                 else if(device == 4){
-                    message = getResources().getString(R.string.closeSlat____);
+                    message = getResources().getString(R.string.openSlat___);
                 }
                 publish("controlDevice",
                         GsonProvider.getInstance().toJson(object),
@@ -852,6 +860,10 @@ public class MainActivity extends AppCompatActivity {
                             .content(getResources().getString(R.string.piNotResponse))
                             .positiveText(getResources().getString(R.string.ok))
                             .show();
+//                    if(publishBean.getTopic().equals("settingStandard")){
+//
+//                        //actionListener.onSetStandardFalse.onSetStandardFalse();
+//                    }
                 }
             };
             publishHandle.postDelayed(publistask, getResources().getInteger(R.integer.waitPublish));

@@ -33,6 +33,7 @@ public class ActionListener {
     public static OnCheckPermission onCheckPermission = null;
     public static OnPermissionResult onPermissionResult = null;
     public static OnRefreshImage onRefreshImage = null;
+    public static OnSetStandardFalse onSetStandardFalse = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -176,6 +177,14 @@ public class ActionListener {
     public void setOnRefreshImage(OnRefreshImage listener){
         onRefreshImage = listener;
     }
+
+    public interface OnSetStandardFalse{
+        public void onSetStandardFalse();
+    }
+    public void setOnSetStandardFalse(OnSetStandardFalse listener){
+        onSetStandardFalse = listener;
+    }
+
 
 
 

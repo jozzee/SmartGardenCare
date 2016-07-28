@@ -69,5 +69,12 @@
     <dimen name="margin_bottom_value_setting">16dp</dimen>
 
 
+    <!--setting activity-->
+    <dimen name="padding_left_right_more">16dp</dimen>
+    <dimen name="padding_top_bottom_more">8dp</dimen>
+
+    <dimen name="margin_layout_more">0dp</dimen>
+
+
 
 </resources>
