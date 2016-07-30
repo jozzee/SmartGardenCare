@@ -46,10 +46,10 @@ public class LogDataAdapter extends RecyclerView.Adapter{
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.shower));
             }
             else if(bean.getAction().equals("Open Slat")){
-                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acOpenSlat));
+                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acCloseSlat));//acOpenSlat
             }
             else if(bean.getAction().equals("Close Slat")){
-                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acCloseSlat));
+                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acOpenSlat));
             }
 
             if(bean.getActionType().equals("Auto")){
