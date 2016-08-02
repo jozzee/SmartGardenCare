@@ -1,8 +1,10 @@
 package com.sitthiphong.smartgardencare.activity;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -10,10 +12,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -49,6 +55,7 @@ import com.sitthiphong.smartgardencare.listener.SubscribeCallBackListener;
 import com.sitthiphong.smartgardencare.core.NetPieRestApi;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
+import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -60,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private final int ERROR = 199;
     private final int WAIT  = 201;
     private final int REQUEST_CODE_ASK_PERMISSIONSc = 123;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
 
     private SharedPreferences sharedPreferences;
@@ -99,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private String rawListAsJsonString;
     private int STSlat;
     private String methodUsePermission;
+
+    private boolean isReceiverRegistered;
 
 
 
@@ -328,6 +338,42 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    private BroadcastReceiver mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean sentToken = sharedPreferences.getBoolean(GcmRegisterService.SENT_TOKEN_TO_SERVER, false);
+            // TODO Do something here
+        }
+    };
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(GcmRegisterService.REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+
+    private void unregisterReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        isReceiverRegistered = false;
+    }
+    private void registerGcm() {
+        Intent intent = new Intent(this, GcmRegisterService.class);
+        startService(intent);
+    }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+            return false;
+        }
+        return true;
+    }
 
 
     @Override
@@ -340,6 +386,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayoutMain);
+
+        registerReceiver();
+
+        if (checkPlayServices()) {
+            registerGcm();
+        }
 
 
         setActionListener();
@@ -400,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onResume");
         super.onResume();
         microgear.bindServiceResume();
+        registerReceiver();
 
     }
 
@@ -407,6 +460,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         Log.i(TAG, "onPause");
         super.onPause();
+        unregisterReceiver();
     }
 
     @Override

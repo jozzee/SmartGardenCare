@@ -132,11 +132,8 @@ public class LightFragment extends Fragment {
                         notificationSnackBar("Slat is Closed");
                     }
                     else{
-
                         actionListener.onControlDevice.onControlDevice(3,true);
                     }
-
-
                 }
                 else if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.open))){
                     if(STSlat){
@@ -145,7 +142,6 @@ public class LightFragment extends Fragment {
                     else {
                         notificationSnackBar("Slat is Opened");
                     }
-
                 }
             }
         });
