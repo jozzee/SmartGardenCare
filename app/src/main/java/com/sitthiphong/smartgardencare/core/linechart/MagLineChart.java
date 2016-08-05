@@ -235,7 +235,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                     }
                 }
                 else if(type == 3){
-                    if(bean.getLight()>0){
+                    if(bean.getLightIn()>0){
                         length++;
                     }
                 }
@@ -275,10 +275,10 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                 }
             }
             else if(type == 3){
-                if(bean.getLight()>0){
+                if(bean.getLightIn()>0){
                     xVals.add(new SimpleDateFormat("HH:mm",java.util.Locale.US)
                             .format(new Date(bean.getTime()*1000)));
-                    yVals.add(new Entry(bean.getLight(),i));
+                    yVals.add(new Entry(bean.getLightIn(),i));
                     i++;
                 }
             }

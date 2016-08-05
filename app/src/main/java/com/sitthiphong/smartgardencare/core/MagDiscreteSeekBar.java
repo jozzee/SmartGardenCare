@@ -26,13 +26,12 @@ public class MagDiscreteSeekBar {
     private int minValue;
     private int progress;
     private int val;
-    private boolean onAuto;
     private String sensor;
 
 
     public MagDiscreteSeekBar(View view, int seekBarId,
                               TextView tvValue, String unit, int colorId,
-                              int maxValue, int minValue, int progress,boolean onAuto,String sensor){
+                              int maxValue, int minValue, int progress,String sensor){
         this.view = view;
         this.seekBarId = seekBarId;
         this.tvValue = tvValue;
@@ -41,7 +40,6 @@ public class MagDiscreteSeekBar {
         this.maxValue = maxValue;
         this.minValue = minValue;
         this.progress = progress;
-        this.onAuto = onAuto;
         this.sensor = sensor;
         val = progress;
 
@@ -74,7 +72,6 @@ public class MagDiscreteSeekBar {
                 Log.e("TAG","จบแล้ววววว");
                 JsonObject obj = new JsonObject();
                 obj.addProperty("sensor",sensor);
-                obj.addProperty("auto",onAuto);
                 obj.addProperty("value",getValue());
                 new ActionListener().onSaveStandard.onSaveStandard(obj);
             }
@@ -87,11 +84,4 @@ public class MagDiscreteSeekBar {
         return val;
     }
 
-    public boolean isOnAuto() {
-        return onAuto;
-    }
-
-    public void setOnAuto(boolean onAuto) {
-        this.onAuto = onAuto;
-    }
 }

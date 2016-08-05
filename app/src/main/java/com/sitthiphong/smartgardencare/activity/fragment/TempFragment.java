@@ -57,11 +57,7 @@ public class TempFragment extends Fragment {
     private ActionListener actionListener = new ActionListener();
     private View rootView;
     private Button btnShower;
-    private TextView lastTime;
-    private TextView autoSwitchTitle;
-    private Switch autoSwitch;
-    private TextView tempValue;
-    private TextView more;
+    private TextView lastTime,sensorTitle1,sensorTitle2,sensorValue1,sensorValue2,tempValue,more,exception,sensorError;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private MagPieView pieView;
@@ -69,10 +65,7 @@ public class TempFragment extends Fragment {
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
     private RelativeLayout layoutContainLinChart;
-    private RelativeLayout layoutSeekBar;
     private ProgressBar progressBar;
-    private TextView exception;
-    private TextView sensorError;
     private MagScreen screen;
 
     public TempFragment() {
@@ -134,11 +127,13 @@ public class TempFragment extends Fragment {
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
 
-        autoSwitchTitle = (TextView)rootView.findViewById(R.id.auto_title);
-        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoShower));
+        sensorTitle1 = (TextView)rootView.findViewById(R.id.sensor1_title);
+        sensorTitle2 = (TextView)rootView.findViewById(R.id.sensor2_title);
+        sensorTitle1.setText(getResources().getString(R.string.tempSensor1));
+        sensorTitle2.setText(getResources().getString(R.string.tempSensor2));
 
-        autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
+        sensorValue1 = (TextView)rootView.findViewById(R.id.sensor1_value);
+        sensorValue2 = (TextView)rootView.findViewById(R.id.sensor2_value);
 
         tempValue = (TextView)rootView.findViewById(R.id.value_standard);
         tempValue.setText(String.valueOf((int)sharedPreferences.getFloat("temp",40))+" °C");
@@ -151,30 +146,12 @@ public class TempFragment extends Fragment {
                 50,//max
                 10,//min
                 40,
-                autoSwitch.isChecked(),
                 "dht22");//progress
         seekBar.createSeekBar();
-        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
-        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                seekBar.setOnAuto(b);
-                JsonObject obj = new JsonObject();
-                obj.addProperty("sensor","dht22");
-                obj.addProperty("auto",b);
-                obj.addProperty("value",seekBar.getValue());
-                actionListener.onSaveStandard.onSaveStandard(obj);
-            }
-        });
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
         more.setTextColor(ContextCompat.getColor(getActivity(),R.color.deepOrange));
 
-        if(autoSwitch.isChecked()){
-
-        }else{
-            layoutSeekBar.setVisibility(View.GONE);
-        }
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -333,7 +310,22 @@ public class TempFragment extends Fragment {
                 }
                 lastTime.setText(SimpleDateProvider.getInstance()
                         .format(new Date(rawBean.getTime()*1000)));
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
+
+                if(rawBean.getTemp1()>0){
+                    sensorValue1.setText(String.valueOf(rawBean.getTemp1()) +
+                            getResources().getString(R.string.unitTemp));
+                }
+                else{
+                    sensorValue1.setText(getResources().getString(R.string.errorSensorDHT22));
+                }
+
+                if(rawBean.getTemp2() >0 ){
+                    sensorValue2.setText(String.valueOf(rawBean.getTemp2())+
+                            getResources().getString(R.string.unitTemp));
+                }
+                else{
+                    sensorValue1.setText(getResources().getString(R.string.errorSensorDHT22));
+                }
                 seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
                 scrollView.setVisibility(View.VISIBLE);
 
@@ -351,21 +343,10 @@ public class TempFragment extends Fragment {
                 layoutContainLinChart.setVisibility(View.VISIBLE);
             }
         });
-        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
-            @Override
-            public void onSetVisibilitySeekBar(boolean b) {
-                if(b){
-                    layoutSeekBar.setVisibility(View.VISIBLE);
-                }
-                else{
-                    layoutSeekBar.setVisibility(View.GONE);
-                }
-            }
-        });
+
         actionListener.setOnSetStandardFalse(new ActionListener.OnSetStandardFalse() {
             @Override
             public void onSetStandardFalse() {
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoShower",true));
                 seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
             }
         });

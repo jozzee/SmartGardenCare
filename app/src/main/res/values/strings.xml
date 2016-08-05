@@ -25,6 +25,13 @@
     <string name="loadIMSuccess">Load Image Success</string>
     <string name="waterFalse">Water False!</string>
     <string name="refreshIM">Refresh Image...</string>
+    <string name="moistureSensor1">Moisture Sensor 1</string>
+    <string name="moistureSensor2">Moisture Sensor 2</string>
+    <string name="tempSensor1">Temp Sensor 1</string>
+    <string name="tempSensor2">Temp Sensor 2</string>
+    <string name="lightSensor1">Light Sensor 1</string>
+    <string name="lightSensor2">Light Sensor 2</string>
+    <string name="autoMode">Auto Mote</string>
 
 
     <!--set up netpie -->

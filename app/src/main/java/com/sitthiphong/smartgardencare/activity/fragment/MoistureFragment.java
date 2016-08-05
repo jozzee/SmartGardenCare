@@ -52,16 +52,13 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class MoistureFragment extends Fragment {
-    private String TAG = "MoistureFragment";
+    private final String TAG = "MoistureFragment";
     private View rootView;
     private OnFragmentInteractionListener mListener;
     private ActionListener actionListener = new ActionListener();
     private Button btnWater;
-    private TextView lastTime;
-    private TextView autoSwitchTitle;
-    private Switch autoSwitch;
-    private TextView moistureValue;
-    private TextView more;
+    private TextView lastTime,sensorTitle1,sensorTitle2,sensorValue1,sensorValue2,moistureValue,
+            more,exception,sensorError;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private MagPieView pieView;
@@ -69,10 +66,7 @@ public class MoistureFragment extends Fragment {
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
     private RelativeLayout layoutContainLinChart;
-    private RelativeLayout layoutSeekBar;
     private ProgressBar progressBar;
-    private TextView exception;
-    private TextView sensorError;
     private MagScreen screen;
 
 
@@ -136,11 +130,15 @@ public class MoistureFragment extends Fragment {
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
 
-        autoSwitchTitle = (TextView)rootView.findViewById(R.id.auto_title);
-        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoWater));
+        sensorTitle1 = (TextView)rootView.findViewById(R.id.sensor1_title);
+        sensorTitle2 = (TextView)rootView.findViewById(R.id.sensor2_title);
+        sensorTitle1.setText(getResources().getString(R.string.moistureSensor1));
+        sensorTitle2.setText(getResources().getString(R.string.moistureSensor2));
 
-        autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+        sensorValue1 = (TextView)rootView.findViewById(R.id.sensor1_value);
+        sensorValue2 = (TextView)rootView.findViewById(R.id.sensor2_value);
+
+
 
         moistureValue = (TextView)rootView.findViewById(R.id.value_standard);
         moistureValue.setText(String.valueOf((int)sharedPreferences.getFloat("moisture",20))+" %");
@@ -153,26 +151,9 @@ public class MoistureFragment extends Fragment {
                 80,//max
                 10,//min
                 20,
-                autoSwitch.isChecked(),
                 "SoilMoisture");//progress
         seekBar.createSeekBar();
-        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
-        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                seekBar.setOnAuto(b);
-                JsonObject obj = new JsonObject();
-                obj.addProperty("sensor","SoilMoisture");
-                obj.addProperty("auto",b);
-                obj.addProperty("value",seekBar.getValue());
-                actionListener.onSaveStandard.onSaveStandard(obj);
-            }
-        });
-        if(autoSwitch.isChecked()){
 
-        }else{
-            layoutSeekBar.setVisibility(View.GONE);
-        }
 
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
@@ -339,7 +320,17 @@ public class MoistureFragment extends Fragment {
 
                 lastTime.setText(SimpleDateProvider.getInstance()
                         .format(new Date(rawBean.getTime()*1000)));
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+                //update sensor 2 ตัวเิหเดทิส
+                if(rawBean.getMoisture1()>0){
+                    sensorValue1.setText(String.valueOf(rawBean.getMoisture1())+" %");
+                }else{
+                    sensorValue1.setText(getResources().getString(R.string.errorSensorMoisture));
+                }
+                if(rawBean.getMoisture2()>0){
+                    sensorValue2.setText(String.valueOf(rawBean.getMoisture2())+" %");
+                }else{
+                    sensorValue2.setText(getResources().getString(R.string.errorSensorMoisture));
+                }
                 seekBar.setProgress((int)sharedPreferences.getFloat("moisture",20));
                 scrollView.setVisibility(View.VISIBLE);
 
@@ -358,21 +349,11 @@ public class MoistureFragment extends Fragment {
                 layoutContainLinChart.setVisibility(View.VISIBLE);
             }
         });
-        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
-            @Override
-            public void onSetVisibilitySeekBar(boolean b) {
-                if(b){
-                    layoutSeekBar.setVisibility(View.VISIBLE);
-                }
-                else{
-                    layoutSeekBar.setVisibility(View.GONE);
-                }
-            }
-        });
+
         actionListener.setOnSetStandardFalse(new ActionListener.OnSetStandardFalse() {
             @Override
             public void onSetStandardFalse() {
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
+                //autoSwitch.setChecked(sharedPreferences.getBoolean("autoWater",true));
                 seekBar.setProgress((int)sharedPreferences.getFloat("moisture",20));
             }
         });

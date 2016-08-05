@@ -46,16 +46,11 @@ import java.util.List;
 
 public class LightFragment extends Fragment {
 
-    private String TAG = "LightFragment";
+    private final String TAG = "LightFragment";
     private View rootView;
-    private OnFragmentInteractionListener mListener;
     private ActionListener actionListener = new ActionListener();
-    private Button btnCtrlSlat;
-    private TextView lastTime;
-    private TextView autoSwitchTitle;
-    private Switch autoSwitch;
-    private TextView lightValue;
-    private TextView more;
+    private Button btnCtrlSlat1,btnCtrlSlat2;
+    private TextView lastTime,textViewStatusSlat,lightValue,more,exception,slatStatus,sensorError;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private MagPieView pieView;
@@ -63,13 +58,10 @@ public class LightFragment extends Fragment {
     private MagLineChart lineChart;
     private NestedScrollView scrollView;
     private ProgressBar progressBar;
-    private TextView exception;
-    private TextView slatStatus;
-    private TextView sensorError;
     private MagScreen screen;
-    private RelativeLayout layoutContainLinChart;
-    private RelativeLayout layoutSeekBar;
-    private boolean STSlat;
+    private RelativeLayout layoutContainLinChart,layoutVisibilityStatus,layoutVisibilitySensor2;
+
+    int statusSlat;
 
     public LightFragment() {
         // Required empty public constructor
@@ -118,44 +110,49 @@ public class LightFragment extends Fragment {
                 getActivity().getResources().getString(R.string.unitLight),
                 ContextCompat.getColor(getActivity(),R.color.amber));
 
-        slatStatus = (TextView)rootView.findViewById(R.id.slatStatus);
-        slatStatus.setVisibility(View.VISIBLE);
 
-        btnCtrlSlat = (Button)rootView.findViewById(R.id.btnAction);
+
+        btnCtrlSlat1 = (Button)rootView.findViewById(R.id.btnAction);
+        btnCtrlSlat2 = (Button)rootView.findViewById(R.id.btnAction2);
+        btnCtrlSlat2.setVisibility(View.VISIBLE);
+
+        layoutVisibilityStatus = (RelativeLayout)rootView.findViewById(R.id.layoutVisibilityStatus);
+        layoutVisibilitySensor2 = (RelativeLayout)rootView.findViewById(R.id.layoutVisibilitySensor2);
+        textViewStatusSlat = (TextView)rootView.findViewById(R.id.slatStatus);
+
+        layoutVisibilitySensor2.setVisibility(View.GONE);
+        layoutVisibilityStatus.setVisibility(View.VISIBLE);
+
+
+
         //btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));
 
-        btnCtrlSlat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.close))){
-                    if(STSlat){
-                        notificationSnackBar("Slat is Closed");
-                    }
-                    else{
-                        actionListener.onControlDevice.onControlDevice(3,true);
-                    }
-                }
-                else if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.open))){
-                    if(STSlat){
-                        actionListener.onControlDevice.onControlDevice(4,false);
-                    }
-                    else {
-                        notificationSnackBar("Slat is Opened");
-                    }
-                }
-            }
-        });
+//        btnCtrlSlat.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.close))){
+//                    if(STSlat){
+//                        notificationSnackBar("Slat is Closed");
+//                    }
+//                    else{
+//                        actionListener.onControlDevice.onControlDevice(3,true);
+//                    }
+//                }
+//                else if(btnCtrlSlat.getText().toString().trim().equals(getActivity().getResources().getString(R.string.open))){
+//                    if(STSlat){
+//                        actionListener.onControlDevice.onControlDevice(4,false);
+//                    }
+//                    else {
+//                        notificationSnackBar("Slat is Opened");
+//                    }
+//                }
+//            }
+//        });
 
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
-
-        autoSwitchTitle = (TextView)rootView.findViewById(R.id.auto_title);
-        autoSwitchTitle.setText(getActivity().getResources().getString(R.string.autoSlat));
-
-        autoSwitch = (Switch)rootView.findViewById(R.id.switchAuto);
-        autoSwitch.setChecked(sharedPreferences.getBoolean("autoSlat",true));
 
         lightValue = (TextView)rootView.findViewById(R.id.value_standard);
         lightValue.setText(String.valueOf((int)sharedPreferences.getFloat("light",5000))+" Lux");
@@ -168,26 +165,11 @@ public class LightFragment extends Fragment {
                 20000,//max
                 1000,//min
                 5000,
-                autoSwitch.isChecked(),
                 "bh1750");//progress
         seekBar.createSeekBar();
-        layoutSeekBar = (RelativeLayout)rootView.findViewById(R.id.layoutSeekBar);
-        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                seekBar.setOnAuto(b);
-                JsonObject obj = new JsonObject();
-                obj.addProperty("sensor","bh1750");
-                obj.addProperty("auto",b);
-                obj.addProperty("value",seekBar.getValue());
-                actionListener.onSaveStandard.onSaveStandard(obj);
-            }
-        });
-        if(autoSwitch.isChecked()){
 
-        }else{
-            layoutSeekBar.setVisibility(View.GONE);
-        }
+        slatStatus = (TextView)rootView.findViewById(R.id.slatStatus);
+        slatStatus.setVisibility(View.VISIBLE);
 
         more = (TextView)rootView.findViewById(R.id.more_raw_data);
         more.setTextColor(ContextCompat.getColor(getActivity(),R.color.amber));
@@ -294,7 +276,7 @@ public class LightFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "onDetach");
         super.onDetach();
-        mListener = null;
+
     }
     public void setActionListener(){
         actionListener.setOnException(new ActionListener.OnException() {
@@ -329,11 +311,12 @@ public class LightFragment extends Fragment {
             @Override
             public void onUpdateRawBean(RawDataBean rawBean) {
 
-                if(rawBean.getLight()>0){
+                //เพิ่มเซ็นเซอร์แสงเข้าไปใหม่
+                if(rawBean.getLightIn()>0){
                     exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
-                    pieView.setValue(rawBean.getLight());
+                    pieView.setValue(rawBean.getLightIn());
                     pieView.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -346,7 +329,8 @@ public class LightFragment extends Fragment {
 
                 lastTime.setText(SimpleDateProvider.getInstance()
                         .format(new Date(rawBean.getTime()*1000)));
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoSlat",true));
+
+
                 seekBar.setProgress((int)sharedPreferences.getFloat("light",5000));
                 scrollView.setVisibility(View.VISIBLE);
 
@@ -368,61 +352,28 @@ public class LightFragment extends Fragment {
         actionListener.setOnUpdateSlatStatus(new ActionListener.OnUpdateSlatStatus() {
             @Override
             public void onUpdateSlatStatus(int stStatus) {
-                if(stStatus == 1){
-                    STSlat = true;
-                    slatStatus.setText(getActivity().getResources().getString(R.string.slatClose));//slatOpen
-                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));//close
-                }
-                else {
-                    STSlat = false;
-                    slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
-                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.close));
-                }
+                Log.e(TAG,"onUpdateSlatStatus");
+//                if(stStatus == 1){
+//
+//                    slatStatus.setText(getActivity().getResources().getString(R.string.slatClose));//slatOpen
+//                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.open));//close
+//                }
+//                else {
+//                    STSlat = false;
+//                    slatStatus.setText(getActivity().getResources().getString(R.string.slatOpen));
+//                    btnCtrlSlat.setText(getActivity().getResources().getString(R.string.close));
+//                }
             }
         });
-        actionListener.setOnSetVisibilitySeekBar(new ActionListener.OnSetVisibilitySeekBar() {
-            @Override
-            public void onSetVisibilitySeekBar(boolean b) {
-                if(b){
-                    layoutSeekBar.setVisibility(View.VISIBLE);
-                }
-                else{
-                    layoutSeekBar.setVisibility(View.GONE);
-                }
-            }
-        });
+
         actionListener.setOnSetStandardFalse(new ActionListener.OnSetStandardFalse() {
             @Override
             public void onSetStandardFalse() {
-                autoSwitch.setChecked(sharedPreferences.getBoolean("autoSlat",true));
-                seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
                 seekBar.setProgress((int)sharedPreferences.getFloat("light",5000));
             }
         });
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
     public List<RawDataBean> getRawList(String rawListAsJsonString){
         JsonArray jsonArray = GsonProvider.getInstance().fromJson(rawListAsJsonString, JsonArray.class);
         Type listType = new TypeToken<ArrayList<RawDataBean>>(){}.getType();

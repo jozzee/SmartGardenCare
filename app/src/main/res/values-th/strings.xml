@@ -26,6 +26,13 @@
     <string name="loadIMSuccess">โหลดรูปภาพเสร็จแล้ว</string>
     <string name="waterFalse">น้ำไม่ไหล!</string>
     <string name="refreshIM">โหลดรูปภาพ...</string>
+    <string name="moistureSensor1">เซนเซอร์วัดความชื้นตัวที่ 1</string>
+    <string name="moistureSensor2">เซนเซอร์วัดความชื้นตัวที่ 2</string>
+    <string name="tempSensor1">เซนเซอร์วัดอุณหภูมิตัวที่ 1</string>
+    <string name="tempSensor2">เซนเซอร์วัดอุณหภูมิตัวที่ 2</string>
+    <string name="lightSensor1">เซนเซอร์วัดแสงตัวที่ 1</string>
+    <string name="lightSensor2">เซนเซอร์วัดแสงตัวที่ 2</string>
+    <string name="autoMode">โหมดอัตโนมัติ</string>
 
 
     <!--set up netpie -->

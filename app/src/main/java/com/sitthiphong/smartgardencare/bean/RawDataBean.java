@@ -7,23 +7,25 @@ import com.google.gson.JsonObject;
  */
 public class RawDataBean {
 
-    private int id;
     private long time;
-    private float moisture;
-    private float temp;
-    private float light;
-
-
-
+    private float moisture1;
+    private float moisture2;
+    private float temp1;
+    private float temp2;
+    private float lightIn;
+    private float lightOut;
 
     public RawDataBean(String payload) {
         if (payload != null){
             String[] payloadList = payload.split(",");
-            if(payloadList.length == 4){
+            if(payloadList.length == 7){
                 time = Long.parseLong(payloadList[0]);
-                moisture = Float.parseFloat(payloadList[1]);
-                temp = Float.parseFloat(payloadList[2]);
-                light = Float.parseFloat(payloadList[3]);
+                moisture1 = Float.parseFloat(payloadList[1]);
+                moisture2 = Float.parseFloat(payloadList[2]);
+                temp1 = Float.parseFloat(payloadList[3]);
+                temp2 = Float.parseFloat(payloadList[4]);
+                lightIn = Float.parseFloat(payloadList[5]);
+                lightOut = Float.parseFloat(payloadList[6]);
             }
         }
     }
@@ -31,17 +33,52 @@ public class RawDataBean {
         if(obj.get("time")!= null){
             this.time = obj.get("time").getAsLong();
         }
-        if(obj.get("moisture")!= null){
-            this.moisture = obj.get("moisture").getAsFloat();
+        if(obj.get("moisture1")!= null){
+            this.moisture1 = obj.get("moisture1").getAsFloat();
         }
-        if(obj.get("temp")!= null){
-            this.temp = obj.get("temp").getAsFloat();
+        if(obj.get("moisture2")!= null){
+            this.moisture2 = obj.get("moisture2").getAsFloat();
         }
-        if(obj.get("light")!= null){
-            this.light = obj.get("light").getAsFloat();
+        if(obj.get("temp1")!= null){
+            this.temp1 = obj.get("temp1").getAsFloat();
         }
-        if(obj.get("id")!= null){
-            this.id = obj.get("id").getAsInt();
+        if(obj.get("temp2")!= null){
+            this.temp2 = obj.get("temp2").getAsFloat();
+        }
+        if(obj.get("lightIn")!= null){
+            this.lightIn = obj.get("lightIn").getAsFloat();
+        }
+        if(obj.get("lightOut")!= null){
+            this.lightOut = obj.get("lightOut").getAsFloat();
+        }
+    }
+
+    public float getMoisture(){
+        if(moisture1>0 && moisture2 >0){
+            return ((moisture1+moisture2)/2);
+        }
+        else if(moisture1>0 && moisture2 <0){
+            return moisture1;
+        }
+        else if(moisture1<0 && moisture2 >0){
+            return moisture2;
+        }
+        else{
+           return (float)-1;
+        }
+    }
+    public float getTemp(){
+        if(temp1>0 && temp2 >0){
+            return ((temp1+temp2)/2);
+        }
+        else if(temp1>0 && temp2 <0){
+            return temp1;
+        }
+        else if(temp1<0 && temp2 >0){
+            return temp2;
+        }
+        else{
+            return (float)-1;
         }
     }
 
@@ -49,38 +86,55 @@ public class RawDataBean {
         return time;
     }
 
-    public float getMoisture() {
-        return moisture;
+    public float getMoisture1() {
+        return moisture1;
     }
 
-    public float getTemp() {
-        return temp;
+    public float getMoisture2() {
+        return moisture2;
     }
 
-    public float getLight() {
-        return light;
+    public float getTemp1() {
+        return temp1;
     }
 
-    public int getId() {
-        return id;
+    public float getTemp2() {
+        return temp2;
+    }
+
+    public float getLightIn() {
+        return lightIn;
+    }
+
+    public float getLightOut() {
+        return lightOut;
     }
 
     public void setTime(long time) {
         this.time = time;
     }
 
-    public void setMoisture(float moisture) {
-        this.moisture = moisture;
-    }
-    public void setTemp(float temp) {
-        this.temp = temp;
+    public void setMoisture1(float moisture1) {
+        this.moisture1 = moisture1;
     }
 
-    public void setLight(float light) {
-        this.light = light;
+    public void setMoisture2(float moisture2) {
+        this.moisture2 = moisture2;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTemp1(float temp1) {
+        this.temp1 = temp1;
+    }
+
+    public void setTemp2(float temp2) {
+        this.temp2 = temp2;
+    }
+
+    public void setLightIn(float lightIn) {
+        this.lightIn = lightIn;
+    }
+
+    public void setLightOut(float lightOut) {
+        this.lightOut = lightOut;
     }
 }

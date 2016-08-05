@@ -28,7 +28,7 @@ public class ActionListener {
     public static OnRequestSlatStatus onRequestSlatStatus = null;
     public static OnUpdateSlatStatus onUpdateSlatStatus = null;
     public static OnSaveStandard onSaveStandard = null;
-    public static OnSetVisibilitySeekBar onSetVisibilitySeekBar = null;
+    //public static OnSetVisibilitySeekBar onSetVisibilitySeekBar = null;
     public static OnControlDevice onControlDevice = null;
     public static OnCheckPermission onCheckPermission = null;
     public static OnPermissionResult onPermissionResult = null;
@@ -146,12 +146,12 @@ public class ActionListener {
         onSaveStandard = listener;
     }
 
-    public interface OnSetVisibilitySeekBar{
-        public void onSetVisibilitySeekBar(boolean b);
-    }
-    public void setOnSetVisibilitySeekBar(OnSetVisibilitySeekBar listener){
-        onSetVisibilitySeekBar = listener;
-    }
+//    public interface OnSetVisibilitySeekBar{
+//        public void onSetVisibilitySeekBar(boolean b);
+//    }
+//    public void setOnSetVisibilitySeekBar(OnSetVisibilitySeekBar listener){
+//        onSetVisibilitySeekBar = listener;
+//    }
     public interface OnControlDevice{
         public void onControlDevice(int device,boolean isOpen);
     }

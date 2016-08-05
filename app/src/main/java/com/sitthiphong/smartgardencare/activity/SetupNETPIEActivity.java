@@ -39,6 +39,10 @@ public class SetupNETPIEActivity extends AppCompatActivity {
     private Button ok;
     public ActionListener actionListener = new ActionListener();
 
+    private final String appIdTAG = "appId";
+    private final String appKeyTAG = "appKey";
+    private final String appSecretTAG ="appSecret";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +68,9 @@ public class SetupNETPIEActivity extends AppCompatActivity {
         etAppSecret.addTextChangedListener(new MyTextWatcher(tilAppSecret));
 
         if(savedInstanceState != null){
-            etAppID.setText(savedInstanceState.getString("appID"));
-            etAppKey.setText(savedInstanceState.getString("key"));
-            etAppSecret.setText(savedInstanceState.getString("secret"));
+            etAppID.setText(savedInstanceState.getString(appIdTAG));
+            etAppKey.setText(savedInstanceState.getString(appKeyTAG));
+            etAppSecret.setText(savedInstanceState.getString(appSecretTAG));
         }
 
         etAppID.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -164,9 +168,9 @@ public class SetupNETPIEActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         Log.i(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putString("appID",etAppID.getText().toString().trim());
-        outState.putString("key",etAppKey.getText().toString().trim());
-        outState.putString("secret",etAppSecret.getText().toString().trim());
+        outState.putString(appIdTAG,etAppID.getText().toString().trim());
+        outState.putString(appKeyTAG,etAppKey.getText().toString().trim());
+        outState.putString(appSecretTAG,etAppSecret.getText().toString().trim());
 
     }
     @Override
@@ -204,9 +208,9 @@ public class SetupNETPIEActivity extends AppCompatActivity {
         if(validate(etAppID,tilAppID,"App ID")
                 &&  validate(etAppKey,tilAppKey,"App Key")
                 &&  validate(etAppSecret,tilAppSecret,"App Secret")){
-            editor.putString("appID",etAppID.getText().toString().trim());
-            editor.putString("appKey",etAppKey.getText().toString().trim());
-            editor.putString("appSecret",etAppSecret.getText().toString().trim());
+            editor.putString(appIdTAG,etAppID.getText().toString().trim());
+            editor.putString(appKeyTAG,etAppKey.getText().toString().trim());
+            editor.putString(appSecretTAG,etAppSecret.getText().toString().trim());
             editor.commit();
             Log.w(TAG,"Setup netpie success");
             //BusProvider.getInstance().post(new OnFinishSetupNetPieEvent("ok"));

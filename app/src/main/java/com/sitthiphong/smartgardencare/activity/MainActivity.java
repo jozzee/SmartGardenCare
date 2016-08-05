@@ -111,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isReceiverRegistered;
 
 
+    private final String appIdTAG = "appId";
+    private final String appKeyTAG = "appKey";
+    private final String appSecretTAG ="appSecret";
+
+
 
 
 
@@ -172,30 +177,17 @@ public class MainActivity extends AppCompatActivity {
                             else if(responseBean.getTopic().equals("settingStandard")){
                                 JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(),JsonObject.class);
                                 int value = object.get("value").getAsInt();
-                                boolean auto = object.get("auto").getAsBoolean();
+
                                 if(object.get("sensor")!= null){
                                     String sensor = object.get("sensor").getAsString();
                                     if(sensor.equals("SoilMoisture")){
                                         editor.putFloat("moisture",(float)value);
-                                        editor.putBoolean("autoWater",auto);
-                                        if(actionListener.onSetVisibilitySeekBar!= null){
-                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
-                                        }
-
                                     }
                                     else if(sensor.equals("dht22")){
                                         editor.putFloat("temp",(float)value);
-                                        editor.putBoolean("autoShower",auto);
-                                        if(actionListener.onSetVisibilitySeekBar!= null){
-                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
-                                        }
                                     }
                                     else if(sensor.equals("bh1750")){
                                         editor.putFloat("light",(float)value);
-                                        editor.putBoolean("autoSlat",auto);
-                                        if(actionListener.onSetVisibilitySeekBar!= null){
-                                            actionListener.onSetVisibilitySeekBar.onSetVisibilitySeekBar(auto);
-                                        }
                                     }
                                     editor.commit();
                                     alertDialog(getResources().getString(R.string.saveSetting),
@@ -554,14 +546,14 @@ public class MainActivity extends AppCompatActivity {
                             getResources().getString(R.string.onSaveSetting));
                 }
                 else if(changeNETPIE){
-                    if(objNETPIE.get("appID")!=null){
-                        editor.putString("appID",objNETPIE.get("appID").getAsString());
+                    if(objNETPIE.get(appIdTAG)!=null){
+                        editor.putString(appIdTAG,objNETPIE.get(appIdTAG).getAsString());
                     }
-                    if(objNETPIE.get("appKey")!=null){
-                        editor.putString("appKey",objNETPIE.get("appKey").getAsString());
+                    if(objNETPIE.get(appKeyTAG)!=null){
+                        editor.putString(appKeyTAG,objNETPIE.get(appKeyTAG).getAsString());
                     }
-                    if(objNETPIE.get("appSecret")!=null){
-                        editor.putString("appSecret",objNETPIE.get("appSecret").getAsString());
+                    if(objNETPIE.get(appSecretTAG)!=null){
+                        editor.putString(appSecretTAG,objNETPIE.get(appSecretTAG).getAsString());
                     }
                     editor.commit();
                     reStartActivity();
@@ -931,16 +923,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkFirstOpenApp(){Log.i(TAG,"checkFirstOpenApp");
         if(sharedPreferences.getBoolean("first",true)){
             editor.putBoolean("first",false); //open first app
-            editor.putBoolean("autoWater",true);
             editor.putFloat("moisture", (float) 20.00); //persen
-            editor.putBoolean("autoShower",true);
             editor.putFloat("temp", (float) 40.00); //°C
-            editor.putBoolean("autoSlat",true);
             editor.putFloat("light", (float) 5000.00);//Lux
-            editor.putInt("dayStore",7); //unit day
-            editor.putInt("ftPubRD",1); // unit minute
-            editor.putInt("ftPubIM",1); // unit hour
-            editor.putInt("ftIRD",1); // unit hour
+            editor.putInt("dayStorage",7); //unit day
+            editor.putInt("fqPubRawData",1); // unit minute
+            editor.putInt("fqPubImage",1); // unit hour
+            editor.putInt("fqInsertRawData",1); // unit hour
+            editor.putBoolean("autoMode",true);
             editor.commit();
             Intent onBoarding = new Intent(getContextManual(), SetupNETPIEActivity.class);
             startActivity(onBoarding);
@@ -955,12 +945,12 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean checkAndGetKeyNetPie(){
         Log.e(TAG,"checkAndGetKeyNetPie");
-        if(!sharedPreferences.getString("appID","").equals("")){
-            if(!sharedPreferences.getString("appKey","").equals("")){
-                if(!sharedPreferences.getString("appSecret","").equals("")){
-                    appID = sharedPreferences.getString("appID","");
-                    appKey = sharedPreferences.getString("appKey","");
-                    appSecret = sharedPreferences.getString("appSecret","");
+        if(!sharedPreferences.getString(appIdTAG,"").equals("")){
+            if(!sharedPreferences.getString(appKeyTAG,"").equals("")){
+                if(!sharedPreferences.getString(appSecretTAG,"").equals("")){
+                    appID = sharedPreferences.getString(appIdTAG,"");
+                    appKey = sharedPreferences.getString(appKeyTAG,"");
+                    appSecret = sharedPreferences.getString(appSecretTAG,"");
                     return true;
                 }
                 else{

@@ -58,11 +58,12 @@ public class MoreAdapter extends RecyclerView.Adapter {
 
             }
             else if(from == 3){
-                if(bean.getLight()<0){
+                if(bean.getLightIn()<0 && bean.getLightOut()<0){
                     ((MoreDataViewHolder) holder).value.setText(R.string.errorSensorBH1750);
                 }
                 else{
-                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(bean.getLight() +" Lux"));
+                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(
+                            "Light in: "+bean.getLightIn() +" Lux, Light out: "+bean.getLightOut()+" Lux"));
                 }
 
             }

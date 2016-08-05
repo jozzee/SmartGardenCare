@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,7 +37,7 @@ public class SettingActivity extends AppCompatActivity {
     private RelativeLayout layoutAppKey;
     private RelativeLayout layoutAppSecret;
     private RelativeLayout layoutSendDataSensor;
-    private RelativeLayout layoutInsertDatasensor;
+    private RelativeLayout layoutInsertDataSensor;
     private RelativeLayout layoutStorageData;
     private TextView textViewAppID;
     private TextView textViewAppKey;
@@ -43,10 +45,19 @@ public class SettingActivity extends AppCompatActivity {
     private TextView sendDataValue;
     private TextView insertDataValue;
     private TextView storageDataValue;
-    private int ftPubRD;
-    private int ftIRD;
-    private int dayStore;
+    private TextView autoMote;
+    private Switch swAutoMode;
+    private int fqPubRawData;
+    private int fqInsertRawData;
+    private int dayStorage;
 
+    private final String dayStorageTAG ="dayStorage";
+    private final String fqPubRawDataTAG ="fqPubRawData";
+    private final String fqPubImageTAG ="fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
+    private final String fqInsertRawDataTAG = "fqInsertRawData";
+    private final String appIdTAG = "appId";
+    private final String appKeyTAG = "appKey";
+    private final String appSecretTAG ="appSecret";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,15 +78,15 @@ public class SettingActivity extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setTitle(R.string.setting);
 
-        ftPubRD = sharedPreferences.getInt("ftPubRD",1);
-        ftIRD = sharedPreferences.getInt("ftIRD",1);
-        dayStore = sharedPreferences.getInt("dayStore",7);
+        fqPubRawData = sharedPreferences.getInt(fqPubRawDataTAG,1);
+        fqInsertRawData = sharedPreferences.getInt(fqInsertRawDataTAG,1);
+        dayStorage = sharedPreferences.getInt(dayStorageTAG,7);
 
         layoutAppID = (RelativeLayout) findViewById(R.id.layoutSetAppId);
         layoutAppKey = (RelativeLayout)findViewById(R.id.layoutSetAppKey);
         layoutAppSecret = (RelativeLayout)findViewById(R.id.layoutSetAppSecret);
         layoutSendDataSensor = (RelativeLayout)findViewById(R.id.layoutSetSendData);
-        layoutInsertDatasensor = (RelativeLayout)findViewById(R.id.layoutSetInsertData);
+        layoutInsertDataSensor = (RelativeLayout)findViewById(R.id.layoutSetInsertData);
         layoutStorageData = (RelativeLayout)findViewById(R.id.layoutSetStorageData);
 
 
@@ -86,21 +97,69 @@ public class SettingActivity extends AppCompatActivity {
         insertDataValue = (TextView)findViewById(R.id.insertDataValue);
         storageDataValue = (TextView)findViewById(R.id.storageDataValue);
 
+        autoMote = (TextView)findViewById(R.id.titleAutoMote);
+        swAutoMode = (Switch)findViewById(R.id.swAutoMode);
 
-        textViewAppID.setText(sharedPreferences.getString("appID","no directory"));
-        textViewAppKey.setText(sharedPreferences.getString("appKey","no directory"));
-        textViewAppSecret.setText(sharedPreferences.getString("appSecret","no directory"));
+        swAutoMode.setChecked(sharedPreferences.getBoolean("autoMode",false));
+        if(swAutoMode.isChecked()){
+            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                    getResources().getString(R.string.open));
+        }
+        else{
+            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                    getResources().getString(R.string.close));
+        }
+
+
+        textViewAppID.setText(sharedPreferences.getString(appIdTAG,"no directory"));
+        textViewAppKey.setText(sharedPreferences.getString(appKeyTAG,"no directory"));
+        textViewAppSecret.setText(sharedPreferences.getString(appSecretTAG,"no directory"));
         sendDataValue.setText(
-                getResources().getString(R.string.every)+" "+
-                ftPubRD+" "+
+                getResources().getString(R.string.every)+" "+ fqPubRawData+" "+
                 getResources().getString(R.string.minute));
         insertDataValue.setText(
                 getResources().getString(R.string.every)+" "+
-                ftIRD+" "+
+                        fqInsertRawData+" "+
                 getResources().getString(R.string.hour));
         storageDataValue.setText(
-                dayStore+" "+
+                dayStorage+" "+
                 getResources().getString(R.string.day));
+
+        swAutoMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                            getResources().getString(R.string.open));
+                }
+                else {
+                    autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                            getResources().getString(R.string.close));
+                }
+                if(b!=sharedPreferences.getBoolean("autoMode",false)){
+                    menu.findItem(R.id.actionSaveSetting).setVisible(true);
+                }else{
+                    if(textViewAppID.getText().toString().trim().equals(sharedPreferences.getString(appIdTAG,"no directory")) &&
+                            textViewAppKey.getText().toString().trim()
+                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
+                            && textViewAppSecret.getText().toString().trim()
+                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
+                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
+                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
+                        menu.findItem(R.id.actionSaveSetting).setVisible(false);
+                        if(b){
+                            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                                    getResources().getString(R.string.open));
+                        }
+                        else {
+                            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
+                                    getResources().getString(R.string.close));
+                        }
+                    }
+                }
+            }
+        });
 
         layoutAppID.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,17 +173,17 @@ public class SettingActivity extends AppCompatActivity {
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 // Do something
                                 Log.e(TAG,"Dialog Callback input App ID: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString("appID","no directory")))){
+                                if(!(input.toString().equals(sharedPreferences.getString(appIdTAG,"no directory")))){
                                     textViewAppID.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
                                     if(textViewAppKey.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appKey","no directory"))
+                                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appSecret","no directory"))
-                                            && ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                            && ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                            && dayStore == (sharedPreferences.getInt("dayStore",7))){
+                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
+                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
+                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
                                         menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                         textViewAppID.setText(input);
                                     }
@@ -145,17 +204,17 @@ public class SettingActivity extends AppCompatActivity {
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 // Do something
                                 Log.e(TAG,"Dialog Callback input App key: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString("appKey","no directory")))){
+                                if(!(input.toString().equals(sharedPreferences.getString(appKeyTAG,"no directory")))){
                                     textViewAppKey.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
                                     if(textViewAppID.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appID","no directory"))
+                                            .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appSecret","no directory"))
-                                            && ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                            && ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                            && dayStore == (sharedPreferences.getInt("dayStore",7))){
+                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
+                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
+                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
                                         menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                         textViewAppKey.setText(input);
                                     }
@@ -178,17 +237,17 @@ public class SettingActivity extends AppCompatActivity {
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 // Do something
                                 Log.e(TAG,"Dialog Callback input App Secret: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString("appSecret","no directory")))){
+                                if(!(input.toString().equals(sharedPreferences.getString(appSecretTAG,"no directory")))){
                                     textViewAppSecret.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
                                     if(textViewAppKey.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appKey","no directory"))
+                                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString("appSecret","no directory"))
-                                            && ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                            && ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                            && dayStore == (sharedPreferences.getInt("dayStore",7))){
+                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
+                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
+                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
                                         menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                         textViewAppSecret.setText(input);
                                     }
@@ -203,30 +262,30 @@ public class SettingActivity extends AppCompatActivity {
                 new MaterialDialog.Builder(getContextManual())
                         .title(getResources().getString(R.string.frequencySendData))
                         .items(R.array.ftPubRDArray)
-                        .itemsCallbackSingleChoice(getWhichFromSendData(ftPubRD),
+                        .itemsCallbackSingleChoice(getWhichFromSendData(fqPubRawData),
                                 new MaterialDialog.ListCallbackSingleChoice() {
                                     @Override
                                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                         int value = getValueSendDataFromWhich(which);
 
-                                        if(value != (sharedPreferences.getInt("ftPubRD",1))){
-                                            ftPubRD = value;
+                                        if(value != (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
+                                            fqPubRawData = value;
                                             sendDataValue.setText(text);
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
                                             if(textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appID","no directory"))
+                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appKey","no directory"))
+                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                                     && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appSecret","no directory"))
+                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
                                                     //&& ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                                    && ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                                    && dayStore == (sharedPreferences.getInt("dayStore",7))){
+                                                    && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
+                                                    && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
                                                 menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                             }
-                                            ftPubRD = sharedPreferences.getInt("ftPubRD",1);
+                                            fqPubRawData = sharedPreferences.getInt(fqPubRawDataTAG,1);
                                             sendDataValue.setText(text);
                                         }
                                         return true;
@@ -237,36 +296,36 @@ public class SettingActivity extends AppCompatActivity {
                         .show();
             }
         });
-        layoutInsertDatasensor.setOnClickListener(new View.OnClickListener() {
+        layoutInsertDataSensor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new MaterialDialog.Builder(getContextManual())
                         .title(getResources().getString(R.string.frequencyInsertData))
                         .items(R.array.ftPubIM_IRDArray)
-                        .itemsCallbackSingleChoice(getWhichFromInsertDataValue(ftIRD),
+                        .itemsCallbackSingleChoice(getWhichFromInsertDataValue(fqInsertRawData),
                                 new MaterialDialog.ListCallbackSingleChoice() {
                                     @Override
                                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                         int value = getValueInsertDataValueFromWhich(which);
 
-                                        if(value != (sharedPreferences.getInt("ftIRD",1))){
-                                            ftIRD = value;
+                                        if(value != (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
+                                            fqInsertRawData = value;
                                             insertDataValue.setText(text);
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
                                             if(textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appID","no directory"))
+                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appKey","no directory"))
+                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                                     && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appSecret","no directory"))
-                                                    && ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
+                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                                                    && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
                                                     //&& ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                                    && dayStore == (sharedPreferences.getInt("dayStore",7))){
+                                                    && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
                                                 menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                             }
-                                            ftIRD = sharedPreferences.getInt("ftIRD",1);
+                                            fqInsertRawData = sharedPreferences.getInt(fqInsertRawDataTAG,1);
                                             sendDataValue.setText(text);
                                         }
                                         return true;
@@ -283,30 +342,30 @@ public class SettingActivity extends AppCompatActivity {
                 new MaterialDialog.Builder(getContextManual())
                         .title(getResources().getString(R.string.dayStorageData))
                         .items(R.array.dayOfStorageArray)
-                        .itemsCallbackSingleChoice(getWhichFromStorageDataValue(dayStore),
+                        .itemsCallbackSingleChoice(getWhichFromStorageDataValue(dayStorage),
                                 new MaterialDialog.ListCallbackSingleChoice() {
                                     @Override
                                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                         int value = getValueStorageDataValueFromWhich(which);
 
-                                        if(value != (sharedPreferences.getInt("dayStore",1))){
-                                            dayStore = value;
+                                        if(value != (sharedPreferences.getInt(dayStorageTAG,7))){
+                                            dayStorage = value;
                                             storageDataValue.setText(text);
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
                                             if(textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appID","no directory"))
+                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appKey","no directory"))
+                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                                     && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString("appSecret","no directory"))
-                                                    && ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                                    && ftIRD == (sharedPreferences.getInt("ftIRD",1))){
+                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
+                                                    && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
+                                                    && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
                                                     //&& dayStore == (sharedPreferences.getInt("dayStore",7))){
                                                 menu.findItem(R.id.actionSaveSetting).setVisible(false);
                                             }
-                                            dayStore = sharedPreferences.getInt("dayStore",1);
+                                            dayStorage = sharedPreferences.getInt(dayStorageTAG,7);
                                             storageDataValue.setText(text);
                                         }
                                         return true;
@@ -405,34 +464,39 @@ public class SettingActivity extends AppCompatActivity {
         JsonObject objDetails = new JsonObject();
         JsonObject objNETPIE = new JsonObject();
         if(!textViewAppID.getText().toString().trim()
-                .equals(sharedPreferences.getString("appID","no directory"))){
+                .equals(sharedPreferences.getString(appIdTAG,"no directory"))){
             //editor.putString("appID",textViewAppID.getText().toString().trim());
-            objNETPIE.addProperty("appID",textViewAppID.getText().toString().trim());
+            objNETPIE.addProperty(appIdTAG,textViewAppID.getText().toString().trim());
             changeNETPIE = true;
         }
         if(!textViewAppKey.getText().toString().trim()
-                .equals(sharedPreferences.getString("appKey","no directory"))){
+                .equals(sharedPreferences.getString(appKeyTAG,"no directory"))){
             //editor.putString("appKey",textViewAppKey.getText().toString().trim());
-            objNETPIE.addProperty("appKey",textViewAppKey.getText().toString().trim());
+            objNETPIE.addProperty(appKeyTAG,textViewAppKey.getText().toString().trim());
             changeNETPIE = true;
         }
         if(!textViewAppSecret.getText().toString().trim()
-                .equals(sharedPreferences.getString("appSecret","no directory"))){
+                .equals(sharedPreferences.getString(appSecretTAG,"no directory"))){
             //editor.putString("appSecret",textViewAppSecret.getText().toString().trim());
-            objNETPIE.addProperty("appSecret",textViewAppSecret.getText().toString().trim());
+            objNETPIE.addProperty(appSecretTAG,textViewAppSecret.getText().toString().trim());
             changeNETPIE = true;
         }
-        if(ftPubRD != sharedPreferences.getInt("ftPubRD",1)){
-            objDetails.addProperty("FTRawData",ftPubRD);
+        if(fqPubRawData != sharedPreferences.getInt(fqPubRawDataTAG,1)){
+            objDetails.addProperty(fqPubRawDataTAG,fqPubRawData);
             changeDetails = true;
         }
-        if(ftIRD != sharedPreferences.getInt("ftIRD",1)){
-            objDetails.addProperty("FIRawData",ftIRD);
+        if(fqInsertRawData != sharedPreferences.getInt(fqInsertRawDataTAG,1)){
+            objDetails.addProperty(fqInsertRawDataTAG,fqInsertRawData);
             changeDetails = true;
         }
-        if(dayStore != sharedPreferences.getInt("dayStore",1)){
-            objDetails.addProperty("DOStorage",dayStore);
+        if(dayStorage != sharedPreferences.getInt(dayStorageTAG,7)){
+            objDetails.addProperty(dayStorageTAG,dayStorage);
             changeDetails =true;
+        }
+        if(swAutoMode.isChecked() != sharedPreferences.getBoolean("autoMode",false)){
+            Log.e(TAG,"swAutoMode.isChecked(): "+String.valueOf(swAutoMode.isChecked()));
+          
+            objDetails.addProperty("autoMode",swAutoMode.isChecked());
         }
         new ActionListener().onSaveSetting.onSaveSetting(
                 changeNETPIE,
