@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     private final String fqPubRawDataTAG ="fqPubRawData";
     private final String fqPubImageTAG ="fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
     private final String fqInsertRawDataTAG = "fqInsertRawData";
+    private final String autoModeTAG = "autoMode";
 
 
 
@@ -173,10 +174,25 @@ public class MainActivity extends AppCompatActivity {
                                     if(object.get(appSecretTAG) != null){
                                         editor.putString(appSecretTAG,object.get(appSecretTAG).getAsString());
                                     }
+
                                     editor.commit();
+                                    Log.e(TAG,"fqPubRawData: "+sharedPreferences.getInt(fqPubRawDataTAG,0));
+                                    Log.e(TAG,"fqPubImage: "+sharedPreferences.getInt(fqPubImageTAG,0));
+                                    Log.e(TAG,"fqInsertRawDataTAG: "+sharedPreferences.getInt(fqInsertRawDataTAG,0));
+                                    Log.e(TAG,"dayStorage: "+sharedPreferences.getInt(dayStorageTAG,0));
+                                    Log.e(TAG,"autoMode: "+sharedPreferences.getInt(autoModeTAG,0));
+                                    Log.e(TAG,"AppId: "+sharedPreferences.getString(appIdTAG,"null"));
+                                    Log.e(TAG,"AppKey: "+sharedPreferences.getString(appKeyTAG,"null"));
+                                    Log.e(TAG,"AppSecret: "+sharedPreferences.getString(appSecretTAG,"null"));
                                     reStartActivity();
                                 }
+
                                 editor.commit();
+                                Log.e(TAG,"fqPubRawData: "+sharedPreferences.getInt(fqPubRawDataTAG,0));
+                                Log.e(TAG,"fqPubImage: "+sharedPreferences.getInt(fqPubImageTAG,0));
+                                Log.e(TAG,"fqInsertRawDataTAG: "+sharedPreferences.getInt(fqInsertRawDataTAG,0));
+                                Log.e(TAG,"dayStorage: "+sharedPreferences.getInt(dayStorageTAG,0));
+                                Log.e(TAG,"autoMode: "+sharedPreferences.getBoolean(autoModeTAG,false));
                                 alertDialog(getResources().getString(R.string.saveSetting),
                                         getResources().getString(R.string.success));
 
@@ -267,23 +283,23 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals("hasPhoto")){
                     new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString("appID",""),
-                                    appKey = sharedPreferences.getString("appKey",""),
-                                    sharedPreferences.getString("appSecret",""),
+                            .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                    appKey = sharedPreferences.getString(appKeyTAG,""),
+                                    sharedPreferences.getString(appSecretTAG,""),
                                     "photo");
                 }
                 else if(topic.equals("hasRawList")){
                     new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString("appID",""),
-                                    appKey = sharedPreferences.getString("appKey",""),
-                                    sharedPreferences.getString("appSecret",""),
+                            .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                    appKey = sharedPreferences.getString(appKeyTAG,""),
+                                    sharedPreferences.getString(appSecretTAG,""),
                                     "rawDataList");
                 }
                 else if(topic.equals("hasLogList")){
                     new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString("appID",""),
-                                    appKey = sharedPreferences.getString("appKey",""),
-                                    sharedPreferences.getString("appSecret",""),
+                            .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                    appKey = sharedPreferences.getString(appKeyTAG,""),
+                                    sharedPreferences.getString(appSecretTAG,""),
                                     "logDataList");
                 }
             }
@@ -617,9 +633,9 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         //load
                         new SubscribeTask(getResources().getString(R.string.fetching))
-                                .execute(appID = sharedPreferences.getString("appID",""),
-                                        appKey = sharedPreferences.getString("appKey",""),
-                                        sharedPreferences.getString("appSecret",""),
+                                .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                        appKey = sharedPreferences.getString(appKeyTAG,""),
+                                        sharedPreferences.getString(appSecretTAG,""),
                                         "photo");
                     }
                 }
@@ -661,9 +677,9 @@ public class MainActivity extends AppCompatActivity {
                     else{
                         //load
                         new SubscribeTask(getResources().getString(R.string.fetching))
-                                .execute(appID = sharedPreferences.getString("appID",""),
-                                        appKey = sharedPreferences.getString("appKey",""),
-                                        sharedPreferences.getString("appSecret",""),
+                                .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                        appKey = sharedPreferences.getString(appKeyTAG,""),
+                                        sharedPreferences.getString(appSecretTAG,""),
                                         "rawDataList");
                     }
                 }
@@ -683,9 +699,9 @@ public class MainActivity extends AppCompatActivity {
                    else{
                        //load
                        new SubscribeTask(getResources().getString(R.string.fetching))
-                               .execute(appID = sharedPreferences.getString("appID",""),
-                                        appKey = sharedPreferences.getString("appKey",""),
-                                        sharedPreferences.getString("appSecret",""),
+                               .execute(appID = sharedPreferences.getString(appIdTAG,""),
+                                        appKey = sharedPreferences.getString(appKeyTAG,""),
+                                        sharedPreferences.getString(appSecretTAG,""),
                                         "logDataList");
                    }
                }

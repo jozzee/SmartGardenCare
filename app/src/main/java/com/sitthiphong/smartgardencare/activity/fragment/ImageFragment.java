@@ -121,6 +121,8 @@ public class ImageFragment extends Fragment {
         imageGarden.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.bg_garden_im));
         setTimeFrequency = (ImageView)rootView.findViewById(R.id.btn_setting_send_im_garden);
         timeFrequencyValue = (TextView)rootView.findViewById(R.id.setting_value_im_garden);
+        timeFrequencyValue.setText(getResources().getText(R.string.every)+" "+String.valueOf(ftPubIM)+" "+
+                getResources().getText(R.string.hour));
 
         dateTime = (TextView)rootView.findViewById(R.id.time_im_garden);
 
