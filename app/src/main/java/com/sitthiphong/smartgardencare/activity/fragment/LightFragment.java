@@ -153,12 +153,15 @@ public class LightFragment extends Fragment {
             @Override
             public void onClick(View view) {//1,4,3
                 if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct1))){
+                    actionListener.onControlDevice.onControlDevice(4,false);
 
                 }
                 else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
+                    actionListener.onControlDevice.onControlDevice(3,true);
 
                 }
                 else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct3))){
+                    actionListener.onControlDevice.onControlDevice(3,false);
 
                 }
             }
@@ -167,10 +170,11 @@ public class LightFragment extends Fragment {
             @Override
             public void onClick(View view) {// 2,2,4
                 if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct2))){
+                    actionListener.onControlDevice.onControlDevice(4,true);
 
                 }
                 else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
-
+                    actionListener.onControlDevice.onControlDevice(3,true);
                 }
             }
         });

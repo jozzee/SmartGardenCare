@@ -213,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
                                             getResources().getString(R.string.success));
                                 }
                                 else if(object.get("3")!=null){
-                                    alertDialog(getResources().getString(R.string.acCloseSlat),//acOpenSlat
+                                    alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
                                             getResources().getString(R.string.success));
                                 }
                                 else if(object.get("4")!=null){
-                                    alertDialog(getResources().getString(R.string.acOpenSlat),//acCloseSlat
-                                            getResources().getString(R.string.success));
+                                    alertDialog(getResources().getString(R.string.acCloseSlat),//acCloseSlat
+                                            getResources().getString(R.string.acCloseSlat));
                                 }
 
                             }
@@ -634,13 +634,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRequestRawBean() {
                 if(statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
-                    actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
-
+                    if(actionListener.onUpdateRawBean != null){
+                        actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
+                    }
                 }else if(statusBean.getStatus() == getResources().getInteger(R.integer.NO_INTERNET)){
-                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
-
+                    if( actionListener.onNoInternet != null){
+                        actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                    }
                 }else if(statusBean.getStatus() == getResources().getInteger(R.integer.ERROR)){
-                    actionListener.onException.onException(statusBean.getException());
+                    if(actionListener.onException != null){
+                        actionListener.onException.onException(statusBean.getException());
+                    }
+
                 }
             }
         });
@@ -649,7 +654,9 @@ public class MainActivity extends AppCompatActivity {
             public void onRequestRawList() {
                 if(statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
                     if(rawListAsJsonString != null){
-                        actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+                        if(actionListener.onUpdateRawList != null){
+                            actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+                        }
                     }
                     else{
                         //load
