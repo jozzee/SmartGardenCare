@@ -25,8 +25,7 @@
         plainpie:inner_text_visibility="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_top_pain_pie_chart"
-        android:layout_below="@id/sensorError"
-        android:visibility="gone"/>
+        android:layout_below="@id/sensorError"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,20 +142,17 @@
         android:paddingLeft="@dimen/padding_left_details"
         android:paddingRight="@dimen/padding_right_details"
         android:layout_marginTop="@dimen/margin_top_details"
-        android:layout_marginBottom="@dimen/margin_bottom_details"/>
+        android:layout_marginBottom="@dimen/margin_bottom_details2"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sensor1_value"
         android:textSize="@dimen/text_size"
-        android:layout_below="@id/layoutContainSlatStatus"
-        android:layout_toRightOf="@+id/time_title"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:gravity="right"
+        android:layout_below="@id/sensor1_title"
+        android:layout_alignLeft="@+id/sensor1_title"
         android:text="Value"
+        android:paddingLeft="@dimen/padding_left_details"
         android:paddingRight="@dimen/padding_right_details"
-        android:layout_marginTop="@dimen/margin_top_details"
         android:layout_marginBottom="@dimen/margin_bottom_details"/>
     <View
 
@@ -186,18 +182,17 @@
                 android:paddingLeft="@dimen/padding_left_details"
                 android:paddingRight="@dimen/padding_right_details"
                 android:layout_marginTop="@dimen/margin_top_details"
-                android:layout_marginBottom="@dimen/margin_bottom_details"/>
+                android:layout_marginBottom="@dimen/margin_bottom_details2"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/sensor2_value"
                 android:textSize="@dimen/text_size"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:gravity="right"
-                android:text="Value2"
+                android:layout_below="@id/sensor2_title"
+                android:layout_alignLeft="@+id/sensor2_title"
+                android:text="Value"
+                android:paddingLeft="@dimen/padding_left_details"
                 android:paddingRight="@dimen/padding_right_details"
-                android:layout_marginTop="@dimen/margin_top_details"
                 android:layout_marginBottom="@dimen/margin_bottom_details"/>
             <View
 

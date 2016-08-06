@@ -39,23 +39,26 @@ public class LogDataAdapter extends RecyclerView.Adapter{
         if(holder instanceof LogDataViewHolder){
             LogDataBean bean = logList.get(position);
 
-            if(bean.getAction().equals("Water")){
+            if(bean.getAction() == 1){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.water));
             }
-            else if(bean.getAction().equals("Shower")){
+            else if(bean.getAction() == 2){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.shower));
             }
-            else if(bean.getAction().equals("Open Slat")){
-                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acCloseSlat));//acOpenSlat
-            }
-            else if(bean.getAction().equals("Close Slat")){
+            else if(bean.getAction() == 3){
                 ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acOpenSlat));
             }
+            else if(bean.getAction() == 4){
+                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acHalfCloseSlat));
+            }
+            else if(bean.getAction() == 5){
+                ((LogDataViewHolder)holder).action.setText(context.getResources().getString(R.string.acCloseSlat));
+            }
 
-            if(bean.getActionType().equals("Auto")){
+            if(bean.getType() == 1){
                 ((LogDataViewHolder)holder).typeAction.setText(context.getResources().getString(R.string.typeActionAuto));
             }
-            else if(bean.getActionType().equals("Manual")){
+            else if(bean.getType() == 2){
                 ((LogDataViewHolder)holder).typeAction.setText(context.getResources().getString(R.string.typeActionManual));
             }
 

@@ -65,9 +65,10 @@ public class ImageFragment extends Fragment {
     private int ftPubIM;
     private Button refresh,load;
     private ImageBean imBean;
+    private final String fqPubImageTAG ="fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
 
     private ActionListener actionListener = new ActionListener();
-    private OnFragmentInteractionListener mListener;
+
 
     public ImageFragment() {
         // Required empty public constructor
@@ -96,7 +97,7 @@ public class ImageFragment extends Fragment {
         }
         sharedPreferences = getActivity().getSharedPreferences("Details", getActivity().MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        ftPubIM = sharedPreferences.getInt("ftPubIM",1);
+        ftPubIM = sharedPreferences.getInt(fqPubImageTAG,1);
     }
 
     @Override
@@ -148,12 +149,12 @@ public class ImageFragment extends Fragment {
                                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                         int value = getValueSendImageFromWhich(which);
 
-                                        if(value != (sharedPreferences.getInt("ftPubIM",1))){
+                                        if(value != (sharedPreferences.getInt(fqPubImageTAG,1))){
                                             ftPubIM = value;
                                             timeFrequencyValue.setText(text);
                                             Log.e(TAG,"publish data to net pie");
                                             JsonObject object = new JsonObject();
-                                            object.addProperty("FTImage",ftPubIM);
+                                            object.addProperty(fqPubImageTAG,ftPubIM);
                                             actionListener.onSaveSetting.onSaveSetting(
                                                     false,
                                                     true,
@@ -246,15 +247,9 @@ public class ImageFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "onDetach");
         super.onDetach();
-        mListener = null;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
     public void setActionListener(){
         actionListener.setOnException(new ActionListener.OnException() {
             @Override

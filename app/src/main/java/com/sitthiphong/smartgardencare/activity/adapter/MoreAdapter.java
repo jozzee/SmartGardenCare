@@ -63,7 +63,10 @@ public class MoreAdapter extends RecyclerView.Adapter {
                 }
                 else{
                     ((MoreDataViewHolder) holder).value.setText(String.valueOf(
-                            "Light in: "+bean.getLightIn() +" Lux, Light out: "+bean.getLightOut()+" Lux"));
+                            context.getResources().getString(R.string.lightIn) +": "
+                            +bean.getLightIn() +" Lux, "+
+                                    context.getResources().getString(R.string.lightOut)+": "
+                                    +bean.getLightOut()+" Lux"));
                 }
 
             }

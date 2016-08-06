@@ -24,6 +24,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.sitthiphong.smartgardencare.R;
+import com.sitthiphong.smartgardencare.bean.RawDataBeanList;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.core.linechart.MyMarkerView;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
@@ -43,9 +44,9 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
     private int lineChartId;
     private LineChart mChart;
     private int type;
-    private  List<RawDataBean> rawList;
+    private  List<RawDataBeanList> rawList;
 
-    public MagLineChart(Context context,View view, int lineChartId,int type, List<RawDataBean> rawList) {
+    public MagLineChart(Context context,View view, int lineChartId,int type, List<RawDataBeanList> rawList) {
         this.context = context;
         this.view = view;
         this.lineChartId = lineChartId;
@@ -66,11 +67,11 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         }
     }
 
-    public void setRawList(List<RawDataBean> rawList) {
+    public void setRawList(List<RawDataBeanList> rawList) {
         this.rawList = rawList;
     }
 
-    public List<RawDataBean> getRawList() {
+    public List<RawDataBeanList> getRawList() {
         return rawList;
     }
 
@@ -215,7 +216,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<Entry> yVals = new ArrayList<Entry>();
 
-        RawDataBean bean = null;
+        RawDataBeanList bean = null;
 
 
         int position = 0;
@@ -235,7 +236,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                     }
                 }
                 else if(type == 3){
-                    if(bean.getLightIn()>0){
+                    if(bean.getLight()>0){
                         length++;
                     }
                 }
@@ -275,10 +276,10 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                 }
             }
             else if(type == 3){
-                if(bean.getLightIn()>0){
+                if(bean.getLight()>0){
                     xVals.add(new SimpleDateFormat("HH:mm",java.util.Locale.US)
                             .format(new Date(bean.getTime()*1000)));
-                    yVals.add(new Entry(bean.getLightIn(),i));
+                    yVals.add(new Entry(bean.getLight(),i));
                     i++;
                 }
             }

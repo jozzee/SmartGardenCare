@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.activity.MoreActivity;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
+import com.sitthiphong.smartgardencare.bean.RawDataBeanList;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
 import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 import com.sitthiphong.smartgardencare.core.MagDiscreteSeekBar;
@@ -324,7 +325,7 @@ public class TempFragment extends Fragment {
                             getResources().getString(R.string.unitTemp));
                 }
                 else{
-                    sensorValue1.setText(getResources().getString(R.string.errorSensorDHT22));
+                    sensorValue2.setText(getResources().getString(R.string.errorSensorDHT22));
                 }
                 seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
                 scrollView.setVisibility(View.VISIBLE);
@@ -373,9 +374,9 @@ public class TempFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public List<RawDataBean> getRawList(String rawListAsJsonString){
+    public List<RawDataBeanList> getRawList(String rawListAsJsonString){
         JsonArray jsonArray = GsonProvider.getInstance().fromJson(rawListAsJsonString, JsonArray.class);
-        Type listType = new TypeToken<ArrayList<RawDataBean>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<RawDataBeanList>>(){}.getType();
         return GsonProvider.getInstance().fromJson(jsonArray, listType);
     }
 }

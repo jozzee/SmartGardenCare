@@ -13,7 +13,7 @@
     <string name="fetching">กำลังโหลดข้อมูล</string>
     <string name="errorSensorMoisture">เซ็นเซอร์วัดความชื้นในดินผิดพลาด!</string>
     <string name="errorSensorDHT22">เซ็นเซอร์วัดอุณหภูมิผิดพลาด!</string>
-    <string name="errorSensorBH1750">ซ็นเซอร์วัดความเข้มแสงผิดพลาด!</string>
+    <string name="errorSensorBH1750">เซ็นเซอร์วัดความเข้มแสงผิดพลาด!</string>
     <string name="saveSetting">บันทึกการตั้งค่า</string>
     <string name="success">สำเร็จ</string>
     <string name="onSaveSetting">กำลังบันทึกค่า...</string>
@@ -71,11 +71,20 @@
     <!--light fragment -->
     <string name="light">ความเข้มแสง</string>
     <string name="slatOpen">ไม้ระแนงเปิดไว้อยู่</string>
+    <string name="slatHalfClose">ไม้ระแนงถูกปิดไว้ครึ่งหนึ่ง</string>
+    <string name="acHalfCloseSlat">ปิดไม้ระแนงครึ่งหนึง</string>
     <string name="slatClose">ไม้ระแนงไม่ได้ถูกเปิดไว้</string>
     <string name="unitLight"> Lux</string>
     <string name="open">เปิด</string>
     <string name="close">ปิด</string>
     <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
+    <string name="lightIn">แสงข้างใน</string>
+    <string name="lightOut">แสงจากข้างนอก</string>
+
+    <string name="ct1">ปิดครึ่งหนึ่ง</string>
+    <string name="ct2">ปิดทั้งหมด</string>
+    <string name="ct3">เปิดครึ่งหนึ่ง</string>
+    <string name="ct4">เปิดทั้งหมด</string>
 
 
     <!--log fragment -->

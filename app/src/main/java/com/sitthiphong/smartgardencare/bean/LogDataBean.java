@@ -5,15 +5,15 @@ package com.sitthiphong.smartgardencare.bean;
  */
 public class LogDataBean {
     private int id;
-    private String action;
-    private String actionType;
+    private int action;
+    private int type;
     private long time;
     private String note;
 
-    public LogDataBean(int id, String action, String actionType, long time, String note) {
+    public LogDataBean(int id, int action, int type, long time, String note) {
         this.id = id;
         this.action = action;
-        this.actionType = actionType;
+        this.type = type;
         this.time = time;
         this.note = note;
     }
@@ -22,12 +22,12 @@ public class LogDataBean {
         return id;
     }
 
-    public String getAction() {
+    public int getAction() {
         return action;
     }
 
-    public String getActionType() {
-        return actionType;
+    public int getType() {
+        return type;
     }
 
     public long getTime() {
@@ -42,12 +42,12 @@ public class LogDataBean {
         this.id = id;
     }
 
-    public void setAction(String action) {
+    public void setAction(int action) {
         this.action = action;
     }
 
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void setTime(long time) {

@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.activity.MoreActivity;
 import com.sitthiphong.smartgardencare.bean.RawDataBean;
+import com.sitthiphong.smartgardencare.bean.RawDataBeanList;
 import com.sitthiphong.smartgardencare.bean.StatusBean;
 import com.sitthiphong.smartgardencare.bean.SubscribeBean;
 import com.sitthiphong.smartgardencare.core.MagDiscreteSeekBar;
@@ -50,7 +51,7 @@ public class LightFragment extends Fragment {
     private View rootView;
     private ActionListener actionListener = new ActionListener();
     private Button btnCtrlSlat1,btnCtrlSlat2;
-    private TextView lastTime,textViewStatusSlat,lightValue,more,exception,slatStatus,sensorError;
+    private TextView lastTime,textViewStatusSlat,lightValue,more,exception,slatStatus,sensorError,lightOutTitle,lightOutValue;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private MagPieView pieView;
@@ -148,11 +149,41 @@ public class LightFragment extends Fragment {
 //                }
 //            }
 //        });
+        btnCtrlSlat1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//1,4,3
+                if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct1))){
+
+                }
+                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
+
+                }
+                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct3))){
+
+                }
+            }
+        });
+        btnCtrlSlat2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {// 2,2,4
+                if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct2))){
+
+                }
+                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
+
+                }
+            }
+        });
 
 
         lastTime = (TextView)rootView.findViewById(R.id.time_value);
         //lastTime.setText( new SimpleDateFormat("HH:mm dd-MM-yyyy",java.util.Locale.US)
         //        .format(new Date(rawDataBean.getTime()*1000)));
+
+
+        lightOutTitle = (TextView)rootView.findViewById(R.id.sensor1_title);
+        lightOutValue = (TextView)rootView.findViewById(R.id.sensor1_value);
+        lightOutTitle.setText(getResources().getString(R.string.lightOut));
 
         lightValue = (TextView)rootView.findViewById(R.id.value_standard);
         lightValue.setText(String.valueOf((int)sharedPreferences.getFloat("light",5000))+" Lux");
@@ -326,6 +357,14 @@ public class LightFragment extends Fragment {
                     sensorError.setText(getResources().getString(R.string.errorSensorBH1750));
                     sensorError.setVisibility(View.VISIBLE);
                 }
+                if(rawBean.getLightOut()>0){
+                    lightOutValue.setText(
+                            String.valueOf(rawBean.getLightOut())+
+                                    getResources().getString(R.string.unitLight)
+                    );
+                }else{
+                    lightOutValue.setText(getResources().getString(R.string.errorSensorBH1750));
+                }
 
                 lastTime.setText(SimpleDateProvider.getInstance()
                         .format(new Date(rawBean.getTime()*1000)));
@@ -353,6 +392,23 @@ public class LightFragment extends Fragment {
             @Override
             public void onUpdateSlatStatus(int stStatus) {
                 Log.e(TAG,"onUpdateSlatStatus");
+
+                if(stStatus == 1){// full open
+                    textViewStatusSlat.setText(getResources().getString(R.string.slatOpen));
+                    btnCtrlSlat1.setText(getResources().getString(R.string.ct1));
+                    btnCtrlSlat2.setText(getResources().getString(R.string.ct2));
+
+                }
+                else if(stStatus == 2){ //half close
+                    textViewStatusSlat.setText(getResources().getString(R.string.slatHalfClose));
+                    btnCtrlSlat1.setText(getResources().getString(R.string.ct4));
+                    btnCtrlSlat2.setText(getResources().getString(R.string.ct2));
+                }
+                else if(stStatus == 3){//full close
+                    textViewStatusSlat.setText(getResources().getString(R.string.slatClose));
+                    btnCtrlSlat1.setText(getResources().getString(R.string.ct3));
+                    btnCtrlSlat2.setText(getResources().getString(R.string.ct4));
+                }
 //                if(stStatus == 1){
 //
 //                    slatStatus.setText(getActivity().getResources().getString(R.string.slatClose));//slatOpen
@@ -374,9 +430,9 @@ public class LightFragment extends Fragment {
         });
     }
 
-    public List<RawDataBean> getRawList(String rawListAsJsonString){
+    public List<RawDataBeanList> getRawList(String rawListAsJsonString){
         JsonArray jsonArray = GsonProvider.getInstance().fromJson(rawListAsJsonString, JsonArray.class);
-        Type listType = new TypeToken<ArrayList<RawDataBean>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<RawDataBeanList>>(){}.getType();
         return GsonProvider.getInstance().fromJson(jsonArray, listType);
     }
     public void notificationSnackBar(String message){

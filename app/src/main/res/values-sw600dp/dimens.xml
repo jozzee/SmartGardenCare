@@ -49,6 +49,7 @@
     <dimen name="padding_right_details">64dp</dimen>
     <dimen name="margin_top_details">32dp</dimen>
     <dimen name="margin_bottom_details">32dp</dimen>
+    <dimen name="margin_bottom_details2">16dp</dimen>
 
     <!--light fragment-->
     <dimen name="padding_slat_status">32dp</dimen>

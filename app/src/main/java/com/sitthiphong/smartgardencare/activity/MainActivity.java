@@ -57,6 +57,8 @@ import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
     private final String appIdTAG = "appId";
     private final String appKeyTAG = "appKey";
     private final String appSecretTAG ="appSecret";
+    private final String dayStorageTAG ="dayStorage";
+    private final String fqPubRawDataTAG ="fqPubRawData";
+    private final String fqPubImageTAG ="fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
+    private final String fqInsertRawDataTAG = "fqInsertRawData";
 
 
 
@@ -143,33 +149,34 @@ public class MainActivity extends AppCompatActivity {
                             }
                             if(responseBean.getTopic().equals("settingDetails")){
                                 JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(),JsonObject.class);
-                                if(objDetails.get("FTRawData")!= null){
-                                    editor.putInt("ftPubRD",objDetails.get("FTRawData").getAsInt());
+                                if(objDetails.get(fqPubRawDataTAG)!= null){
+                                    editor.putInt(fqPubRawDataTAG,objDetails.get(fqPubRawDataTAG).getAsInt());
                                 }
-                                if(objDetails.get("FIRawData")!= null){
-                                    editor.putInt("ftIRD",objDetails.get("FIRawData").getAsInt());
+                                if(objDetails.get(fqInsertRawDataTAG)!= null){
+                                    editor.putInt(fqInsertRawDataTAG,objDetails.get(fqInsertRawDataTAG).getAsInt());
                                 }
-                                if(objDetails.get("DOStorage")!= null){
-                                    editor.putInt("dayStore",objDetails.get("DOStorage").getAsInt());
+                                if(objDetails.get(dayStorageTAG)!= null){
+                                    editor.putInt(dayStorageTAG,objDetails.get(dayStorageTAG).getAsInt());
 
                                 }
-                                if(objDetails.get("FTImage")!= null){
-                                    editor.putInt("ftPubIM",objDetails.get("FTImage").getAsInt());
+                                if(objDetails.get(fqPubImageTAG)!= null){
+                                    editor.putInt(fqPubImageTAG,objDetails.get(fqPubImageTAG).getAsInt());
+                                }
+                                if(objDetails.get("objNETPIE")!= null){
+                                    JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
+                                    if(object.get(appIdTAG)!= null){
+                                        editor.putString(appIdTAG,object.get(appIdTAG).getAsString());
+                                    }
+                                    if(object.get(appKeyTAG)!= null){
+                                        editor.putString(appKeyTAG,object.get(appKeyTAG).getAsString());
+                                    }
+                                    if(object.get(appSecretTAG) != null){
+                                        editor.putString(appSecretTAG,object.get(appSecretTAG).getAsString());
+                                    }
+                                    editor.commit();
+                                    reStartActivity();
                                 }
                                 editor.commit();
-
-//                                editor.putBoolean("first",false); //open first app
-//                                editor.putBoolean("autoWater",true);
-//                                editor.putFloat("moisture", (float) 20.00); //persen
-//                                editor.putBoolean("autoShower",true);
-//                                editor.putFloat("temp", (float) 40.00); //°C
-//                                editor.putBoolean("autoSlat",true);
-//                                editor.putFloat("light", (float) 5000.00);//Lux
-//                                editor.putInt("dayStore",7); //unit day
-//                                editor.putInt("ftPubRD",1); // unit minute
-//                                editor.putInt("ftPubIM",1); // unit hour
-//                                editor.putInt("ftIRD",1); // unit hour
-//                                editor.commit()
                                 alertDialog(getResources().getString(R.string.saveSetting),
                                         getResources().getString(R.string.success));
 

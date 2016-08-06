@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -131,10 +132,12 @@ public class SettingActivity extends AppCompatActivity {
                 if(b){
                     autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                             getResources().getString(R.string.open));
+                    autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
                 }
                 else {
                     autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                             getResources().getString(R.string.close));
+                    autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
                 }
                 if(b!=sharedPreferences.getBoolean("autoMode",false)){
                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
@@ -151,10 +154,12 @@ public class SettingActivity extends AppCompatActivity {
                         if(b){
                             autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                                     getResources().getString(R.string.open));
+                            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
                         }
                         else {
                             autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                                     getResources().getString(R.string.close));
+                            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
                         }
                     }
                 }
@@ -177,7 +182,8 @@ public class SettingActivity extends AppCompatActivity {
                                     textViewAppID.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
-                                    if(textViewAppKey.getText().toString().trim()
+                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                            && textViewAppKey.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
@@ -208,7 +214,8 @@ public class SettingActivity extends AppCompatActivity {
                                     textViewAppKey.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
-                                    if(textViewAppID.getText().toString().trim()
+                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                            &&textViewAppID.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
@@ -241,7 +248,8 @@ public class SettingActivity extends AppCompatActivity {
                                     textViewAppSecret.setText(input.toString());
                                     menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                 }else{
-                                    if(textViewAppKey.getText().toString().trim()
+                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                            &&textViewAppKey.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
                                             && textViewAppSecret.getText().toString().trim()
                                             .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
@@ -274,7 +282,8 @@ public class SettingActivity extends AppCompatActivity {
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
-                                            if(textViewAppID.getText().toString().trim()
+                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                                    &&textViewAppID.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
@@ -314,7 +323,8 @@ public class SettingActivity extends AppCompatActivity {
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
-                                            if(textViewAppID.getText().toString().trim()
+                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                                    &&textViewAppID.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
@@ -354,7 +364,8 @@ public class SettingActivity extends AppCompatActivity {
                                             menu.findItem(R.id.actionSaveSetting).setVisible(true);
                                         }
                                         else{
-                                            if(textViewAppID.getText().toString().trim()
+                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
+                                                    &&textViewAppID.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appIdTAG,"no directory"))
                                                     && textViewAppKey.getText().toString().trim()
                                                     .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
@@ -491,12 +502,12 @@ public class SettingActivity extends AppCompatActivity {
         }
         if(dayStorage != sharedPreferences.getInt(dayStorageTAG,7)){
             objDetails.addProperty(dayStorageTAG,dayStorage);
-            changeDetails =true;
+            changeDetails = true;
         }
         if(swAutoMode.isChecked() != sharedPreferences.getBoolean("autoMode",false)){
-            Log.e(TAG,"swAutoMode.isChecked(): "+String.valueOf(swAutoMode.isChecked()));
-          
+            //Log.e(TAG,"swAutoMode.isChecked(): "+String.valueOf(swAutoMode.isChecked()));
             objDetails.addProperty("autoMode",swAutoMode.isChecked());
+            changeDetails = true;
         }
         new ActionListener().onSaveSetting.onSaveSetting(
                 changeNETPIE,
