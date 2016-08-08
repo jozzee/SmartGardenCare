@@ -105,10 +105,12 @@ public class SettingActivity extends AppCompatActivity {
         if(swAutoMode.isChecked()){
             autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                     getResources().getString(R.string.open));
+            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
         }
         else{
             autoMote.setText(getResources().getString(R.string.autoMode)+" "+
                     getResources().getString(R.string.close));
+            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
         }
 
 

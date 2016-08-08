@@ -169,11 +169,12 @@ public class LightFragment extends Fragment {
         btnCtrlSlat2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {// 2,2,4
-                if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct2))){
+
+                if(btnCtrlSlat2.getText().toString().trim().equals(getResources().getString(R.string.ct2))){
                     actionListener.onControlDevice.onControlDevice(4,true);
 
                 }
-                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
+                else if(btnCtrlSlat2.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
                     actionListener.onControlDevice.onControlDevice(3,true);
                 }
             }
@@ -363,7 +364,7 @@ public class LightFragment extends Fragment {
                 }
                 if(rawBean.getLightOut()>0){
                     lightOutValue.setText(
-                            String.valueOf(rawBean.getLightOut())+
+                            String.format( "%.2f", rawBean.getLightOut() )+" "+
                                     getResources().getString(R.string.unitLight)
                     );
                 }else{

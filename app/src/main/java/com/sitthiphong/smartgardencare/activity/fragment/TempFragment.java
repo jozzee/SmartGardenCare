@@ -313,7 +313,7 @@ public class TempFragment extends Fragment {
                         .format(new Date(rawBean.getTime()*1000)));
 
                 if(rawBean.getTemp1()>0){
-                    sensorValue1.setText(String.valueOf(rawBean.getTemp1()) +
+                    sensorValue1.setText(String.format( "%.2f", rawBean.getTemp1() ) +
                             getResources().getString(R.string.unitTemp));
                 }
                 else{
@@ -321,7 +321,7 @@ public class TempFragment extends Fragment {
                 }
 
                 if(rawBean.getTemp2() >0 ){
-                    sensorValue2.setText(String.valueOf(rawBean.getTemp2())+
+                    sensorValue2.setText(String.format( "%.2f", rawBean.getTemp2() )+
                             getResources().getString(R.string.unitTemp));
                 }
                 else{

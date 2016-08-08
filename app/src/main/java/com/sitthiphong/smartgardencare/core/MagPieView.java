@@ -38,7 +38,7 @@ public class MagPieView {
         pieView.setPercentageTextSize(context.getResources()
                 .getInteger(R.integer.percentage_size_moisture));
 
-        if(value>0){
+        if(value>=0){
             pieView.setmPercentage(value);
             pieView.setInnerText(String.valueOf(value)+unit);
         }
@@ -51,21 +51,21 @@ public class MagPieView {
 
     public void setValue(float value) {
         this.value = value;
-        if(value>0){
+        if(value>=0){
             if(colorId == ContextCompat.getColor(context,R.color.blue)){
                 //BigDecimal v = new BigDecimal(value).setScale(2,BigDecimal.ROUND_HALF_UP);
 
                 pieView.setmPercentage(value);
-                pieView.setInnerText(String.valueOf(value)+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
             }
             else if(colorId == ContextCompat.getColor(context,R.color.deepOrange)){
                 pieView.setmPercentage((value*2));
-                pieView.setInnerText(String.valueOf(value)+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
 
             }
             else if(colorId == ContextCompat.getColor(context,R.color.amber)){
                 pieView.setmPercentage((value/200));
-                pieView.setInnerText(String.valueOf(value)+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
             }
 
         }

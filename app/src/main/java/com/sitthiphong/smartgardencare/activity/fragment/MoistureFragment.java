@@ -322,13 +322,13 @@ public class MoistureFragment extends Fragment {
                 lastTime.setText(SimpleDateProvider.getInstance()
                         .format(new Date(rawBean.getTime()*1000)));
                 //update sensor 2 ตัวเิหเดทิส
-                if(rawBean.getMoisture1()>0){
-                    sensorValue1.setText(String.valueOf(rawBean.getMoisture1())+" %");
+                if(rawBean.getMoisture1()>=0){
+                    sensorValue1.setText(String.valueOf(String.format( "%.2f", rawBean.getMoisture1() ))+" %");
                 }else{
                     sensorValue1.setText(getResources().getString(R.string.errorSensorMoisture));
                 }
-                if(rawBean.getMoisture2()>0){
-                    sensorValue2.setText(String.valueOf(rawBean.getMoisture2())+" %");
+                if(rawBean.getMoisture2()>=0){
+                    sensorValue2.setText(String.valueOf(String.format( "%.2f", rawBean.getMoisture2() ))+" %");
                 }else{
                     sensorValue2.setText(getResources().getString(R.string.errorSensorMoisture));
                 }

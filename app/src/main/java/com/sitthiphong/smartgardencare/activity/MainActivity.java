@@ -163,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(objDetails.get(fqPubImageTAG)!= null){
                                     editor.putInt(fqPubImageTAG,objDetails.get(fqPubImageTAG).getAsInt());
                                 }
+                                if(objDetails.get(autoModeTAG)!= null){
+                                    editor.putBoolean(autoModeTAG,objDetails.get(autoModeTAG).getAsBoolean());
+                                }
                                 if(objDetails.get("objNETPIE")!= null){
                                     JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
                                     if(object.get(appIdTAG)!= null){
