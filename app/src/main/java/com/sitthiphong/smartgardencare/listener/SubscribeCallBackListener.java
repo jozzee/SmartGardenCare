@@ -1,6 +1,6 @@
 package com.sitthiphong.smartgardencare.listener;
 
-import com.sitthiphong.smartgardencare.bean.SubscribeBean;
+import com.sitthiphong.smartgardencare.datamodel.SubscribeBean;
 
 /**
  * Created by jozze on 17/7/2559.

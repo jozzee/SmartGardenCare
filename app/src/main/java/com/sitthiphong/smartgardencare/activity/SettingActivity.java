@@ -3,7 +3,6 @@ package com.sitthiphong.smartgardencare.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -22,10 +20,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.bean.NetPieBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
-import com.sitthiphong.smartgardencare.provider.event.OnSaveSettingEvent;
 
 public class SettingActivity extends AppCompatActivity {
     private final String TAG = "SettingActivity";

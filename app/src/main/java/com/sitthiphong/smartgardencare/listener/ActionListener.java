@@ -1,11 +1,9 @@
 package com.sitthiphong.smartgardencare.listener;
 
 import com.google.gson.JsonObject;
-import com.sitthiphong.smartgardencare.bean.ImageBean;
-import com.sitthiphong.smartgardencare.bean.RawDataBean;
-import com.sitthiphong.smartgardencare.bean.StatusBean;
-
-import java.util.List;
+import com.sitthiphong.smartgardencare.datamodel.ImageBean;
+import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
+import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 
 /**
  * Created by Sitthiphong on 7/20/2016 AD.
@@ -34,6 +32,7 @@ public class ActionListener {
     public static OnPermissionResult onPermissionResult = null;
     public static OnRefreshImage onRefreshImage = null;
     public static OnSetStandardFalse onSetStandardFalse = null;
+    public static OnRegisterGCMFinish onRegisterGCMFinish = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -184,6 +183,13 @@ public class ActionListener {
     public void setOnSetStandardFalse(OnSetStandardFalse listener){
         onSetStandardFalse = listener;
     }
+    public interface OnRegisterGCMFinish{
+        public void onRegisterGCMFinish(String token);
+    }
+    public void setOnRegisterGCMFinish(OnRegisterGCMFinish listener){
+        onRegisterGCMFinish = listener;
+    }
+
 
 
 

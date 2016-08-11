@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.bean;
+package com.sitthiphong.smartgardencare.datamodel;
 
 import com.google.gson.JsonObject;
 

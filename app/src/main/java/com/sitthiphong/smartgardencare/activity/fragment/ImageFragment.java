@@ -1,6 +1,5 @@
 package com.sitthiphong.smartgardencare.activity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,8 +27,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.bean.ImageBean;
-import com.sitthiphong.smartgardencare.bean.StatusBean;
+import com.sitthiphong.smartgardencare.datamodel.ImageBean;
+import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.core.CheckPermission;
 import com.sitthiphong.smartgardencare.core.MagScreen;
 import com.sitthiphong.smartgardencare.listener.ActionListener;

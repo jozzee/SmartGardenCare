@@ -24,10 +24,8 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.bean.RawDataBeanList;
+import com.sitthiphong.smartgardencare.datamodel.RawDataBeanList;
 import com.sitthiphong.smartgardencare.core.MagScreen;
-import com.sitthiphong.smartgardencare.core.linechart.MyMarkerView;
-import com.sitthiphong.smartgardencare.bean.RawDataBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -242,20 +240,20 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                 }
 
             }
-            Log.e(TAG,"position: "+position);
+            //Log.e(TAG,"position: "+position);
             position++;
             if(position>rawList.size()){
                 length = 11;
             }
         }
-        Log.e(TAG,"---------------------");
-        Log.e(TAG,"position: "+position);
-        Log.e(TAG,"length: "+length);
+        //Log.e(TAG,"---------------------");
+        //Log.e(TAG,"position: "+position);
+        //Log.e(TAG,"length: "+length);
 
         position-=2;
         int i =0;
         while (position>=0){
-            Log.e(TAG,"position: "+position);
+            //Log.e(TAG,"position: "+position);
             bean = rawList.get(position);
             Log.e(TAG,"time: "+bean.getTime());
             if(type == 1){
@@ -264,7 +262,7 @@ public class MagLineChart implements OnChartGestureListener, OnChartValueSelecte
                             .format(new Date(bean.getTime()*1000)));
                     yVals.add(new Entry(bean.getMoisture(),i));
                     i++;
-                    Log.e(TAG,"Time: "+bean.getTime());
+                    //Log.e(TAG,"Time: "+bean.getTime());
                 }
             }
             else if(type == 2){

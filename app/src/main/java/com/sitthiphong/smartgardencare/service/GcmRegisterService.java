@@ -11,6 +11,7 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.sitthiphong.smartgardencare.R;
+import com.sitthiphong.smartgardencare.listener.ActionListener;
 
 import java.io.IOException;
 
@@ -21,6 +22,9 @@ public class GcmRegisterService extends IntentService {
     private static final String[] TOPICS = {"global"};
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
 
     public GcmRegisterService() {
         super(TAG);
@@ -29,8 +33,8 @@ public class GcmRegisterService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Details", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreferences = getSharedPreferences("Details", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
 
         try {
@@ -45,9 +49,6 @@ public class GcmRegisterService extends IntentService {
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
             Log.i(TAG, "GCM Registration Token: " + token);
-            editor.putString("Token",token);
-            editor.commit();
-            Log.e(TAG, "put token to sharePreferences");
 
 
 
@@ -86,6 +87,9 @@ public class GcmRegisterService extends IntentService {
         Log.e(TAG, "Token : " + token);
 //        MainVariable.setTokenDevice(token);
         //ShareData.setToken(token);
+        editor.putString("token",token);
+        editor.commit();
+        new ActionListener().onRegisterGCMFinish.onRegisterGCMFinish(token);
     }
 
     /**

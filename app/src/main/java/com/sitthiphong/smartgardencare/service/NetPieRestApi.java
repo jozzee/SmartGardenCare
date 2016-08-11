@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.core;
+package com.sitthiphong.smartgardencare.service;
 
 import android.util.Log;
 
@@ -35,7 +35,7 @@ public class NetPieRestApi {
         Log.i(TAG,"message: "+message);
         Log.i(TAG,"retain: "+ String.valueOf(retain));
 
-        url = "https://api.netpie.io/topic/" +appID  +topic;
+        url = "https://api.netpie.io/topic/" +appID  +"/"+topic;
         if(retain){
             url+="?retain";
         }

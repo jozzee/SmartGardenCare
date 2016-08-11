@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.activity.adapter;
+package com.sitthiphong.smartgardencare.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.bean.RawDataBean;
+import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
 import com.sitthiphong.smartgardencare.provider.SimpleDateProvider;
 
 import java.util.Date;

@@ -20,19 +20,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.sitthiphong.netpiegear.EventListener;
@@ -43,25 +39,19 @@ import com.sitthiphong.smartgardencare.activity.fragment.LightFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.LogFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.MoistureFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.TempFragment;
-import com.sitthiphong.smartgardencare.bean.ImageBean;
-import com.sitthiphong.smartgardencare.bean.PublishBean;
-import com.sitthiphong.smartgardencare.bean.RawDataBean;
-import com.sitthiphong.smartgardencare.bean.ResponseBean;
-import com.sitthiphong.smartgardencare.bean.StatusBean;
-import com.sitthiphong.smartgardencare.bean.SubscribeBean;
+import com.sitthiphong.smartgardencare.datamodel.ImageBean;
+import com.sitthiphong.smartgardencare.datamodel.PublishBean;
+import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
+import com.sitthiphong.smartgardencare.datamodel.ResponseBean;
+import com.sitthiphong.smartgardencare.datamodel.StatusBean;
+import com.sitthiphong.smartgardencare.datamodel.SubscribeBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
 import com.sitthiphong.smartgardencare.listener.NetworkChangeListener;
 import com.sitthiphong.smartgardencare.listener.SubscribeCallBackListener;
-import com.sitthiphong.smartgardencare.core.NetPieRestApi;
+import com.sitthiphong.smartgardencare.service.NetPieRestApi;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
-
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
@@ -308,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else if(head.equals("connect")){
                 boolean status = bundle.getBoolean("status");
-                if(status == true){
+                if(status){
                     Log.i(TAG,"NETPIE Event Listener: onConnect: Connected to NETPIE!!");
                     notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),null);
@@ -343,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
                     else{
                         Log.e(TAG,"not create BottomBar");
                     }
+
                 }
                 else{
                     Log.i(TAG,"NETPIE Event Listener: onConnectFalse: Can't connect to NETPIE!!");
@@ -366,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void registerReceiver() {
+        Log.e(TAG,"registerReceiver");
         if (!isReceiverRegistered) {
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                     new IntentFilter(GcmRegisterService.REGISTRATION_COMPLETE));
@@ -407,9 +399,14 @@ public class MainActivity extends AppCompatActivity {
 
         registerReceiver();
 
+
         if (checkPlayServices()) {
             registerGcm();
         }
+
+
+
+        //Log.e(TAG,"token: "+sharedPreferences.getString("token",""));
 
 
         setActionListener();
@@ -463,6 +460,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         //BusProvider.getInstance().register(this);
 
+
     }
 
     @Override
@@ -471,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         microgear.bindServiceResume();
         registerReceiver();
+
 
     }
 
@@ -732,6 +731,14 @@ public class MainActivity extends AppCompatActivity {
                 publish("refreshIM","1",getResources().getString(R.string.refreshIM));
             }
         });
+        actionListener.setOnRegisterGCMFinish(new ActionListener.OnRegisterGCMFinish() {
+            @Override
+            public void onRegisterGCMFinish(String token) {
+                //microgear.publish("token",token,0,true);
+                new NetPieRestApi(appID,appKey,appSecret).publish("token",token,true);
+                Log.e(TAG,"update Token");
+            }
+        });
 
 
     }
@@ -898,6 +905,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void publish(String topic,String payload,String messageDialog){
         Log.e(TAG,"publish");

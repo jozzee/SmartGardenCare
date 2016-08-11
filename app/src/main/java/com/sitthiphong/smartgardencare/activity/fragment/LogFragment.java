@@ -1,9 +1,7 @@
 package com.sitthiphong.smartgardencare.activity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,13 +17,10 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.activity.adapter.LogDataAdapter;
-import com.sitthiphong.smartgardencare.bean.LogDataBean;
-import com.sitthiphong.smartgardencare.bean.StatusBean;
-import com.sitthiphong.smartgardencare.bean.SubscribeBean;
-import com.sitthiphong.smartgardencare.core.NetPieRestApi;
+import com.sitthiphong.smartgardencare.adapter.LogDataAdapter;
+import com.sitthiphong.smartgardencare.datamodel.LogDataBean;
+import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
-import com.sitthiphong.smartgardencare.listener.SubscribeCallBackListener;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 
 import java.lang.reflect.Type;

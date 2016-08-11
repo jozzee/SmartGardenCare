@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.bean;
+package com.sitthiphong.smartgardencare.datamodel;
 
 /**
  * Created by Sitthiphong on 7/20/2016 AD.

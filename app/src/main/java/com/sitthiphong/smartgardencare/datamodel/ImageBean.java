@@ -1,4 +1,4 @@
-package com.sitthiphong.smartgardencare.bean;
+package com.sitthiphong.smartgardencare.datamodel;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

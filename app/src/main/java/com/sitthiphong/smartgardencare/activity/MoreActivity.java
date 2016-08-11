@@ -5,16 +5,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.activity.adapter.MoreAdapter;
-import com.sitthiphong.smartgardencare.bean.RawDataBean;
-import com.sitthiphong.smartgardencare.provider.BusProvider;
+import com.sitthiphong.smartgardencare.adapter.MoreAdapter;
+import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 
 import java.lang.reflect.Type;
