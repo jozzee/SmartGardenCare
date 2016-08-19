@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.activity.MainActivity;
+import com.sitthiphong.smartgardencare.listener.ActionListener;
 
 /**
  * Created by Akexorcist on 3/6/2016 AD.
@@ -24,8 +26,27 @@ public class GcmDownstreamService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         // TODO Do something here
         Log.e(TAG, "Message Incoming");
+        SharedPreferences sp =  getSharedPreferences("Details", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if(sp.getString("activity","").equals("onResume")){
+            Log.e(TAG,"onResume");
+            try {
+                new ActionListener().onNoti.onNoti(data);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
 
-        sendNotification(String.valueOf(data.get("body")));
+        }
+        else if(sp.getString("activity","").equals("onStop")){
+            Log.e(TAG,"onResume");
+
+        }
+        else if(sp.getString("activity","").equals("onDestroy")){
+            Log.e(TAG,"onResume");
+            sendNotification(String.valueOf(data.get("body")));
+        }
+
+
 
     }
     private void sendNotification(String messageBody) {

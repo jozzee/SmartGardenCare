@@ -286,11 +286,11 @@ public class TempFragment extends Fragment {
             @Override
             public void onUpdateRawBean(RawDataBean rawBean) {
 
-                if(rawBean.getTemp()>0){
+                if(rawBean.getTempAverage()>0){
                     exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
-                    pieView.setValue(rawBean.getTemp());
+                    pieView.setValue(rawBean.getTempAverage());
                     pieView.setVisibility(View.VISIBLE);
 
                 }

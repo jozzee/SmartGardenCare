@@ -43,7 +43,7 @@ public class LightFragment extends Fragment {
     private final String TAG = "LightFragment";
     private View rootView;
     private ActionListener actionListener = new ActionListener();
-    private Button btnCtrlSlat1,btnCtrlSlat2;
+    private Button btnCtrlSlat;
     private TextView lastTime,textViewStatusSlat,lightValue,more,exception,slatStatus,sensorError,lightOutTitle,lightOutValue;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -106,9 +106,7 @@ public class LightFragment extends Fragment {
 
 
 
-        btnCtrlSlat1 = (Button)rootView.findViewById(R.id.btnAction);
-        btnCtrlSlat2 = (Button)rootView.findViewById(R.id.btnAction2);
-        btnCtrlSlat2.setVisibility(View.VISIBLE);
+        btnCtrlSlat = (Button)rootView.findViewById(R.id.btnAction);
 
         layoutVisibilityStatus = (RelativeLayout)rootView.findViewById(R.id.layoutVisibilityStatus);
         layoutVisibilitySensor2 = (RelativeLayout)rootView.findViewById(R.id.layoutVisibilitySensor2);
@@ -142,34 +140,18 @@ public class LightFragment extends Fragment {
 //                }
 //            }
 //        });
-        btnCtrlSlat1.setOnClickListener(new View.OnClickListener() {
+        btnCtrlSlat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//1,4,3
-                if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct1))){
-                    actionListener.onControlDevice.onControlDevice(4,false);
-
-                }
-                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
+                if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.open))){
                     actionListener.onControlDevice.onControlDevice(3,true);
 
                 }
-                else if(btnCtrlSlat1.getText().toString().trim().equals(getResources().getString(R.string.ct3))){
-                    actionListener.onControlDevice.onControlDevice(3,false);
-
-                }
-            }
-        });
-        btnCtrlSlat2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {// 2,2,4
-
-                if(btnCtrlSlat2.getText().toString().trim().equals(getResources().getString(R.string.ct2))){
+                else if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.close))){
                     actionListener.onControlDevice.onControlDevice(4,true);
 
                 }
-                else if(btnCtrlSlat2.getText().toString().trim().equals(getResources().getString(R.string.ct4))){
-                    actionListener.onControlDevice.onControlDevice(3,true);
-                }
+
             }
         });
 
@@ -392,20 +374,14 @@ public class LightFragment extends Fragment {
                 Log.e(TAG,"onUpdateSlatStatus");
 
                 if(stStatus == 1){// full open
-                    textViewStatusSlat.setText(getResources().getString(R.string.slatOpen));
-                    btnCtrlSlat1.setText(getResources().getString(R.string.ct1));
-                    btnCtrlSlat2.setText(getResources().getString(R.string.ct2));
+                    textViewStatusSlat.setText(getString(R.string.slatOpen));
+                    btnCtrlSlat.setText(getString(R.string.close));
 
                 }
                 else if(stStatus == 2){ //half close
-                    textViewStatusSlat.setText(getResources().getString(R.string.slatHalfClose));
-                    btnCtrlSlat1.setText(getResources().getString(R.string.ct4));
-                    btnCtrlSlat2.setText(getResources().getString(R.string.ct2));
-                }
-                else if(stStatus == 3){//full close
-                    textViewStatusSlat.setText(getResources().getString(R.string.slatClose));
-                    btnCtrlSlat1.setText(getResources().getString(R.string.ct3));
-                    btnCtrlSlat2.setText(getResources().getString(R.string.ct4));
+                    textViewStatusSlat.setText(getString(R.string.slatClose));
+                    btnCtrlSlat.setText(getString(R.string.open));
+
                 }
 //                if(stStatus == 1){
 //

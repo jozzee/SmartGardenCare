@@ -8,24 +8,21 @@ import com.google.gson.JsonObject;
 public class RawDataBean {
 
     private long time;
-    private float moisture1;
-    private float moisture2;
-    private float temp1;
-    private float temp2;
-    private float lightIn;
-    private float lightOut;
+    private float moisture1,moisture2,moistureAverage,temp1,temp2,tempAverage,lightOut,lightIn;
 
     public RawDataBean(String payload) {
         if (payload != null){
             String[] payloadList = payload.split(",");
-            if(payloadList.length == 7){
+            if(payloadList.length == 10){
                 time = Long.parseLong(payloadList[0]);
                 moisture1 = Float.parseFloat(payloadList[1]);
                 moisture2 = Float.parseFloat(payloadList[2]);
-                temp1 = Float.parseFloat(payloadList[3]);
-                temp2 = Float.parseFloat(payloadList[4]);
-                lightIn = Float.parseFloat(payloadList[5]);
-                lightOut = Float.parseFloat(payloadList[6]);
+                moistureAverage = Float.parseFloat(payloadList[3]);
+                temp1 = Float.parseFloat(payloadList[4]);
+                temp2 = Float.parseFloat(payloadList[5]);
+                tempAverage = Float.parseFloat(payloadList[6]);
+                lightOut = Float.parseFloat(payloadList[7]);
+                lightIn = Float.parseFloat(payloadList[8]);
             }
         }
     }
@@ -39,11 +36,36 @@ public class RawDataBean {
         if(obj.get("moisture2")!= null){
             this.moisture2 = obj.get("moisture2").getAsFloat();
         }
+        if(obj.get("moistureAverage")!= null){
+            this.moistureAverage = obj.get("moistureAverage").getAsFloat();
+        }
+        if(obj.get("m1")!= null){
+            this.moisture1 = obj.get("m1").getAsFloat();
+        }
+        if(obj.get("m2")!= null){
+            this.moisture2 = obj.get("m2").getAsFloat();
+        }
+        if(obj.get("mAverage")!= null){
+            this.moistureAverage = obj.get("mAverage").getAsFloat();
+        }
+
         if(obj.get("temp1")!= null){
             this.temp1 = obj.get("temp1").getAsFloat();
         }
         if(obj.get("temp2")!= null){
             this.temp2 = obj.get("temp2").getAsFloat();
+        }
+        if(obj.get("tempAverage")!= null){
+            this.tempAverage = obj.get("tempAverage").getAsFloat();
+        }
+        if(obj.get("t1")!= null){
+            this.temp1 = obj.get("t1").getAsFloat();
+        }
+        if(obj.get("t2")!= null){
+            this.temp2 = obj.get("t12").getAsFloat();
+        }
+        if(obj.get("tAverage")!= null){
+            this.tempAverage = obj.get("tAverage").getAsFloat();
         }
         if(obj.get("lightIn")!= null){
             this.lightIn = obj.get("lightIn").getAsFloat();
@@ -51,34 +73,11 @@ public class RawDataBean {
         if(obj.get("lightOut")!= null){
             this.lightOut = obj.get("lightOut").getAsFloat();
         }
-    }
-
-    public float getMoisture(){
-        if(moisture1>0 && moisture2 >0){
-            return ((moisture1+moisture2)/2);
+        if(obj.get("l1")!= null){
+            this.lightOut = obj.get("l1").getAsFloat();
         }
-        else if(moisture1>0 && moisture2 <0){
-            return moisture1;
-        }
-        else if(moisture1<0 && moisture2 >0){
-            return moisture2;
-        }
-        else{
-           return (float)-1;
-        }
-    }
-    public float getTemp(){
-        if(temp1>0 && temp2 >0){
-            return ((temp1+temp2)/2);
-        }
-        else if(temp1>0 && temp2 <0){
-            return temp1;
-        }
-        else if(temp1<0 && temp2 >0){
-            return temp2;
-        }
-        else{
-            return (float)-1;
+        if(obj.get("l2")!= null){
+            this.lightIn = obj.get("l2").getAsFloat();
         }
     }
 
@@ -94,6 +93,10 @@ public class RawDataBean {
         return moisture2;
     }
 
+    public float getMoistureAverage() {
+        return moistureAverage;
+    }
+
     public float getTemp1() {
         return temp1;
     }
@@ -102,12 +105,16 @@ public class RawDataBean {
         return temp2;
     }
 
-    public float getLightIn() {
-        return lightIn;
+    public float getTempAverage() {
+        return tempAverage;
     }
 
     public float getLightOut() {
         return lightOut;
+    }
+
+    public float getLightIn() {
+        return lightIn;
     }
 
     public void setTime(long time) {
@@ -122,6 +129,10 @@ public class RawDataBean {
         this.moisture2 = moisture2;
     }
 
+    public void setMoistureAverage(float moistureAverage) {
+        this.moistureAverage = moistureAverage;
+    }
+
     public void setTemp1(float temp1) {
         this.temp1 = temp1;
     }
@@ -130,11 +141,15 @@ public class RawDataBean {
         this.temp2 = temp2;
     }
 
-    public void setLightIn(float lightIn) {
-        this.lightIn = lightIn;
+    public void setTempAverage(float tempAverage) {
+        this.tempAverage = tempAverage;
     }
 
     public void setLightOut(float lightOut) {
         this.lightOut = lightOut;
+    }
+
+    public void setLightIn(float lightIn) {
+        this.lightIn = lightIn;
     }
 }

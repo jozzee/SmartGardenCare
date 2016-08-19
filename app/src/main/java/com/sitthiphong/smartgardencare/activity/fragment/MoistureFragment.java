@@ -298,11 +298,11 @@ public class MoistureFragment extends Fragment {
 
                 Log.e(TAG,"onUpdateRawBean");
 
-                if(rawBean.getMoisture()>0){
+                if(rawBean.getMoistureAverage()>0){
                     exception.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                     sensorError.setVisibility(View.GONE);
-                    pieView.setValue(rawBean.getMoisture());
+                    pieView.setValue(rawBean.getMoistureAverage());
                     pieView.setVisibility(View.VISIBLE);
                 }
                 else{

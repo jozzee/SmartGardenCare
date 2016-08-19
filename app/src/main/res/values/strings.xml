@@ -78,10 +78,6 @@
     <string name="close">Close</string>
     <string name="autoSlat">Auto Slat</string>
 
-    <string name="ct1">close half</string>
-    <string name="ct2">close full</string>
-    <string name="ct3">open half</string>
-    <string name="ct4">open full</string>
 
     <!--log fragment -->
     <string name="log">Log</string>

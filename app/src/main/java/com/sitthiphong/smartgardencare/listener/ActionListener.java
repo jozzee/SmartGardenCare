@@ -1,5 +1,7 @@
 package com.sitthiphong.smartgardencare.listener;
 
+import android.os.Bundle;
+
 import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
@@ -33,6 +35,7 @@ public class ActionListener {
     public static OnRefreshImage onRefreshImage = null;
     public static OnSetStandardFalse onSetStandardFalse = null;
     public static OnRegisterGCMFinish onRegisterGCMFinish = null;
+    public static OnNoti onNoti = null;
 
     public interface OnFinishSetupNETPIE{
         public void onFinishSetupNETPIE(boolean event);
@@ -189,6 +192,13 @@ public class ActionListener {
     public void setOnRegisterGCMFinish(OnRegisterGCMFinish listener){
         onRegisterGCMFinish = listener;
     }
+    public interface OnNoti{
+        public void onNoti(Bundle data);
+    }
+    public void setOnNoti(OnNoti listener){
+        onNoti = listener;
+    }
+
 
 
 

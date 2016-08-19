@@ -81,10 +81,6 @@
     <string name="lightIn">แสงข้างใน</string>
     <string name="lightOut">แสงจากข้างนอก</string>
 
-    <string name="ct1">ปิดครึ่งหนึ่ง</string>
-    <string name="ct2">ปิดทั้งหมด</string>
-    <string name="ct3">เปิดครึ่งหนึ่ง</string>
-    <string name="ct4">เปิดทั้งหมด</string>
 
 
     <!--log fragment -->
