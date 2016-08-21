@@ -8,14 +8,17 @@ public class LogDataBean {
     private int action;
     private int type;
     private long time;
-    private String note;
+    private float valBefore,valAfter;
 
-    public LogDataBean(int id, int action, int type, long time, String note) {
+
+    public LogDataBean(int id, int action, int type, long time,float valBefore,float valAfter) {
         this.id = id;
         this.action = action;
         this.type = type;
         this.time = time;
-        this.note = note;
+        this.valBefore = valBefore;
+        this.valAfter = valAfter;
+
     }
 
     public int getId() {
@@ -34,8 +37,12 @@ public class LogDataBean {
         return time;
     }
 
-    public String getNote() {
-        return note;
+    public float getValBefore() {
+        return valBefore;
+    }
+
+    public float getValAfter() {
+        return valAfter;
     }
 
     public void setId(int id) {
@@ -54,7 +61,11 @@ public class LogDataBean {
         this.time = time;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setValBefore(float valBefore) {
+        this.valBefore = valBefore;
+    }
+
+    public void setValAfter(float valAfter) {
+        this.valAfter = valAfter;
     }
 }

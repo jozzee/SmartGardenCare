@@ -42,18 +42,18 @@ public class MoreAdapter extends RecyclerView.Adapter {
 
 
             if(from == 1){
-                if(bean.getMoisture()<0){
+                if(bean.getMoistureAverage()<0){
                     ((MoreDataViewHolder) holder).value.setText(R.string.errorSensorMoisture);
                 }else{
-                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(bean.getMoisture() +" %"));
+                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(bean.getMoistureAverage() +" %"));
                 }
             }
             else if(from == 2){
-                if(bean.getTemp()<0){
+                if(bean.getTempAverage()<0){
                     ((MoreDataViewHolder) holder).value.setText(R.string.errorSensorDHT22);
                 }
                 else {
-                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(bean.getTemp() +" °C"));
+                    ((MoreDataViewHolder) holder).value.setText(String.valueOf(bean.getTempAverage() +" °C"));
                 }
 
             }

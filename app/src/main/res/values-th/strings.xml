@@ -33,7 +33,11 @@
     <string name="lightSensor1">เซนเซอร์วัดแสงตัวที่ 1</string>
     <string name="lightSensor2">เซนเซอร์วัดแสงตัวที่ 2</string>
     <string name="autoMode">โหมดอัตโนมัติ</string>
-
+    <string name="noWateringArea">รดน้ำไม่ตรงพื้นที่</string>
+    <string name="tempNotDecrease">อุณหภูมิไม่ลงหลังจากฉีดฝักบัว</string>
+    <string name="lightInNotDecrease">ค่าความเข้มแสงไม่ลดลงหลังจากปิดไม้ระแนง</string>
+    <string name="onPresent">ตรวจพบอุปกรณ์เชื่อมต่อ NETPIE</string>
+    <string name="onAbsent">อุปกรณ์ขาดการเชื่อมต่อ NETPIE</string>
 
     <!--set up netpie -->
     <string name="appId">แอป ไอดี</string>
@@ -80,6 +84,8 @@
     <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
     <string name="lightIn">แสงข้างใน</string>
     <string name="lightOut">แสงจากข้างนอก</string>
+    <string name="before">ก่อน</string>
+    <string name="after">หลัง</string>
 
 
 

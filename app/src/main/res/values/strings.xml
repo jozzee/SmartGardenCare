@@ -32,6 +32,13 @@
     <string name="lightSensor1">Light Sensor 1</string>
     <string name="lightSensor2">Light Sensor 2</string>
     <string name="autoMode">Auto Mote</string>
+    <string name="noWateringArea">No Watering Area</string>
+    <string name="tempNotDecrease">Temp Not Decrease</string>
+    <string name="lightInNotDecrease">light in not Decrease</string>
+    <string name="before">before</string>
+    <string name="after">after</string>
+    <string name="onPresent">Detects device to Connected NETPIE</string>
+    <string name="onAbsent">Device Connection Failed</string>
 
 
 
@@ -82,8 +89,7 @@
     <!--log fragment -->
     <string name="log">Log</string>
     <string name="acCloseSlat">Close Slat</string>
-    <string name="acHalfCloseSlat">Halt Close Slat</string>
-    <string name="acOpenSlat">OpenSlat</string>
+    <string name="acOpenSlat">Open Slat</string>
     <string name="typeActionAuto">Auto</string>
     <string name="typeActionManual">Manual</string>
     <string name="lightIn">Light In</string>

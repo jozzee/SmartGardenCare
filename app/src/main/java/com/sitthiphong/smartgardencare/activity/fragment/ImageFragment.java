@@ -266,22 +266,26 @@ public class ImageFragment extends Fragment {
             @Override
             public void onUpdateImage(StatusBean statusBean, ImageBean imageBean) {
                 Log.i(TAG,"onUpdateImage");
-                if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
-                    //ถ้าคอนเน็คเสร็จ เมื่อขออัพเดทไปแล้ว แต่มันยังเสือกไม่มี จะไปโหลดข้อมผผูลโดยใช้ Asynctask  พอได้ข้อมูล
-                    // เมื่อได้ข้อม฿ลมา ก็จะนำข้อมูลไป update view และส่งข้อมูลไปเก็ยที่ mainactivity
-                    progressBar.setVisibility(View.GONE);
-                    exception.setVisibility(View.GONE);
-                    Log.i(TAG,"exception GONE");
+                try {
+                    if(statusBean.getStatus() == getActivity().getResources().getInteger(R.integer.IS_CONNECT_NETPIE)){
+                        //ถ้าคอนเน็คเสร็จ เมื่อขออัพเดทไปแล้ว แต่มันยังเสือกไม่มี จะไปโหลดข้อมผผูลโดยใช้ Asynctask  พอได้ข้อมูล
+                        // เมื่อได้ข้อม฿ลมา ก็จะนำข้อมูลไป update view และส่งข้อมูลไปเก็ยที่ mainactivity
+                        progressBar.setVisibility(View.GONE);
+                        exception.setVisibility(View.GONE);
+                        Log.i(TAG,"exception GONE");
 
 
-                    imageGarden.setImageBitmap(imageBean.getBitmap());
-                    dateTime.setText(SimpleDateProvider.getInstance()
-                            .format(new Date(imageBean.getTimeStamp()*1000)));
-                    rootLayout.setVisibility(View.VISIBLE);
-                    exception.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
+                        imageGarden.setImageBitmap(imageBean.getBitmap());
+                        dateTime.setText(SimpleDateProvider.getInstance()
+                                .format(new Date(imageBean.getTimeStamp()*1000)));
+                        rootLayout.setVisibility(View.VISIBLE);
+                        exception.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
 
-                    imBean = imageBean;
+                        imBean = imageBean;
+
+                    }
+                }catch (NullPointerException e){
 
                 }
             }

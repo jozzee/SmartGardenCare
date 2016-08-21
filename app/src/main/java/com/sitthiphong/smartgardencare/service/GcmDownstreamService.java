@@ -26,43 +26,54 @@ public class GcmDownstreamService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         // TODO Do something here
         Log.e(TAG, "Message Incoming");
-        SharedPreferences sp =  getSharedPreferences("Details", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("Details", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        if(sp.getString("activity","").equals("onResume")){
-            Log.e(TAG,"onResume");
-            try {
-                new ActionListener().onNoti.onNoti(data);
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
+        if (sp.getString("activity", "").equals("onResume")) {
+            Log.e(TAG, "onResume");
+            sendNotification2(String.valueOf(data.get("title")), String.valueOf(data.get("body")));
 
-        }
-        else if(sp.getString("activity","").equals("onStop")){
-            Log.e(TAG,"onResume");
+        } else if (sp.getString("activity", "").equals("onStop")) {
+            Log.e(TAG, "onResume");
+            sendNotification2(String.valueOf(data.get("title")), String.valueOf(data.get("body")));
 
+        } else if (sp.getString("activity", "").equals("onDestroy")) {
+            Log.e(TAG, "onResume");
+            sendNotification(String.valueOf(data.get("title")), String.valueOf(data.get("body")));
         }
-        else if(sp.getString("activity","").equals("onDestroy")){
-            Log.e(TAG,"onResume");
-            sendNotification(String.valueOf(data.get("body")));
-        }
-
 
 
     }
-    private void sendNotification(String messageBody) {
+
+    private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Firebase Push Notification")
+                .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private void sendNotification2(String title, String messageBody) {
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

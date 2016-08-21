@@ -53,6 +53,8 @@ import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private final int IS_CONNECT_NETPIE = 200;
@@ -246,16 +248,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else if (topic.equals("rawData")) {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), "");
-                    rawDataBean = new RawDataBean(message);
-                    if (actionListener.onUpdateRawBean != null) {
-                        Log.e(TAG, "update RawBean");
+                    rawDataBean = new RawDataBean(GsonProvider.getInstance().fromJson(message, JsonObject.class));
+                    try {
                         actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
+                    } catch (IllegalStateException e) {
+
+                    } catch (NullPointerException e) {
+
                     }
 
                 } else if (topic.equals("STSlat")) {
                     STSlat = Integer.parseInt(message);
-                    if (actionListener.onUpdateSlatStatus != null) {
+                    try {
                         actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
+                    } catch (IllegalStateException e) {
+
+                    } catch (NullPointerException e) {
+
                     }
                 } else if (topic.equals("hasPhoto")) {
                     new SubscribeTask(getResources().getString(R.string.fetching))
@@ -275,6 +284,28 @@ public class MainActivity extends AppCompatActivity {
                                     appKey = sharedPreferences.getString(appKeyTAG, ""),
                                     sharedPreferences.getString(appSecretTAG, ""),
                                     "logDataList");
+                } else if (topic.equals("onPresent")) {
+                    JsonObject object = GsonProvider.getInstance().fromJson(message, JsonObject.class);
+                    try {
+                        new MaterialDialog.Builder(getContextManual())
+                                .title(getString(R.string.onPresent))
+                                .content(object.get("alias").getAsString())
+                                .positiveText(getResources().getString(R.string.ok))
+                                .show();
+                    } catch (NullPointerException e) {
+
+                    }
+                } else if (topic.equals("onAbsent")) {
+                    JsonObject object = GsonProvider.getInstance().fromJson(message, JsonObject.class);
+                    try {
+                        new MaterialDialog.Builder(getContextManual())
+                                .title(getString(R.string.onAbsent))
+                                .content(object.get("alias").getAsString())
+                                .positiveText(getResources().getString(R.string.ok))
+                                .show();
+                    } catch (NullPointerException e) {
+
+                    }
                 }
             } else if (head.equals("connect")) {
                 boolean status = bundle.getBoolean("status");
@@ -527,6 +558,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onRestoreInstanceState");
     }
 
+    public Handler getPublishHandle() {
+        return publishHandle;
+    }
+
     public void setActionListener() {
         Log.i(TAG, "setActionListener");
         actionListener.setOnFinishSetupNETPIE(new ActionListener.OnFinishSetupNETPIE() {
@@ -774,6 +809,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPresent(String name) {
                 Log.e(TAG, "NETPIE Event Listener: onPresent: " + name);
+                Message msg = handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("head", "subscribe");
+                bundle.putString("topic", "onPresent");//onPresent,onAbsent
+                bundle.putString("message", name);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
             }
         });
 
@@ -781,6 +823,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAbsent(String name) {
                 Log.e(TAG, "NETPIE Event Listener: onAbsent: " + name);
+                Message msg = handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("head", "subscribe");
+                bundle.putString("topic", "onAbsent");
+                bundle.putString("message", name);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
             }
         });
 
@@ -1099,34 +1148,43 @@ public class MainActivity extends AppCompatActivity {
                 if (bean.getTopic().equals("photo")) {
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
                     imageBean = new ImageBean(bean.getPayload());
-                    if (actionListener.onUpdateImage != null) {
+                    try {
                         actionListener.onUpdateImage.onUpdateImage(statusBean, imageBean);
+                    } catch (NullPointerException e) {
+
                     }
+
                 }
                 if (bean.getTopic().equals("rawDataList")) {
                     rawListAsJsonString = bean.getPayload();
                     //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    if (actionListener.onUpdateRawList != null) {
+                    try {
                         actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
+                    } catch (NullPointerException e) {
+
                     }
+
                 }
             } else {
                 Log.e(TAG, "error: " + result);
                 if (result.equals("connectionLost")) {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
                             getResources().getString(R.string.connectionLost));
-                    if (actionListener.onNoInternet != null) {
+                    try {
                         actionListener.onNoInternet.onNoInternet(statusBean.getException());
+                    } catch (NullPointerException e) {
+
                     }
 
 
                 } else {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR), result);
-                    if (actionListener.onException != null) {
+                    try {
                         actionListener.onException.onException(result);
+                    } catch (NullPointerException e) {
+
                     }
                 }
-
             }
         }
     }

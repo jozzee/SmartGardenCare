@@ -56,16 +56,16 @@ public class MagPieView {
                 //BigDecimal v = new BigDecimal(value).setScale(2,BigDecimal.ROUND_HALF_UP);
 
                 pieView.setmPercentage(value);
-                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+" "+unit);
             }
             else if(colorId == ContextCompat.getColor(context,R.color.deepOrange)){
                 pieView.setmPercentage((value*2));
-                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+" "+unit);
 
             }
             else if(colorId == ContextCompat.getColor(context,R.color.amber)){
                 pieView.setmPercentage((value/200));
-                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+unit);
+                pieView.setInnerText(String.valueOf(String.format( "%.2f", value ))+" "+unit);
             }
 
         }

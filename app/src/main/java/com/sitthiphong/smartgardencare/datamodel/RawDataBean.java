@@ -12,18 +12,7 @@ public class RawDataBean {
 
     public RawDataBean(String payload) {
         if (payload != null){
-            String[] payloadList = payload.split(",");
-            if(payloadList.length == 10){
-                time = Long.parseLong(payloadList[0]);
-                moisture1 = Float.parseFloat(payloadList[1]);
-                moisture2 = Float.parseFloat(payloadList[2]);
-                moistureAverage = Float.parseFloat(payloadList[3]);
-                temp1 = Float.parseFloat(payloadList[4]);
-                temp2 = Float.parseFloat(payloadList[5]);
-                tempAverage = Float.parseFloat(payloadList[6]);
-                lightOut = Float.parseFloat(payloadList[7]);
-                lightIn = Float.parseFloat(payloadList[8]);
-            }
+
         }
     }
     public RawDataBean(JsonObject obj) {
@@ -62,7 +51,7 @@ public class RawDataBean {
             this.temp1 = obj.get("t1").getAsFloat();
         }
         if(obj.get("t2")!= null){
-            this.temp2 = obj.get("t12").getAsFloat();
+            this.temp2 = obj.get("t2").getAsFloat();
         }
         if(obj.get("tAverage")!= null){
             this.tempAverage = obj.get("tAverage").getAsFloat();

@@ -143,11 +143,11 @@ public class LightFragment extends Fragment {
         btnCtrlSlat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//1,4,3
-                if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.open))){
+                if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.acOpenSlat))){
                     actionListener.onControlDevice.onControlDevice(3,true);
 
                 }
-                else if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.close))){
+                else if(btnCtrlSlat.getText().toString().trim().equals(getString(R.string.acCloseSlat))){
                     actionListener.onControlDevice.onControlDevice(4,true);
 
                 }
@@ -375,11 +375,11 @@ public class LightFragment extends Fragment {
 
                 if(stStatus == 1){// full open
                     textViewStatusSlat.setText(getString(R.string.slatOpen));
-                    btnCtrlSlat.setText(getString(R.string.close));
+                    btnCtrlSlat.setText(getString(R.string.acCloseSlat));
 
                 }
                 else if(stStatus == 2){ //half close
-                    textViewStatusSlat.setText(getString(R.string.slatClose));
+                    textViewStatusSlat.setText(getString(R.string.acOpenSlat));
                     btnCtrlSlat.setText(getString(R.string.open));
 
                 }
