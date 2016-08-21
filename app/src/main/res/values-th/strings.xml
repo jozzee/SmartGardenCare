@@ -76,7 +76,6 @@
     <string name="light">ความเข้มแสง</string>
     <string name="slatOpen">ไม้ระแนงเปิดไว้อยู่</string>
     <string name="slatHalfClose">ไม้ระแนงถูกปิดไว้ครึ่งหนึ่ง</string>
-    <string name="acHalfCloseSlat">ปิดไม้ระแนงครึ่งหนึง</string>
     <string name="slatClose">ไม้ระแนงไม่ได้ถูกเปิดไว้</string>
     <string name="unitLight"> Lux</string>
     <string name="open">เปิด</string>

@@ -105,30 +105,6 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
 
                 }
             }
-
-            if (bean.getAction() == 1) {
-                ((LogDataViewHolder) holder).action.setText(context.getResources().getString(R.string.water));
-            } else if (bean.getAction() == 2) {
-                ((LogDataViewHolder) holder).action.setText(context.getResources().getString(R.string.shower));
-            } else if (bean.getAction() == 3) {
-                ((LogDataViewHolder) holder).action.setText(context.getResources().getString(R.string.acOpenSlat));
-            } else if (bean.getAction() == 4) {
-                ((LogDataViewHolder) holder).action.setText(context.getResources().getString(R.string.acHalfCloseSlat));
-            } else if (bean.getAction() == 5) {
-                ((LogDataViewHolder) holder).action.setText(context.getResources().getString(R.string.acCloseSlat));
-            }
-
-            if (bean.getType() == 1) {
-                ((LogDataViewHolder) holder).typeAction.setText(context.getResources().getString(R.string.typeActionAuto));
-            } else if (bean.getType() == 2) {
-                ((LogDataViewHolder) holder).typeAction.setText(context.getResources().getString(R.string.typeActionManual));
-            }
-
-
-            ((LogDataViewHolder) holder).dateTime.setText(SimpleDateProvider.getInstance()
-                    .format(new Date(bean.getTime() * 1000)));
-
-
         }
     }
 
