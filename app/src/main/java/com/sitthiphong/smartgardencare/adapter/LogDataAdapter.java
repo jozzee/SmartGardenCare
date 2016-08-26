@@ -3,9 +3,11 @@ package com.sitthiphong.smartgardencare.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sitthiphong.smartgardencare.R;
@@ -38,6 +40,7 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
     public void onBindViewHolder(LogDataViewHolder holder, int position) {
         if (holder instanceof LogDataViewHolder) {
             LogDataBean bean = logList.get(position);
+            //Log.e(TAG,"Action working: "+bean.getAction());
 
             holder.dateTime.setText(SimpleDateProvider.getInstance()
                     .format(new Date(bean.getTime() * 1000)));
@@ -61,9 +64,11 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
                                         String.valueOf(String.format("%.2f", bean.getValBefore()) + " °C, " +
                                                 context.getString(R.string.after) + " " +
                                                 String.valueOf(String.format("%.2f", bean.getValAfter()) + " °C")));
+                        break;
                     case 3:
                         holder.action.setText(context.getString(R.string.acOpenSlat));
                         holder.beforeAndAfter.setVisibility(View.GONE);
+                        break;
                     case 4:
                         holder.action.setText(context.getString(R.string.acCloseSlat));
                         holder.beforeAndAfter.setText(
@@ -71,6 +76,7 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
                                         String.valueOf(String.format("%.2f", bean.getValBefore()) + " Lux, " +
                                                 context.getString(R.string.after) + " " +
                                                 String.valueOf(String.format("%.2f", bean.getValAfter()) + " Lux")));
+                        break;
                     default:
 
                 }

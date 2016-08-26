@@ -29,6 +29,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.JsonObject;
+import com.itextpdf.text.DocumentException;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.sitthiphong.netpiegear.EventListener;
@@ -39,6 +40,7 @@ import com.sitthiphong.smartgardencare.activity.fragment.LightFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.LogFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.MoistureFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.TempFragment;
+import com.sitthiphong.smartgardencare.core.MagPDF;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.PublishBean;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
@@ -47,13 +49,12 @@ import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.datamodel.SubscribeBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
 import com.sitthiphong.smartgardencare.listener.NetworkChangeListener;
-import com.sitthiphong.smartgardencare.listener.SubscribeCallBackListener;
 import com.sitthiphong.smartgardencare.service.NetPieRestApi;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 
-import org.json.JSONObject;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
@@ -466,6 +467,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onStart");
         super.onStart();
         //BusProvider.getInstance().register(this);
+        MagPDF magPDF = new MagPDF();
+        try {
+            magPDF.createPdf(MagPDF.PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
 
 
     }

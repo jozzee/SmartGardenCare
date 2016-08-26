@@ -379,8 +379,8 @@ public class LightFragment extends Fragment {
 
                 }
                 else if(stStatus == 2){ //half close
-                    textViewStatusSlat.setText(getString(R.string.acOpenSlat));
-                    btnCtrlSlat.setText(getString(R.string.open));
+                    textViewStatusSlat.setText(getString(R.string.slatClose));
+                    btnCtrlSlat.setText(getString(R.string.acOpenSlat));
 
                 }
 //                if(stStatus == 1){

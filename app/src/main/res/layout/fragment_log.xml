@@ -1,39 +1,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.fragment.LogFragment"
-    app:theme="@style/AppThemeLog">
+    app:theme="@style/AppThemeLog"
+    tools:context=".activity.fragment.LogFragment">
+
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/containLog"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/containLog">
+        android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewLog"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible" />
 
-        </android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_pdf"
+            app:fabSize="normal"
+            app:layout_anchor="@+id/recyclerViewLog"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="com.sitthiphong.smartgardencare.activity.fragment.FABScrollBehavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
     <TextView
+        android:id="@+id/exceptionLog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/exceptionLog"
-        android:textSize="@dimen/text_size"
         android:layout_centerInParent="true"
-        android:text="@string/exception"
         android:clickable="true"
         android:padding="@dimen/padding_exception"
-        android:visibility="gone"/>
+        android:text="@string/exception"
+        android:textSize="@dimen/text_size"
+        android:visibility="gone" />
+
     <ProgressBar
+        android:id="@+id/progressBarLog"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
-        android:id="@+id/progressBarLog"
-        android:indeterminate="false"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:indeterminate="false"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

@@ -141,6 +141,15 @@
         <item>6 day</item>
         <item>7 day</item>
     </string-array>
+    
+    <string-array name="titleTable">
+        <item>Time</item>
+        <item>Working</item>
+        <item>Type</item>
+        <item>Before</item>
+        <item>After</item>
+        <item>note</item>
+    </string-array>
 
 
     <!--listener-->
