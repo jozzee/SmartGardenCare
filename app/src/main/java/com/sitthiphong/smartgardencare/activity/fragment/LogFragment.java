@@ -2,15 +2,12 @@ package com.sitthiphong.smartgardencare.activity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,13 +22,13 @@ import com.google.gson.reflect.TypeToken;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.adapter.LogDataAdapter;
 import com.sitthiphong.smartgardencare.core.CheckPermission;
+import com.sitthiphong.smartgardencare.core.PDFClass;
 import com.sitthiphong.smartgardencare.datamodel.LogDataBean;
 import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
@@ -61,6 +58,7 @@ public class LogFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView exception;
+    private FloatingActionButton myFab;
 
     public LogFragment() {
         // Required empty public constructor
@@ -111,12 +109,15 @@ public class LogFragment extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarLog);
         progressBar.setVisibility(View.VISIBLE);
 
-        FloatingActionButton myFab = (FloatingActionButton) rootView.findViewById(R.id.btnFab);
+        myFab = (FloatingActionButton) rootView.findViewById(R.id.btnFab);
+        myFab.setVisibility(View.GONE);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (new CheckPermission(getActivity()).checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     //new SaveIMTask().execute(imBean.getBitmap());
-                    createPdf();
+                    //createPdf();
+                    PDFClass pdFClass = new PDFClass(getContext(),adapter.getLogList());
+                    pdFClass.createPDF();
                 } else {
                     new CheckPermission(getActivity()).requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     actionListener.onCheckPermission.onCheckPermission("save2PDF", android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -128,7 +129,9 @@ public class LogFragment extends Fragment {
             public void onPermissionResult(String method, boolean b) {
                 if (method.equals("save2PDF") && b) {
                     //new SaveIMTask().execute(imBean.getBitmap());
-                    createPdf();
+                    //createPdf();
+                    PDFClass pdFClass = new PDFClass(getContext(),adapter.getLogList());
+                    pdFClass.createPDF();
                 }
 
             }
@@ -212,6 +215,7 @@ public class LogFragment extends Fragment {
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 recyclerView.setVisibility(View.VISIBLE);
+                myFab.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -229,7 +233,7 @@ public class LogFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -274,6 +278,7 @@ public class LogFragment extends Fragment {
             }
             PdfWriter.getInstance(document, output);
             try {
+
                 document.open();
                 PdfPTable table = new PdfPTable(6);
                 table.setWidthPercentage(100);

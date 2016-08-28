@@ -39,6 +39,15 @@
     <string name="after">after</string>
     <string name="onPresent">Detects device to Connected NETPIE</string>
     <string name="onAbsent">Device Connection Failed</string>
+    <string name="SlatIsOpened">Slat is Opened</string>
+    <string name="SlatIsClosed">Slat is Closed</string>
+    <string name="moistureBefore">moisture before</string>
+    <string name="moistureAfter">moisture after</string>
+    <string name="tempBefore">temp before</string>
+    <string name="tempAfter">temp after</string>
+    <string name="lightBefore">light Before</string>
+    <string name="lightAfter">light After</string>
+    <string name="notTimeToShower">Not time to Shower</string>
 
 
 

@@ -40,7 +40,6 @@ import com.sitthiphong.smartgardencare.activity.fragment.LightFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.LogFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.MoistureFragment;
 import com.sitthiphong.smartgardencare.activity.fragment.TempFragment;
-import com.sitthiphong.smartgardencare.core.MagPDF;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.PublishBean;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
@@ -53,6 +52,8 @@ import com.sitthiphong.smartgardencare.service.NetPieRestApi;
 import com.sitthiphong.smartgardencare.provider.BusProvider;
 import com.sitthiphong.smartgardencare.provider.GsonProvider;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -132,40 +133,53 @@ public class MainActivity extends AppCompatActivity {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    if (publishBean.getTopic().equals(responseBean.getTopic())) {
-                        if (responseBean.isSuccess()) {
-                            if (publishHandle != null) {
-                                Log.e(TAG, "remove task");
-                                publishHandle.removeCallbacks(publistask);
-                            }
-                            if (responseBean.getTopic().equals("settingDetails")) {
-                                JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                if (objDetails.get(fqPubRawDataTAG) != null) {
-                                    editor.putInt(fqPubRawDataTAG, objDetails.get(fqPubRawDataTAG).getAsInt());
+                    try {
+                        if (publishBean.getTopic().equals(responseBean.getTopic())) {
+                            if (responseBean.isSuccess()) {
+                                if (publishHandle != null) {
+                                    Log.e(TAG, "remove task");
+                                    publishHandle.removeCallbacks(publistask);
                                 }
-                                if (objDetails.get(fqInsertRawDataTAG) != null) {
-                                    editor.putInt(fqInsertRawDataTAG, objDetails.get(fqInsertRawDataTAG).getAsInt());
-                                }
-                                if (objDetails.get(dayStorageTAG) != null) {
-                                    editor.putInt(dayStorageTAG, objDetails.get(dayStorageTAG).getAsInt());
+                                if (responseBean.getTopic().equals("settingDetails")) {
+                                    JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    if (objDetails.get(fqPubRawDataTAG) != null) {
+                                        editor.putInt(fqPubRawDataTAG, objDetails.get(fqPubRawDataTAG).getAsInt());
+                                    }
+                                    if (objDetails.get(fqInsertRawDataTAG) != null) {
+                                        editor.putInt(fqInsertRawDataTAG, objDetails.get(fqInsertRawDataTAG).getAsInt());
+                                    }
+                                    if (objDetails.get(dayStorageTAG) != null) {
+                                        editor.putInt(dayStorageTAG, objDetails.get(dayStorageTAG).getAsInt());
 
-                                }
-                                if (objDetails.get(fqPubImageTAG) != null) {
-                                    editor.putInt(fqPubImageTAG, objDetails.get(fqPubImageTAG).getAsInt());
-                                }
-                                if (objDetails.get(autoModeTAG) != null) {
-                                    editor.putBoolean(autoModeTAG, objDetails.get(autoModeTAG).getAsBoolean());
-                                }
-                                if (objDetails.get("objNETPIE") != null) {
-                                    JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
-                                    if (object.get(appIdTAG) != null) {
-                                        editor.putString(appIdTAG, object.get(appIdTAG).getAsString());
                                     }
-                                    if (object.get(appKeyTAG) != null) {
-                                        editor.putString(appKeyTAG, object.get(appKeyTAG).getAsString());
+                                    if (objDetails.get(fqPubImageTAG) != null) {
+                                        editor.putInt(fqPubImageTAG, objDetails.get(fqPubImageTAG).getAsInt());
                                     }
-                                    if (object.get(appSecretTAG) != null) {
-                                        editor.putString(appSecretTAG, object.get(appSecretTAG).getAsString());
+                                    if (objDetails.get(autoModeTAG) != null) {
+                                        editor.putBoolean(autoModeTAG, objDetails.get(autoModeTAG).getAsBoolean());
+                                    }
+                                    if (objDetails.get("objNETPIE") != null) {
+                                        JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
+                                        if (object.get(appIdTAG) != null) {
+                                            editor.putString(appIdTAG, object.get(appIdTAG).getAsString());
+                                        }
+                                        if (object.get(appKeyTAG) != null) {
+                                            editor.putString(appKeyTAG, object.get(appKeyTAG).getAsString());
+                                        }
+                                        if (object.get(appSecretTAG) != null) {
+                                            editor.putString(appSecretTAG, object.get(appSecretTAG).getAsString());
+                                        }
+
+                                        editor.commit();
+                                        Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
+                                        Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
+                                        Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
+                                        Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
+                                        Log.e(TAG, "autoMode: " + sharedPreferences.getInt(autoModeTAG, 0));
+                                        Log.e(TAG, "AppId: " + sharedPreferences.getString(appIdTAG, "null"));
+                                        Log.e(TAG, "AppKey: " + sharedPreferences.getString(appKeyTAG, "null"));
+                                        Log.e(TAG, "AppSecret: " + sharedPreferences.getString(appSecretTAG, "null"));
+                                        reStartActivity();
                                     }
 
                                     editor.commit();
@@ -173,79 +187,98 @@ public class MainActivity extends AppCompatActivity {
                                     Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
                                     Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
                                     Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                    Log.e(TAG, "autoMode: " + sharedPreferences.getInt(autoModeTAG, 0));
-                                    Log.e(TAG, "AppId: " + sharedPreferences.getString(appIdTAG, "null"));
-                                    Log.e(TAG, "AppKey: " + sharedPreferences.getString(appKeyTAG, "null"));
-                                    Log.e(TAG, "AppSecret: " + sharedPreferences.getString(appSecretTAG, "null"));
-                                    reStartActivity();
-                                }
-
-                                editor.commit();
-                                Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
-                                Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
-                                Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
-                                Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                Log.e(TAG, "autoMode: " + sharedPreferences.getBoolean(autoModeTAG, false));
-                                alertDialog(getResources().getString(R.string.saveSetting),
-                                        getResources().getString(R.string.success));
-
-                            } else if (responseBean.getTopic().equals("settingStandard")) {
-                                JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                int value = object.get("value").getAsInt();
-
-                                if (object.get("sensor") != null) {
-                                    String sensor = object.get("sensor").getAsString();
-                                    if (sensor.equals("SoilMoisture")) {
-                                        editor.putFloat("moisture", (float) value);
-                                    } else if (sensor.equals("dht22")) {
-                                        editor.putFloat("temp", (float) value);
-                                    } else if (sensor.equals("bh1750")) {
-                                        editor.putFloat("light", (float) value);
-                                    }
-                                    editor.commit();
+                                    Log.e(TAG, "autoMode: " + sharedPreferences.getBoolean(autoModeTAG, false));
                                     alertDialog(getResources().getString(R.string.saveSetting),
                                             getResources().getString(R.string.success));
-                                }
-                            } else if (responseBean.getTopic().equals("controlDevice")) {
-                                JsonObject object = new JsonObject();
-                                object = GsonProvider.getInstance().fromJson(publishBean.getPayload(), JsonObject.class);
-                                if (object.get("1") != null) {
-                                    alertDialog(getResources().getString(R.string.water),
-                                            getResources().getString(R.string.success));
-                                } else if (object.get("2") != null) {
-                                    alertDialog(getResources().getString(R.string.shower),
-                                            getResources().getString(R.string.success));
-                                } else if (object.get("3") != null) {
-                                    alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
-                                            getResources().getString(R.string.success));
-                                } else if (object.get("4") != null) {
-                                    alertDialog(getResources().getString(R.string.acCloseSlat),//acCloseSlat
-                                            getResources().getString(R.string.acCloseSlat));
-                                }
 
-                            } else if (responseBean.getTopic().equals("refreshIM")) {
+                                } else if (responseBean.getTopic().equals("settingStandard")) {
+                                    JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    int value = object.get("value").getAsInt();
 
+                                    if (object.get("sensor") != null) {
+                                        String sensor = object.get("sensor").getAsString();
+                                        if (sensor.equals("SoilMoisture")) {
+                                            editor.putFloat("moisture", (float) value);
+                                        } else if (sensor.equals("dht22")) {
+                                            editor.putFloat("temp", (float) value);
+                                        } else if (sensor.equals("bh1750")) {
+                                            editor.putFloat("light", (float) value);
+                                        }
+                                        editor.commit();
+                                        alertDialog(getResources().getString(R.string.saveSetting),
+                                                getResources().getString(R.string.success));
+                                    }
+                                } else if (responseBean.getTopic().equals("controlDevice")) {
+                                    JsonObject object = new JsonObject();
+                                    object = GsonProvider.getInstance().fromJson(publishBean.getPayload(), JsonObject.class);
+                                    JsonObject obj = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    if (object.get("1") != null) {
+                                        alertDialog(getResources().getString(R.string.water)
+                                                + " " + getResources().getString(R.string.success),
+                                                getResources().getString(R.string.moistureBefore)
+                                                        + ": " + String.valueOf(String.format( "%.2f", obj.get("mBAverage").getAsFloat() )) + " %\n"
+                                                        + getString(R.string.moistureAfter) + ": "
+                                                        + String.valueOf(String.format( "%.2f", obj.get("mAAverage").getAsFloat() )) + " %");
+                                    } else if (object.get("2") != null) {
+                                        alertDialog(getString(R.string.shower)+" "+getString(R.string.success),
+                                                getString(R.string.tempBefore) +": " +String.valueOf(String.format( "%.2f",obj.get("tBAverage").getAsFloat())) +" °C\n"
+                                                +getString(R.string.tempAfter) +": " +String.valueOf(String.format( "%.2f",obj.get("tAAverage").getAsFloat()) )+" °C");
+                                    } else if (object.get("3") != null) {
+                                        alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
+                                                getResources().getString(R.string.success));
+                                        //actionListener.onUpdateSlatStatus.onUpdateSlatStatus();
+                                    } else if (object.get("4") != null) {
+                                        alertDialog(getString(R.string.acCloseSlat)+" "+getString(R.string.success),
+                                                getString(R.string.lightBefore) +": "+String.valueOf(String.format( "%.2f",obj.get("lB2").getAsFloat())) +" Lux\n"
+                                                +getString(R.string.lightAfter) +": "+String.valueOf(String.format( "%.2f",obj.get("lA2").getAsFloat())) +" Lux");//acCloseSlat
+
+                                    }
+
+                                } else if (responseBean.getTopic().equals("refreshIM")) {
+
+                                }
+                            } else {
+                                //for error control device
+                                if (publishHandle != null) {
+                                    Log.e(TAG, "remove task");
+                                    publishHandle.removeCallbacks(publistask);
+                                }
+                                if (responseBean.getTopic().equals("controlDevice")) {
+                                    switch (responseBean.getMessage()) {
+                                        case "error1":
+                                            alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
+                                            break;
+                                        case "error2":
+                                            alertDialog(getString(R.string.exception), getString(R.string.noWateringArea));
+                                            break;
+                                        case "error3":
+                                            alertDialog(getString(R.string.exception), getString(R.string.tempNotDecrease));
+                                            break;
+                                        case "error4":
+                                            alertDialog(getString(R.string.exception), getString(R.string.lightInNotDecrease));
+                                            break;
+                                        case "error5":
+                                            alertDialog(getString(R.string.exception), getString(R.string.SlatIsOpened));
+                                            break;
+                                        case "error6":
+                                            alertDialog(getString(R.string.exception), getString(R.string.SlatIsClosed));
+                                            break;
+                                        case "error7":
+                                            alertDialog(getString(R.string.exception), getString(R.string.notTimeToShower));
+                                            break;
+                                        default:
+                                            alertDialog(getString(R.string.warning), responseBean.getMessage());
+                                            break;
+                                    }
+                                }
+                                //Log.e(TAG, responseBean.getMessage());
+                                //notificationSnackBar(responseBean.getMessage());
                             }
                         } else {
-                            //for error control device
-                            if (publishHandle != null) {
-                                Log.e(TAG, "remove task");
-                                publishHandle.removeCallbacks(publistask);
-                            }
-                            if (responseBean.getTopic().equals("controlDevice")) {
-                                if (responseBean.getMessage().equals("water falsed!")) {
-                                    alertDialog(getResources().getString(R.string.exception),
-                                            getResources().getString(R.string.waterFalse));
-                                } else {
-                                    alertDialog(getResources().getString(R.string.warning), responseBean.getMessage());
-                                }
-
-                            }
-                            Log.e(TAG, responseBean.getMessage());
-                            notificationSnackBar(responseBean.getMessage());
+                            // if topic not math
                         }
-                    } else {
-                        // if topic not math
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
                     }
                 } else if (topic.equals("rawData")) {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), "");
@@ -467,14 +500,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onStart");
         super.onStart();
         //BusProvider.getInstance().register(this);
-        MagPDF magPDF = new MagPDF();
-        try {
-            magPDF.createPdf(MagPDF.PATH);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+//        MagPDF magPDF = new MagPDF();
+//        try {
+//            magPDF.createPdf(MagPDF.PATH);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (DocumentException e) {
+//            e.printStackTrace();
+//        }
 
 
     }

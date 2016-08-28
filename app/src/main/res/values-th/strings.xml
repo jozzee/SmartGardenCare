@@ -36,8 +36,17 @@
     <string name="noWateringArea">รดน้ำไม่ตรงพื้นที่</string>
     <string name="tempNotDecrease">อุณหภูมิไม่ลงหลังจากฉีดฝักบัว</string>
     <string name="lightInNotDecrease">ค่าความเข้มแสงไม่ลดลงหลังจากปิดไม้ระแนง</string>
-    <string name="onPresent">ตรวจพบอุปกรณ์เชื่อมต่อ NETPIE</string>
-    <string name="onAbsent">อุปกรณ์ขาดการเชื่อมต่อ NETPIE</string>
+    <string name="onPresent">ตรวจพบอุปกรณ์เชื่อมต่อ Netpie</string>
+    <string name="onAbsent">อุปกรณ์ขาดการเชื่อมต่อ Netpie</string>
+    <string name="SlatIsOpened">ไม้ระแรงเปิดไว้อยู่</string>
+    <string name="SlatIsClosed">ไม้ระแนงปิดไว้แล้ว</string>
+    <string name="moistureBefore">ค่าความชื้นก่อนรดน้ำ</string>
+    <string name="moistureAfter">ค่าความชื้นหลังรดน้ำ</string>
+    <string name="tempBefore">ค่าอุณหภูมิก่อนฉีดฝักบัว</string>
+    <string name="tempAfter">ค่าอุณหภูมิหลังฉีดฝักบัว</string>
+    <string name="lightBefore">ก่อนปิดไม้ระแนง</string>
+    <string name="lightAfter">หลังปิดไม้ระแนง</string>
+    <string name="notTimeToShower">ยังไม่ถึงเวลารดน้ำอีกครั้ง</string>
 
     <!--set up netpie -->
     <string name="appId">แอป ไอดี</string>
