@@ -44,7 +44,7 @@ import java.util.HashMap;
 /**
  * Created by Suphadate_Noy on 11/23/2015.
  */
-public class PDFClass extends AppCompatActivity{
+public class PDFclass{
     //private static NameWalletTB objNameWalletTB;
     //private WalletTB objWalletTB;
     private int mIdTable;
@@ -52,7 +52,7 @@ public class PDFClass extends AppCompatActivity{
     //String[] textPDF;
     private Context mContext;
 
-    public PDFClass(Context context, java.util.List<LogDataBean> logList) {
+    public PDFclass(Context context, java.util.List<LogDataBean> logList) {
         this.mContext = context;
         this.logList = logList;
     }
@@ -83,7 +83,7 @@ public class PDFClass extends AppCompatActivity{
 
 
 
-            BaseFont urName = BaseFont.createFont("assets/fonts/THSarabunNew.ttf", "UTF-8", BaseFont.EMBEDDED);
+            BaseFont urName = BaseFont.createFont("assets/fonts/THSarabunNew.ttf", "TIS-620", BaseFont.EMBEDDED);
             Font sarabunB18 = new Font(urName, 18, Font.BOLD);
             Font sarabunB22 = new Font(urName, 22, Font.BOLD);
             Font sarabunB = new Font(urName, 16, Font.BOLD);

@@ -133,41 +133,55 @@ public class MainActivity extends AppCompatActivity {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    try {
-                        if (publishBean.getTopic().equals(responseBean.getTopic())) {
-                            if (responseBean.isSuccess()) {
-                                if (publishHandle != null) {
-                                    Log.e(TAG, "remove task");
-                                    publishHandle.removeCallbacks(publistask);
-                                }
-                                if (responseBean.getTopic().equals("settingDetails")) {
-                                    JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                    if (objDetails.get(fqPubRawDataTAG) != null) {
-                                        editor.putInt(fqPubRawDataTAG, objDetails.get(fqPubRawDataTAG).getAsInt());
+                    if (publishBean != null) {
+                        if (publishBean.getTopic() != null) {
+                            if (publishBean.getTopic().equals(responseBean.getTopic())) {
+                                if (responseBean.isSuccess()) {
+                                    if (publishHandle != null) {
+                                        Log.e(TAG, "remove task");
+                                        publishHandle.removeCallbacks(publistask);
                                     }
-                                    if (objDetails.get(fqInsertRawDataTAG) != null) {
-                                        editor.putInt(fqInsertRawDataTAG, objDetails.get(fqInsertRawDataTAG).getAsInt());
-                                    }
-                                    if (objDetails.get(dayStorageTAG) != null) {
-                                        editor.putInt(dayStorageTAG, objDetails.get(dayStorageTAG).getAsInt());
+                                    if (responseBean.getTopic().equals("settingDetails")) {
 
-                                    }
-                                    if (objDetails.get(fqPubImageTAG) != null) {
-                                        editor.putInt(fqPubImageTAG, objDetails.get(fqPubImageTAG).getAsInt());
-                                    }
-                                    if (objDetails.get(autoModeTAG) != null) {
-                                        editor.putBoolean(autoModeTAG, objDetails.get(autoModeTAG).getAsBoolean());
-                                    }
-                                    if (objDetails.get("objNETPIE") != null) {
-                                        JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
-                                        if (object.get(appIdTAG) != null) {
-                                            editor.putString(appIdTAG, object.get(appIdTAG).getAsString());
+                                        JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                        if (objDetails.get(fqPubRawDataTAG) != null) {
+                                            editor.putInt(fqPubRawDataTAG, objDetails.get(fqPubRawDataTAG).getAsInt());
                                         }
-                                        if (object.get(appKeyTAG) != null) {
-                                            editor.putString(appKeyTAG, object.get(appKeyTAG).getAsString());
+                                        if (objDetails.get(fqInsertRawDataTAG) != null) {
+                                            editor.putInt(fqInsertRawDataTAG, objDetails.get(fqInsertRawDataTAG).getAsInt());
                                         }
-                                        if (object.get(appSecretTAG) != null) {
-                                            editor.putString(appSecretTAG, object.get(appSecretTAG).getAsString());
+                                        if (objDetails.get(dayStorageTAG) != null) {
+                                            editor.putInt(dayStorageTAG, objDetails.get(dayStorageTAG).getAsInt());
+
+                                        }
+                                        if (objDetails.get(fqPubImageTAG) != null) {
+                                            editor.putInt(fqPubImageTAG, objDetails.get(fqPubImageTAG).getAsInt());
+                                        }
+                                        if (objDetails.get(autoModeTAG) != null) {
+                                            editor.putBoolean(autoModeTAG, objDetails.get(autoModeTAG).getAsBoolean());
+                                        }
+                                        if (objDetails.get("objNETPIE") != null) {
+                                            JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
+                                            if (object.get(appIdTAG) != null) {
+                                                editor.putString(appIdTAG, object.get(appIdTAG).getAsString());
+                                            }
+                                            if (object.get(appKeyTAG) != null) {
+                                                editor.putString(appKeyTAG, object.get(appKeyTAG).getAsString());
+                                            }
+                                            if (object.get(appSecretTAG) != null) {
+                                                editor.putString(appSecretTAG, object.get(appSecretTAG).getAsString());
+                                            }
+
+                                            editor.commit();
+                                            Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
+                                            Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
+                                            Log.e(TAG, "fqInsertRawData: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
+                                            Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
+                                            Log.e(TAG, "autoMode: " + sharedPreferences.getInt(autoModeTAG, 0));
+                                            Log.e(TAG, "AppId: " + sharedPreferences.getString(appIdTAG, "null"));
+                                            Log.e(TAG, "AppKey: " + sharedPreferences.getString(appKeyTAG, "null"));
+                                            Log.e(TAG, "AppSecret: " + sharedPreferences.getString(appSecretTAG, "null"));
+                                            reStartActivity();
                                         }
 
                                         editor.commit();
@@ -175,110 +189,95 @@ public class MainActivity extends AppCompatActivity {
                                         Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
                                         Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
                                         Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                        Log.e(TAG, "autoMode: " + sharedPreferences.getInt(autoModeTAG, 0));
-                                        Log.e(TAG, "AppId: " + sharedPreferences.getString(appIdTAG, "null"));
-                                        Log.e(TAG, "AppKey: " + sharedPreferences.getString(appKeyTAG, "null"));
-                                        Log.e(TAG, "AppSecret: " + sharedPreferences.getString(appSecretTAG, "null"));
-                                        reStartActivity();
-                                    }
+                                        Log.e(TAG, "autoMode: " + sharedPreferences.getBoolean(autoModeTAG, false));
+                                        alertDialog(getResources().getString(R.string.saveSetting),
+                                                getResources().getString(R.string.success));
 
-                                    editor.commit();
-                                    Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
-                                    Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
-                                    Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
-                                    Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                    Log.e(TAG, "autoMode: " + sharedPreferences.getBoolean(autoModeTAG, false));
-                                    alertDialog(getResources().getString(R.string.saveSetting),
-                                            getResources().getString(R.string.success));
-
-                                } else if (responseBean.getTopic().equals("settingStandard")) {
-                                    JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                    int value = object.get("value").getAsInt();
-
-                                    if (object.get("sensor") != null) {
-                                        String sensor = object.get("sensor").getAsString();
-                                        if (sensor.equals("SoilMoisture")) {
-                                            editor.putFloat("moisture", (float) value);
-                                        } else if (sensor.equals("dht22")) {
-                                            editor.putFloat("temp", (float) value);
-                                        } else if (sensor.equals("bh1750")) {
-                                            editor.putFloat("light", (float) value);
+                                    } else if (responseBean.getTopic().equals("settingStandard")) {
+                                        JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                        if (object.get("moisture") != null) {
+                                            editor.putFloat("moisture", object.get("moisture").getAsFloat());
+                                        }
+                                        if (object.get("temp") != null) {
+                                            editor.putFloat("temp", object.get("temp").getAsFloat());
+                                        }
+                                        if (object.get("light") != null) {
+                                            editor.putFloat("light", object.get("light").getAsFloat());
                                         }
                                         editor.commit();
                                         alertDialog(getResources().getString(R.string.saveSetting),
                                                 getResources().getString(R.string.success));
-                                    }
-                                } else if (responseBean.getTopic().equals("controlDevice")) {
-                                    JsonObject object = new JsonObject();
-                                    object = GsonProvider.getInstance().fromJson(publishBean.getPayload(), JsonObject.class);
-                                    JsonObject obj = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                    if (object.get("1") != null) {
-                                        alertDialog(getResources().getString(R.string.water)
-                                                + " " + getResources().getString(R.string.success),
-                                                getResources().getString(R.string.moistureBefore)
-                                                        + ": " + String.valueOf(String.format( "%.2f", obj.get("mBAverage").getAsFloat() )) + " %\n"
-                                                        + getString(R.string.moistureAfter) + ": "
-                                                        + String.valueOf(String.format( "%.2f", obj.get("mAAverage").getAsFloat() )) + " %");
-                                    } else if (object.get("2") != null) {
-                                        alertDialog(getString(R.string.shower)+" "+getString(R.string.success),
-                                                getString(R.string.tempBefore) +": " +String.valueOf(String.format( "%.2f",obj.get("tBAverage").getAsFloat())) +" °C\n"
-                                                +getString(R.string.tempAfter) +": " +String.valueOf(String.format( "%.2f",obj.get("tAAverage").getAsFloat()) )+" °C");
-                                    } else if (object.get("3") != null) {
-                                        alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
-                                                getResources().getString(R.string.success));
-                                        //actionListener.onUpdateSlatStatus.onUpdateSlatStatus();
-                                    } else if (object.get("4") != null) {
-                                        alertDialog(getString(R.string.acCloseSlat)+" "+getString(R.string.success),
-                                                getString(R.string.lightBefore) +": "+String.valueOf(String.format( "%.2f",obj.get("lB2").getAsFloat())) +" Lux\n"
-                                                +getString(R.string.lightAfter) +": "+String.valueOf(String.format( "%.2f",obj.get("lA2").getAsFloat())) +" Lux");//acCloseSlat
+
+                                    } else if (responseBean.getTopic().equals("controlDevices")) {
+                                        JsonObject object = new JsonObject();
+                                        object = GsonProvider.getInstance().fromJson(publishBean.getPayload(), JsonObject.class);
+                                        JsonObject obj = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
+                                        if (object.get("1") != null) {
+                                            alertDialog(getResources().getString(R.string.water)
+                                                            + " " + getResources().getString(R.string.success),
+                                                    getResources().getString(R.string.moistureBefore)
+                                                            + ": " + String.valueOf(String.format("%.2f", obj.get("mBAverage").getAsFloat())) + " %\n"
+                                                            + getString(R.string.moistureAfter) + ": "
+                                                            + String.valueOf(String.format("%.2f", obj.get("mAAverage").getAsFloat())) + " %");
+                                        } else if (object.get("2") != null) {
+                                            alertDialog(getString(R.string.shower) + " " + getString(R.string.success),
+                                                    getString(R.string.tempBefore) + ": " + String.valueOf(String.format("%.2f", obj.get("tBAverage").getAsFloat())) + " °C\n"
+                                                            + getString(R.string.tempAfter) + ": " + String.valueOf(String.format("%.2f", obj.get("tAAverage").getAsFloat())) + " °C");
+                                        } else if (object.get("3") != null) {
+                                            alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
+                                                    getResources().getString(R.string.success));
+                                            //actionListener.onUpdateSlatStatus.onUpdateSlatStatus();
+                                        } else if (object.get("4") != null) {
+                                            alertDialog(getString(R.string.acCloseSlat) + " " + getString(R.string.success),
+                                                    getString(R.string.lightBefore) + ": " + String.valueOf(String.format("%.2f", obj.get("lB2").getAsFloat())) + " Lux\n"
+                                                            + getString(R.string.lightAfter) + ": " + String.valueOf(String.format("%.2f", obj.get("lA2").getAsFloat())) + " Lux");//acCloseSlat
+
+                                        }
+
+                                    } else if (responseBean.getTopic().equals("refreshIM")) {
 
                                     }
-
-                                } else if (responseBean.getTopic().equals("refreshIM")) {
-
+                                } else {
+                                    //for error control device
+                                    if (publishHandle != null) {
+                                        Log.e(TAG, "remove task");
+                                        publishHandle.removeCallbacks(publistask);
+                                    }
+                                    if (responseBean.getTopic().equals("controlDevices")) {
+                                        switch (responseBean.getMessage()) {
+                                            case "error1":
+                                                alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
+                                                break;
+                                            case "error2":
+                                                alertDialog(getString(R.string.exception), getString(R.string.noWateringArea));
+                                                break;
+                                            case "error3":
+                                                alertDialog(getString(R.string.exception), getString(R.string.tempNotDecrease));
+                                                break;
+                                            case "error4":
+                                                alertDialog(getString(R.string.exception), getString(R.string.lightInNotDecrease));
+                                                break;
+                                            case "error5":
+                                                alertDialog(getString(R.string.exception), getString(R.string.SlatIsOpened));
+                                                break;
+                                            case "error6":
+                                                alertDialog(getString(R.string.exception), getString(R.string.SlatIsClosed));
+                                                break;
+                                            case "error7":
+                                                alertDialog(getString(R.string.exception), getString(R.string.notTimeToShower));
+                                                break;
+                                            default:
+                                                alertDialog(getString(R.string.warning), responseBean.getMessage());
+                                                break;
+                                        }
+                                    }
+                                    //Log.e(TAG, responseBean.getMessage());
+                                    //notificationSnackBar(responseBean.getMessage());
                                 }
                             } else {
-                                //for error control device
-                                if (publishHandle != null) {
-                                    Log.e(TAG, "remove task");
-                                    publishHandle.removeCallbacks(publistask);
-                                }
-                                if (responseBean.getTopic().equals("controlDevice")) {
-                                    switch (responseBean.getMessage()) {
-                                        case "error1":
-                                            alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
-                                            break;
-                                        case "error2":
-                                            alertDialog(getString(R.string.exception), getString(R.string.noWateringArea));
-                                            break;
-                                        case "error3":
-                                            alertDialog(getString(R.string.exception), getString(R.string.tempNotDecrease));
-                                            break;
-                                        case "error4":
-                                            alertDialog(getString(R.string.exception), getString(R.string.lightInNotDecrease));
-                                            break;
-                                        case "error5":
-                                            alertDialog(getString(R.string.exception), getString(R.string.SlatIsOpened));
-                                            break;
-                                        case "error6":
-                                            alertDialog(getString(R.string.exception), getString(R.string.SlatIsClosed));
-                                            break;
-                                        case "error7":
-                                            alertDialog(getString(R.string.exception), getString(R.string.notTimeToShower));
-                                            break;
-                                        default:
-                                            alertDialog(getString(R.string.warning), responseBean.getMessage());
-                                            break;
-                                    }
-                                }
-                                //Log.e(TAG, responseBean.getMessage());
-                                //notificationSnackBar(responseBean.getMessage());
+                                // if topic not math
                             }
-                        } else {
-                            // if topic not math
                         }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
                     }
                 } else if (topic.equals("rawData")) {
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), "");
@@ -347,8 +346,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "NETPIE Event Listener: onConnect: Connected to NETPIE!!");
                     notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
                     statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), null);
-                    microgear.publish("token", sharedPreferences.getString("token", ""), 0, true);
-                    Log.e(TAG, "publush token 9999");
+                    //microgear.publish("token", sharedPreferences.getString("token", ""), 0, true);
+                    new PublishTask().execute("token", sharedPreferences.getString("token", ""));
+                    //new PublishTask().execute("mem",GsonProvider.getInstance().toJson(getMem()));
+                    Log.e(TAG, "publush token after connected");
                     if (mBottomBar != null) {
                         Log.e(TAG, "create BottomBar: position " + mBottomBar.getCurrentTabPosition());
                         if (mBottomBar.getCurrentTabPosition() == 0) {
@@ -680,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (device == 4) {
                     message = getResources().getString(R.string.closeSlat___);
                 }
-                publish("controlDevice",
+                publish("controlDevices",
                         GsonProvider.getInstance().toJson(object),
                         message);
 
@@ -1016,7 +1017,15 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setCancelable(false);
             progressDialog.show();
             publishBean = new PublishBean(topic, payload);
-            microgear.publish(topic, payload);
+
+
+            if(topic.equals("controlDevices")){
+                microgear.publish(topic, payload);
+            }
+            else{
+                new PublishTask().execute(topic, payload);
+            }
+
             publishHandle = new Handler();
             publistask = new Runnable() {
                 @Override
@@ -1067,6 +1076,21 @@ public class MainActivity extends AppCompatActivity {
             return false;
 
         }
+
+    }
+
+    public JsonObject getMem() {
+        JsonObject object = new JsonObject();
+        object.addProperty("moisture", sharedPreferences.getFloat("moisture", 0));
+        object.addProperty("temp", sharedPreferences.getFloat("temp", 0));
+        object.addProperty("light", sharedPreferences.getFloat("light", 0));
+        object.addProperty("autoMode", sharedPreferences.getBoolean("autoMode", true));
+        object.addProperty("dayStorage", sharedPreferences.getInt("dayStorage", 7));
+        object.addProperty("fqPubRawData", sharedPreferences.getInt("fqPubRawData", 1));
+        object.addProperty("fqPubImage", sharedPreferences.getInt("fqPubImage", 1));
+        object.addProperty("fqInsertRawData", sharedPreferences.getInt("fqInsertRawData", 1));
+        return object;
+
     }
 
     private boolean checkAndGetKeyNetPie() {
@@ -1231,6 +1255,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public class PublishTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            checkAndGetKeyNetPie();
+            Log.d(TAG, "publish topic: " + strings[0]);
+            return new NetPieRestApi(appID, appKey, appSecret).publish(strings[0], strings[1], true);
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //alertDialog("result",result);
+            if (result.equals("ok")) {
+                Log.d(TAG, "publish success");
+            }
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Log.e(TAG, "onRequestPermissionsResult");
@@ -1280,4 +1328,5 @@ public class MainActivity extends AppCompatActivity {
     public void notificationSnackBar(String message) {
         Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
     }
+
 }

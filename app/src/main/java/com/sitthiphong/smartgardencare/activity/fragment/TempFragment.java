@@ -321,7 +321,7 @@ public class TempFragment extends Fragment {
                 else{
                     sensorValue2.setText(getResources().getString(R.string.errorSensorDHT22));
                 }
-                seekBar.setProgress((int)sharedPreferences.getFloat("temp",40));
+                seekBar.setProgressSeekBar((int)sharedPreferences.getFloat("temp",40));
                 scrollView.setVisibility(View.VISIBLE);
 
 

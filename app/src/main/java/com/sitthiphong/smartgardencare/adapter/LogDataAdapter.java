@@ -23,7 +23,7 @@ import java.util.List;
 public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataViewHolder> {
     private static String TAG = LogDataAdapter.class.getSimpleName();
     private List<LogDataBean> logList;
-    private Context context;
+    public Context context;
 
     public LogDataAdapter(Context context, List<LogDataBean> logList) {
         this.logList = logList;
@@ -46,38 +46,38 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
                     .format(new Date(bean.getTime() * 1000)));
             holder.typeAction.setText((bean.getType() == 1) ? context.getString(R.string.typeActionAuto) :
                     context.getString(R.string.typeActionManual));
-
             if (bean.getAction() <= 4) {
                 switch (bean.getAction()) {
                     case 1:
                         holder.action.setText(context.getString(R.string.water));
-                        holder.beforeAndAfter.setText(
-                                context.getString(R.string.before) + " " +
-                                        String.valueOf(String.format("%.2f", bean.getValBefore()) + " %, " +
-                                                context.getString(R.string.after) + " " +
-                                                String.valueOf(String.format("%.2f", bean.getValAfter()) + " %")));
+                        holder.beforeAndAfter.setText(holder
+                                .getBeforeAndAfter(context,
+                                        bean,
+                                        context.getString(R.string.unitMoisture)));
                         break;
                     case 2:
                         holder.action.setText(context.getString(R.string.shower));
-                        holder.beforeAndAfter.setText(
-                                context.getString(R.string.before) + " " +
-                                        String.valueOf(String.format("%.2f", bean.getValBefore()) + " °C, " +
-                                                context.getString(R.string.after) + " " +
-                                                String.valueOf(String.format("%.2f", bean.getValAfter()) + " °C")));
+                        holder.beforeAndAfter.setText(holder
+                                .getBeforeAndAfter(context,
+                                        bean,
+                                        context.getString(R.string.unitTemp)));
                         break;
                     case 3:
                         holder.action.setText(context.getString(R.string.acOpenSlat));
-                        holder.beforeAndAfter.setVisibility(View.GONE);
+                        holder.beforeAndAfter.setText(holder
+                                .getBeforeAndAfter(context,
+                                        bean,
+                                        context.getString(R.string.unitLight)));
                         break;
                     case 4:
                         holder.action.setText(context.getString(R.string.acCloseSlat));
-                        holder.beforeAndAfter.setText(
-                                context.getString(R.string.before) + " " +
-                                        String.valueOf(String.format("%.2f", bean.getValBefore()) + " Lux, " +
-                                                context.getString(R.string.after) + " " +
-                                                String.valueOf(String.format("%.2f", bean.getValAfter()) + " Lux")));
+                        holder.beforeAndAfter.setText(holder
+                                .getBeforeAndAfter(context,
+                                        bean,
+                                        context.getString(R.string.unitLight)));
                         break;
                     default:
+                        break;
 
                 }
 
@@ -142,6 +142,18 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
             typeAction = (TextView) itemView.findViewById(R.id.tv_cv_type_logData);
             beforeAndAfter = (TextView) itemView.findViewById(R.id.tv_before_after);
 
+
+        }
+
+        public String getBeforeAndAfter(Context context, LogDataBean bean, String unit) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(context.getString(R.string.before));
+            builder.append(" " + String.valueOf(String.format("%.2f", bean.getValBefore())));
+            builder.append(" " + unit + ", ");
+            builder.append(context.getString(R.string.after) + " ");
+            builder.append(String.valueOf(String.format("%.2f", bean.getValAfter())));
+            builder.append(" " + unit);
+            return builder.toString();
         }
 
     }

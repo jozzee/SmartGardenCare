@@ -466,6 +466,7 @@ public class SettingActivity extends AppCompatActivity {
     public Context getContextManual(){
         return this;
     }
+
     public void validateChange(){
         Log.e(TAG,"validateChange");
         boolean changeNETPIE = false;
@@ -490,23 +491,13 @@ public class SettingActivity extends AppCompatActivity {
             objNETPIE.addProperty(appSecretTAG,textViewAppSecret.getText().toString().trim());
             changeNETPIE = true;
         }
-        if(fqPubRawData != sharedPreferences.getInt(fqPubRawDataTAG,1)){
-            objDetails.addProperty(fqPubRawDataTAG,fqPubRawData);
-            changeDetails = true;
-        }
-        if(fqInsertRawData != sharedPreferences.getInt(fqInsertRawDataTAG,1)){
-            objDetails.addProperty(fqInsertRawDataTAG,fqInsertRawData);
-            changeDetails = true;
-        }
-        if(dayStorage != sharedPreferences.getInt(dayStorageTAG,7)){
-            objDetails.addProperty(dayStorageTAG,dayStorage);
-            changeDetails = true;
-        }
-        if(swAutoMode.isChecked() != sharedPreferences.getBoolean("autoMode",false)){
-            //Log.e(TAG,"swAutoMode.isChecked(): "+String.valueOf(swAutoMode.isChecked()));
-            objDetails.addProperty("autoMode",swAutoMode.isChecked());
-            changeDetails = true;
-        }
+
+        changeDetails = true;
+        objDetails.addProperty(fqPubRawDataTAG,fqPubRawData);
+        objDetails.addProperty(fqInsertRawDataTAG,fqInsertRawData);
+        objDetails.addProperty(dayStorageTAG,dayStorage);
+        objDetails.addProperty("autoMode",swAutoMode.isChecked());
+        objDetails.addProperty("fqPubImage",sharedPreferences.getInt("fqPubImage",1));
         new ActionListener().onSaveSetting.onSaveSetting(
                 changeNETPIE,
                 changeDetails,

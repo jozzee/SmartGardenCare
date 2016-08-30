@@ -28,7 +28,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.adapter.LogDataAdapter;
 import com.sitthiphong.smartgardencare.core.CheckPermission;
-import com.sitthiphong.smartgardencare.core.PDFClass;
+import com.sitthiphong.smartgardencare.core.PDFclass;
 import com.sitthiphong.smartgardencare.datamodel.LogDataBean;
 import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.listener.ActionListener;
@@ -116,7 +116,7 @@ public class LogFragment extends Fragment {
                 if (new CheckPermission(getActivity()).checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     //new SaveIMTask().execute(imBean.getBitmap());
                     //createPdf();
-                    PDFClass pdFClass = new PDFClass(getContext(),adapter.getLogList());
+                    PDFclass pdFClass = new PDFclass(getContext(),adapter.getLogList());
                     pdFClass.createPDF();
                 } else {
                     new CheckPermission(getActivity()).requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -130,7 +130,7 @@ public class LogFragment extends Fragment {
                 if (method.equals("save2PDF") && b) {
                     //new SaveIMTask().execute(imBean.getBitmap());
                     //createPdf();
-                    PDFClass pdFClass = new PDFClass(getContext(),adapter.getLogList());
+                    PDFclass pdFClass = new PDFclass(getContext(),adapter.getLogList());
                     pdFClass.createPDF();
                 }
 

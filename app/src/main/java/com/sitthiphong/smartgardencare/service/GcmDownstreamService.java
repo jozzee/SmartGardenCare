@@ -53,8 +53,8 @@ public class GcmDownstreamService extends GcmListenerService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(messageBody)
+                .setContentTitle(getApplicationContext().getString(R.string.app_name))
+                .setContentText(getMessage(messageBody))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -67,11 +67,12 @@ public class GcmDownstreamService extends GcmListenerService {
 
     private void sendNotification2(String title, String messageBody) {
 
+
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(messageBody)
+                .setContentTitle(getApplicationContext().getString(R.string.app_name))
+                .setContentText(getMessage(messageBody))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri);
 
@@ -79,5 +80,23 @@ public class GcmDownstreamService extends GcmListenerService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notificationBuilder.build());
+    }
+    private String getMessage(String message){
+        switch (message){
+            case "error1":
+                message = getApplicationContext().getString(R.string.waterFalse);
+                break;
+            case "error2":
+                message = getApplicationContext().getString(R.string.noWateringArea);
+                break;
+            case "error3":
+                message = getApplicationContext().getString(R.string.tempNotDecrease);
+                break;
+            case "error4":
+                message = getApplicationContext().getString(R.string.lightInNotDecrease);
+                break;
+            default:
+        }
+        return message;
     }
 }

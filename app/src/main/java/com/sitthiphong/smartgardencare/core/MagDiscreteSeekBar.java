@@ -1,7 +1,9 @@
 package com.sitthiphong.smartgardencare.core;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +17,7 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 /**
  * Created by jozze on 18/7/2559.
  */
-public class MagDiscreteSeekBar {
+public class MagDiscreteSeekBar extends AppCompatActivity {
     private View view;
     private DiscreteSeekBar seekBar;
     private int seekBarId;
@@ -31,7 +33,7 @@ public class MagDiscreteSeekBar {
 
     public MagDiscreteSeekBar(View view, int seekBarId,
                               TextView tvValue, String unit, int colorId,
-                              int maxValue, int minValue, int progress,String sensor){
+                              int maxValue, int minValue, int progress, String sensor) {
         this.view = view;
         this.seekBarId = seekBarId;
         this.tvValue = tvValue;
@@ -43,10 +45,11 @@ public class MagDiscreteSeekBar {
         this.sensor = sensor;
         val = progress;
 
-        seekBar = (DiscreteSeekBar)view.findViewById(seekBarId);
+        seekBar = (DiscreteSeekBar) view.findViewById(seekBarId);
 
     }
-    public void createSeekBar(){
+
+    public void createSeekBar() {
         seekBar.setMax(maxValue);
         seekBar.setMin(minValue);
         seekBar.setProgress(progress);
@@ -57,7 +60,7 @@ public class MagDiscreteSeekBar {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 val = value;
-                tvValue.setText(String.valueOf(value)+unit);
+                tvValue.setText(String.valueOf(value) + unit);
 
 
             }
@@ -69,18 +72,32 @@ public class MagDiscreteSeekBar {
 
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-                Log.e("TAG","จบแล้ววววว");
+                Log.e("TAG", "จบแล้ววววว");
                 JsonObject obj = new JsonObject();
-                obj.addProperty("sensor",sensor);
-                obj.addProperty("value",getValue());
+                SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("Details", MODE_PRIVATE);
+                if (sensor.equals("SoilMoisture")) {
+                    obj.addProperty("moisture", getValue());
+                    obj.addProperty("temp", sharedPreferences.getFloat("temp", (float) 40.00));
+                    obj.addProperty("light", sharedPreferences.getFloat("light", (float) 5000.00));
+                } else if (sensor.equals("dht22")) {
+                    obj.addProperty("moisture", sharedPreferences.getFloat("moisture", (float) 20.00));
+                    obj.addProperty("temp", getValue());
+                    obj.addProperty("light", sharedPreferences.getFloat("light", (float) 5000.00));
+                } else if (sensor.equals("bh1750")) {
+                    obj.addProperty("moisture", sharedPreferences.getFloat("moisture", (float) 20.00));
+                    obj.addProperty("temp", sharedPreferences.getFloat("temp", (float) 40.00));
+                    obj.addProperty("light", getValue());
+                }
                 new ActionListener().onSaveStandard.onSaveStandard(obj);
             }
         });
     }
-    public void setProgress(int progress){
+
+    public void setProgressSeekBar(int progress) {
         seekBar.setProgress(progress);
     }
-    public int getValue(){
+
+    public int getValue() {
         return val;
     }
 

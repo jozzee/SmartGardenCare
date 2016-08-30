@@ -326,7 +326,7 @@ public class MoistureFragment extends Fragment {
                 }else{
                     sensorValue2.setText(getResources().getString(R.string.errorSensorMoisture));
                 }
-                seekBar.setProgress((int)sharedPreferences.getFloat("moisture",20));
+                seekBar.setProgressSeekBar((int)sharedPreferences.getFloat("moisture",20));
                 scrollView.setVisibility(View.VISIBLE);
 
 

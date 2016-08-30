@@ -155,7 +155,16 @@ public class ImageFragment extends Fragment {
                                             timeFrequencyValue.setText(text);
                                             Log.e(TAG,"publish data to net pie");
                                             JsonObject object = new JsonObject();
+                                            String dayStorageTAG = "dayStorage";
+                                            String fqPubRawDataTAG = "fqPubRawData";
+                                            String fqPubImageTAG = "fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
+                                            String fqInsertRawDataTAG = "fqInsertRawData";
+                                            String autoModeTAG = "autoMode";
                                             object.addProperty(fqPubImageTAG,ftPubIM);
+                                            object.addProperty(fqPubRawDataTAG,sharedPreferences.getInt(fqPubRawDataTAG,1));
+                                            object.addProperty(fqInsertRawDataTAG,sharedPreferences.getInt(fqInsertRawDataTAG,1));
+                                            object.addProperty(dayStorageTAG,sharedPreferences.getInt(dayStorageTAG,7));
+                                            object.addProperty("autoMode",sharedPreferences.getBoolean(autoModeTAG,true));
                                             actionListener.onSaveSetting.onSaveSetting(
                                                     false,
                                                     true,

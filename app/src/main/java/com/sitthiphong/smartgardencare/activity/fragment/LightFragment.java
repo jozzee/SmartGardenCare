@@ -350,7 +350,7 @@ public class LightFragment extends Fragment {
                         .format(new Date(rawBean.getTime()*1000)));
 
 
-                seekBar.setProgress((int)sharedPreferences.getFloat("light",5000));
+                seekBar.setProgressSeekBar((int)sharedPreferences.getFloat("light",5000));
                 scrollView.setVisibility(View.VISIBLE);
 
 

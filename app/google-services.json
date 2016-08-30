@@ -1,12 +1,12 @@
 {
   "project_info": {
-    "project_number": "1009902406090",
-    "project_id": "firebase-smart-garden"
+    "project_number": "1090249793337",
+    "project_id": "smart-garden-care"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1009902406090:android:e38c7ebce5ed6cd6",
+        "mobilesdk_app_id": "1:1090249793337:android:e38c7ebce5ed6cd6",
         "android_client_info": {
           "package_name": "com.sitthiphong.smartgardencare"
         }
@@ -14,7 +14,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCmZk_YcNRhEPP2W5HEbMg6SngA9Qt0P6w"
+          "current_key": "AIzaSyDLGPTlbGeNW6z4oy-Ug1nHjWEreyFRanw"
         }
       ],
       "services": {
