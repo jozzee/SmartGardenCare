@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--moisture fragment -->
-    <integer name="inner_pie_padding">36</integer>
-    <integer name="percentage_size_moisture">75</integer>
-    <integer name="max_moisture">80</integer>
-    <integer name="min_moisture">10</integer>
-    <integer name="value_moisture">20</integer>
-
-    <integer name="waitPublish">20000</integer>
 </resources>

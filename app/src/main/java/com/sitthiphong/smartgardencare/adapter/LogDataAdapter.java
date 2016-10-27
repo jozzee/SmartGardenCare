@@ -3,17 +3,17 @@ package com.sitthiphong.smartgardencare.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sitthiphong.smartgardencare.R;
+import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.LogDataBean;
-import com.sitthiphong.smartgardencare.provider.SimpleDateProvider;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -40,77 +40,36 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
     public void onBindViewHolder(LogDataViewHolder holder, int position) {
         if (holder instanceof LogDataViewHolder) {
             LogDataBean bean = logList.get(position);
-            //Log.e(TAG,"Action working: "+bean.getAction());
 
-            holder.dateTime.setText(SimpleDateProvider.getInstance()
-                    .format(new Date(bean.getTime() * 1000)));
-            holder.typeAction.setText((bean.getType() == 1) ? context.getString(R.string.typeActionAuto) :
-                    context.getString(R.string.typeActionManual));
-            if (bean.getAction() <= 4) {
-                switch (bean.getAction()) {
-                    case 1:
-                        holder.action.setText(context.getString(R.string.water));
-                        holder.beforeAndAfter.setText(holder
-                                .getBeforeAndAfter(context,
-                                        bean,
-                                        context.getString(R.string.unitMoisture)));
-                        break;
-                    case 2:
-                        holder.action.setText(context.getString(R.string.shower));
-                        holder.beforeAndAfter.setText(holder
-                                .getBeforeAndAfter(context,
-                                        bean,
-                                        context.getString(R.string.unitTemp)));
-                        break;
-                    case 3:
-                        holder.action.setText(context.getString(R.string.acOpenSlat));
-                        holder.beforeAndAfter.setText(holder
-                                .getBeforeAndAfter(context,
-                                        bean,
-                                        context.getString(R.string.unitLight)));
-                        break;
-                    case 4:
-                        holder.action.setText(context.getString(R.string.acCloseSlat));
-                        holder.beforeAndAfter.setText(holder
-                                .getBeforeAndAfter(context,
-                                        bean,
-                                        context.getString(R.string.unitLight)));
-                        break;
-                    default:
-                        break;
 
-                }
-
-            } else {
-                holder.action.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.dateTime.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.typeAction.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.beforeAndAfter.setTextColor(ContextCompat.getColor(context, R.color.red));
-                switch (bean.getAction()) {
-                    case 5:
-                        holder.action.setText(context.getString(R.string.water));
-                        holder.beforeAndAfter.setText(context.getString(R.string.waterFalse));
-                        break;
-                    case 6:
-                        holder.action.setText(context.getString(R.string.water));
-                        holder.beforeAndAfter.setText(context.getString(R.string.noWateringArea));
-                        break;
-                    case 7:
-                        holder.action.setText(context.getString(R.string.shower));
-                        holder.beforeAndAfter.setText(context.getString(R.string.waterFalse));
-                        break;
-                    case 8:
-                        holder.action.setText(context.getString(R.string.shower));
-                        holder.beforeAndAfter.setText(context.getString(R.string.tempNotDecrease));
-                        break;
-                    case 9:
-                        holder.action.setText(context.getString(R.string.acCloseSlat));
-                        holder.beforeAndAfter.setText(context.getString(R.string.lightInNotDecrease));
-                        break;
-                    default:
-
-                }
+            holder.time.setText(getDateTime(bean.getTime() * 1000));
+            if (bean.getType() == ConfigData.AUTO_TYPE) {
+                holder.type.setText(context.getString(R.string.autoMode));
+            } else if (bean.getType() == ConfigData.MANUAL_TYPE) {
+                holder.type.setText(context.getString(R.string.manualMode));
             }
+
+            switch (bean.getWorking()) {
+                case 1:
+                    holder.working.setText(context.getString(R.string.water));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"%"));
+                    break;
+                case 2:
+                    holder.working.setText(context.getString(R.string.foggy));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"°C"));
+                    break;
+                case 3:
+                    holder.working.setText(context.getString(R.string.openSlat));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"Lux"));
+                    break;
+                case 4:
+                    holder.working.setText(context.getString(R.string.closeSlat));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"Lux"));
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
@@ -123,38 +82,54 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
         return logList;
     }
 
+    private String getBeforeAndAfter(Context context, LogDataBean bean, String unit) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(context.getString(R.string.before));
+        builder.append(" " + String.valueOf(bean.getVal_berfore()));
+        builder.append(" " + unit + ", ");
+        builder.append(context.getString(R.string.after) + " ");
+        builder.append(String.valueOf(bean.getVal_after()));
+        builder.append(" " + unit);
+        return builder.toString();
+    }
+
+    private String getDateTime(long time) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+            Date date = (new Date(time));
+            return dateFormat.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
     public void setLogList(List<LogDataBean> logList) {
         this.logList = logList;
     }
 
-    public static class LogDataViewHolder extends RecyclerView.ViewHolder {
-        private static String TAG = LogDataViewHolder.class.getSimpleName();
-        public TextView action;
-        public TextView dateTime;
-        public TextView typeAction;
+
+    public class LogDataViewHolder extends RecyclerView.ViewHolder {
+        private final String TAG = "LogDataViewHolder";
+        public TextView working;
+        public TextView time;
+        public TextView type;
         public TextView beforeAndAfter;
 
 
         public LogDataViewHolder(View itemView) {
             super(itemView);
-            action = (TextView) itemView.findViewById(R.id.tv_cv_action_logData);
-            dateTime = (TextView) itemView.findViewById(R.id.tv_cv_timeStamp_logData);
-            typeAction = (TextView) itemView.findViewById(R.id.tv_cv_type_logData);
-            beforeAndAfter = (TextView) itemView.findViewById(R.id.tv_before_after);
+            working = (TextView) itemView.findViewById(R.id.tv_working);
+            time = (TextView) itemView.findViewById(R.id.tv_time);
+            type = (TextView) itemView.findViewById(R.id.tv_type);
+            beforeAndAfter = (TextView) itemView.findViewById(R.id.tv_val_before_after);
 
 
         }
 
-        public String getBeforeAndAfter(Context context, LogDataBean bean, String unit) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(context.getString(R.string.before));
-            builder.append(" " + String.valueOf(String.format("%.2f", bean.getValBefore())));
-            builder.append(" " + unit + ", ");
-            builder.append(context.getString(R.string.after) + " ");
-            builder.append(String.valueOf(String.format("%.2f", bean.getValAfter())));
-            builder.append(" " + unit);
-            return builder.toString();
-        }
 
     }
+
 }

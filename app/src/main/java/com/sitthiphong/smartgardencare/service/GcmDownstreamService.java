@@ -1,7 +1,9 @@
 package com.sitthiphong.smartgardencare.service;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +16,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.activity.MainActivity;
-import com.sitthiphong.smartgardencare.listener.ActionListener;
+
+import java.util.List;
 
 /**
  * Created by Akexorcist on 3/6/2016 AD.
@@ -54,7 +57,7 @@ public class GcmDownstreamService extends GcmListenerService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getApplicationContext().getString(R.string.app_name))
-                .setContentText(getMessage(messageBody))
+                .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -72,7 +75,7 @@ public class GcmDownstreamService extends GcmListenerService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getApplicationContext().getString(R.string.app_name))
-                .setContentText(getMessage(messageBody))
+                .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri);
 
@@ -81,22 +84,30 @@ public class GcmDownstreamService extends GcmListenerService {
 
         notificationManager.notify(0, notificationBuilder.build());
     }
-    private String getMessage(String message){
-        switch (message){
-            case "error1":
-                message = getApplicationContext().getString(R.string.waterFalse);
-                break;
-            case "error2":
-                message = getApplicationContext().getString(R.string.noWateringArea);
-                break;
-            case "error3":
-                message = getApplicationContext().getString(R.string.tempNotDecrease);
-                break;
-            case "error4":
-                message = getApplicationContext().getString(R.string.lightInNotDecrease);
-                break;
-            default:
-        }
-        return message;
+    /**
+     for check activity is running
+     */
+    public boolean isForeground(String myPackage) {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
+        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
+        return componentInfo.getPackageName().equals(myPackage);
     }
+    public static boolean isBackgroundRunning(Context context) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                for (String activeProcess : processInfo.pkgList) {
+                    if (activeProcess.equals(context.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        return false;
+    }
+
 }

@@ -1,71 +1,41 @@
 package com.sitthiphong.smartgardencare.datamodel;
 
 /**
- * Created by zaade on 24/6/2559.
+ * Created by Sitthiphong on 10/21/2016 AD.
  */
+
 public class LogDataBean {
-    private int id;
-    private int action;
-    private int type;
     private long time;
-    private float valBefore,valAfter;
+    private int working;
+    private int type;
+    private float val_berfore;
+    private float val_after;
 
-
-    public LogDataBean(int id, int action, int type, long time,float valBefore,float valAfter) {
-        this.id = id;
-        this.action = action;
-        this.type = type;
+    public LogDataBean(long time, int working, int type, float val_berfore, float val_after) {
         this.time = time;
-        this.valBefore = valBefore;
-        this.valAfter = valAfter;
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public int getType() {
-        return type;
+        this.working = working;
+        this.type = type;
+        this.val_berfore = val_berfore;
+        this.val_after = val_after;
     }
 
     public long getTime() {
         return time;
     }
 
-    public float getValBefore() {
-        return valBefore;
+    public int getWorking() {
+        return working;
     }
 
-    public float getValAfter() {
-        return valAfter;
+    public int getType() {
+        return type;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public float getVal_berfore() {
+        return val_berfore;
     }
 
-    public void setAction(int action) {
-        this.action = action;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setValBefore(float valBefore) {
-        this.valBefore = valBefore;
-    }
-
-    public void setValAfter(float valAfter) {
-        this.valAfter = valAfter;
+    public float getVal_after() {
+        return val_after;
     }
 }

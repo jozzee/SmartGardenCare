@@ -1,76 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <dimen name="padding_exception">32dp</dimen>
-
-    <dimen name="margin_line">32dp</dimen>
-    <dimen name="text_size">26sp</dimen>
-    <dimen name="text_size_btn">18sp</dimen>
-    <dimen name="progressBar_size">72dp</dimen>
-
-    <!--set up netpie -->
-    <dimen name="margin_left_layout_setup_netpie">96dp</dimen>
-    <dimen name="margin_right_layout_setup_netpie">96dp</dimen>
-    <dimen name="margin_btn_setup_ntpie">16dp</dimen>
-
-    <dimen name="padding_layout_setup_netpie">16dp</dimen>
-    <dimen name="padding_btn_setup_nrtpie">16dp</dimen>
-
-    <dimen name="text_size_logoNETPIE">18sp</dimen>
-
-    <dimen name="image_width_setup_netpie">256dp</dimen>
-    <dimen name="image_height_setup_netpie">144dp</dimen>
+    <!--
+        Customize dimensions originally defined in res/values/dimens.xml (such as
+        screen margins) for sw600dp devices (e.g. 7" tablets) here.
+   -->
+    <dimen name="bar_cursor">7dp</dimen>
+    <dimen name="menu_padding">-10dp</dimen>
 
 
-    <!--image fragment -->
-    <dimen name="margin_layout_control_im_garden">64dp</dimen>
-    <dimen name="margin_sensor_error">152dp</dimen>
-    <dimen name="padding_im_garden">32dp</dimen>
-    <dimen name="padding_layout_control_im_garden">64dp</dimen>
-    <dimen name="padding_layout_setting_im_garden">32dp</dimen>
-    <dimen name="padding_value_setting_im_garden">32dp</dimen>
+    <!-- Default Font Style -->
+    <dimen name="FontSize5S">14sp</dimen>
+    <dimen name="FontSizeSSS">18sp</dimen>
+    <dimen name="FontSizeSS">20sp</dimen>
+    <dimen name="FontSizeS">22sp</dimen>
+    <dimen name="FontSizeM">24sp</dimen>
+    <dimen name="FontSizeL">26sp</dimen>
+    <dimen name="FontSizeXL">28sp</dimen>
+    <dimen name="FontSizeXXL">30sp</dimen>
+    <dimen name="FontSizeXXXL">32sp</dimen>
+    <dimen name="FontSize5XL">36sp</dimen>
 
-    <dimen name="btn_im_garden_size">56dp</dimen>
+    <!-- ListView Dimension -->
+    <dimen name="PaddingSpaceSS">3dp</dimen>
+    <dimen name="PaddingSpaceS">5dp</dimen>
+    <dimen name="PaddingSpace">8dp</dimen>
+    <dimen name="PaddingSpaceL">13dp</dimen>
+    <dimen name="PaddingSpaceXL">18dp</dimen>
+    <dimen name="PaddingSpaceXXL">23dp</dimen>
+    <dimen name="PaddingSpace3XL">28dp</dimen>
+    <dimen name="PaddingSpace4XL">33dp</dimen>
+    <dimen name="MarginSpaceSS">3dp</dimen>
+    <dimen name="MarginSpaceS">6dp</dimen>
+    <dimen name="MarginSpace">11dp</dimen>
+    <dimen name="MarginSpaceL">16dp</dimen>
+    <dimen name="MarginSpaceXL">21dp</dimen>
+    <dimen name="MarginSpaceXXL">26dp</dimen>
+    <dimen name="WatchlistPageHeight">208dp</dimen>
 
-    <!--image moisture -->
-    <dimen name="size_pain_pie_chart">384dp</dimen>
+    <dimen name="XCalenRing">16dp</dimen>
+    <dimen name="XCalenCircle">18dp</dimen>
 
-    <dimen name="padding_title_moisture_last_update">32dp</dimen>
-
-    <dimen name="margin_top_pain_pie_chart">32dp</dimen>
-    <dimen name="margin_bottom_pain_pie_chart">32dp</dimen>
-    <dimen name="margin_top_btn_water_pain_pie_chart">64dp</dimen>
-    <dimen name="margin_bottom_btn_water_pain_pie_chart">64dp</dimen>
-    <dimen name="margin_left_btn_water_pain_pie_chart">64dp</dimen>
-    <dimen name="margin_right_btn_water_pain_pie_chart">64dp</dimen>
-
-    <!--for details-->
-    <dimen name="padding_left_details">64dp</dimen>
-    <dimen name="padding_right_details">64dp</dimen>
-    <dimen name="margin_top_details">32dp</dimen>
-    <dimen name="margin_bottom_details">32dp</dimen>
-    <dimen name="margin_bottom_details2">16dp</dimen>
-
-    <!--light fragment-->
-    <dimen name="padding_slat_status">32dp</dimen>
-
-    <!--log fragment-->
-    <dimen name="margin_left_right_gard_view">96dp</dimen>
-    <dimen name="text_size_action_log">32sp</dimen>
-    <dimen name="test_size_time_log">18sp</dimen>
-
-    <!--setting activity-->
-    <dimen name="margin_left_right_layout_setting">72dp</dimen>
-    <dimen name="padding_top_setting">16dp</dimen>
-    <dimen name="padding_bottom_setting">16dp</dimen>
-    <dimen name="title_textView_size">18sp</dimen>
-    <dimen name="padding_layout_setting">32dp</dimen>
-    <dimen name="margin_top_value_setting">16dp</dimen>
-    <dimen name="margin_bottom_value_setting">32dp</dimen>
-
-    <!--setting activity-->
-    <dimen name="padding_left_right_more">32dp</dimen>
-    <dimen name="padding_top_bottom_more">16dp</dimen>
-    <dimen name="margin_layout_more">128dp</dimen>
-
+    <!-- dateTitleLayout -->
+    <dimen name="dateTitleTextSize">@dimen/FontSizeM</dimen>
+    <dimen name="dateTitlePaddingBottom">@dimen/PaddingSpaceS</dimen>
+    <!-- weekLayout -->
+    <dimen name="weekDaysPaddingBottom">0dp</dimen>
+    <dimen name="dayOfWeekTextSize">@dimen/FontSizeS</dimen>
+    <!-- weekRowLayout -->
+    <dimen name="weekRowMinHeight">@dimen/PaddingSpaceXXL</dimen>
+    <dimen name="dayOfMonthTextSize">@dimen/FontSizeS</dimen>
+    <dimen name="dayOfMonthMinWidth">50dp</dimen>
+    <dimen name="dayOfMonthMinHeight">0dp</dimen>
+    <dimen name="dayOfMonthPaddingBottom">0dp</dimen>
+    <dimen name="dayOfMonthImageSize">4dp</dimen>
+    <dimen name="dayOfMonthImageMarginTop">@dimen/PaddingSpaceXXL</dimen>
 </resources>

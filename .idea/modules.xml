@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartGardenCare.iml" filepath="$PROJECT_DIR$/SmartGardenCare.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartGarden.iml" filepath="$PROJECT_DIR$/SmartGarden.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/netpiegear/netpiegear.iml" filepath="$PROJECT_DIR$/netpiegear/netpiegear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microgear/microgear.iml" filepath="$PROJECT_DIR$/microgear/microgear.iml" />
     </modules>
   </component>
 </project>

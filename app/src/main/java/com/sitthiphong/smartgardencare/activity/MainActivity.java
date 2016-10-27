@@ -6,389 +6,883 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.DetectedActivity;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.itextpdf.text.DocumentException;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabClickListener;
-import com.sitthiphong.netpiegear.EventListener;
-import com.sitthiphong.netpiegear.Microgear;
+import com.jozziga.microgear.Microgear;
+import com.jozziga.microgear.MicrogearEventListener;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.activity.fragment.ImageFragment;
-import com.sitthiphong.smartgardencare.activity.fragment.LightFragment;
-import com.sitthiphong.smartgardencare.activity.fragment.LogFragment;
-import com.sitthiphong.smartgardencare.activity.fragment.MoistureFragment;
-import com.sitthiphong.smartgardencare.activity.fragment.TempFragment;
+import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.PublishBean;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
 import com.sitthiphong.smartgardencare.datamodel.ResponseBean;
-import com.sitthiphong.smartgardencare.datamodel.StatusBean;
 import com.sitthiphong.smartgardencare.datamodel.SubscribeBean;
-import com.sitthiphong.smartgardencare.listener.ActionListener;
-import com.sitthiphong.smartgardencare.listener.NetworkChangeListener;
-import com.sitthiphong.smartgardencare.service.NetPieRestApi;
-import com.sitthiphong.smartgardencare.provider.BusProvider;
-import com.sitthiphong.smartgardencare.provider.GsonProvider;
+import com.sitthiphong.smartgardencare.libs.MagDiscreteSeekBar;
+import com.sitthiphong.smartgardencare.libs.MagScreen;
+import com.sitthiphong.smartgardencare.libs.MyTextWatcher;
+import com.sitthiphong.smartgardencare.libs.ShareData;
+import com.sitthiphong.smartgardencare.listener.OnSaveSettingListener;
+import com.sitthiphong.smartgardencare.listener.SetStandListener;
+import com.sitthiphong.smartgardencare.listener.UpdateImageListener;
+import com.sitthiphong.smartgardencare.listener.UpdateRawDataListener;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
+import com.sitthiphong.smartgardencare.service.RestApiNetPie;
 
-import org.json.JSONObject;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements
+        UpdateRawDataListener,
+        UpdateImageListener,
+        OnSaveSettingListener,
+        SetStandListener.OnSetStandardListener {
     private final String TAG = "MainActivity";
-    private final int IS_CONNECT_NETPIE = 200;
-    private final int ERROR = 199;
-    private final int WAIT = 201;
-    private final int REQUEST_CODE_ASK_PERMISSIONSc = 123;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private UpdateRawDataListener updateRawDataListener = null;
+    //private SetStandListener.Result resultSetStandard = null;
+
+    private boolean isReceiverRegistered;
+    private CoordinatorLayout rootLayout;
+    private Toolbar toolbar;
+    private MicroGearCallBack callBack;
+    private SwipeRefreshLayout refreshLayout;
+    private NestedScrollView scrollView;
+    private ImageView image;
+    private RelativeLayout moistureLayout, templayout, lightLatout;
+    private TextView moistureValue, tempValue, lightValue, lsatUpdateValue, slatStatus;
+    private Button btnWater, btnFoggy, btnSlat, history;
+    private ProgressDialog progressDialog;
+    private RawDataBean rawDataBean;
+    private ResponseBean responseBean;
+    private TextView exception;
+    private ProgressBar progressBar, progressBarImage;
+    private ShareData shareData;
 
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private RelativeLayout rootLayout;
-    private BottomBar mBottomBar;
-    private ActionListener actionListener = new ActionListener();
-    private NetworkChangeListener networkChangeListener = new NetworkChangeListener();
-
-    private JsonObject objSetting;
-
-    public Microgear microgear = new Microgear(this);
-    public EventListener eventListener = new EventListener();
     private PublishBean publishBean;
     private Handler publishHandle;
     private Runnable publistask;
-    private String appID = "ECPSmartGarden"; //APP_ID
-    private String appKey = "23oRa3PnK8Czx91"; //KEY
-    private String appSecret = "U1zuonSDIeEeokxAskiJJJTEW"; //SECRET
-    private String[] topicList;
-
-    private int menuItemId;
-    private ImageFragment imFragment;
-    private MoistureFragment moistureFragment;
-    private TempFragment tempFragment;
-    private LightFragment lightFragment;
-    private Fragment fragment;
-    private LogFragment logFragment;
-    private android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
-
-
-    private StatusBean statusBean = new StatusBean(WAIT, "");
-    private RawDataBean rawDataBean;
-    private ImageBean imageBean = new ImageBean();
-    private ProgressDialog progressDialog;
-    private String logListAsJsonString;
-    private String rawListAsJsonString;
-    private int STSlat;
-    private String methodUsePermission;
-
-    private boolean isReceiverRegistered;
-
-
-    private final String appIdTAG = "appId";
-    private final String appKeyTAG = "appKey";
-    private final String appSecretTAG = "appSecret";
-    private final String dayStorageTAG = "dayStorage";
-    private final String fqPubRawDataTAG = "fqPubRawData";
-    private final String fqPubImageTAG = "fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
-    private final String fqInsertRawDataTAG = "fqInsertRawData";
-    private final String autoModeTAG = "autoMode";
+    private Handler checkConnectNetPieHandler;
+    private Runnable checkConnectNetPieRunnable;
+    private Microgear microgear = new Microgear(this);
+    private String appId = "SmartGardenCare"; //APP_ID
+    private String key = "L8LswNXzRY9nalS"; //KEY
+    private String secret = "KcysynAOjLxZ3BkGzqSq4WvSA"; //SECRET
+    private String alias = "android";
+    private boolean isConnectNetPie;
 
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            String head = bundle.getString("head");
-            if (head.equals("subscribe")) {
-                Log.i(TAG, "NETPIE Event Listener: onSubscribe");
+            String action = bundle.getString("action");
+            if (action.equals("onConnect")) {
+                isConnectNetPie = true;
+                microgear.publish(ConfigData.token, shareData.getToken(), 1, true);
+                if (shareData.getSendPrefer()) {
+                    Log.i(TAG, "MicroGearCallBack, publish setting details (not save to netpie) ");
+                    microgear.publish(ConfigData.preferencesTopic, shareData.getPreferencesAsObjString(), 1, true);
+                    shareData.removeSendPrefer();
+                }
+                progressBar.setVisibility(View.GONE);
+                exception.setVisibility(View.GONE);
+                refreshLayout.setVisibility(View.VISIBLE);
+                new SubscribeTask(getString(R.string.loadingImage)).execute(ConfigData.photoTopic);
+
+            } else if (action.equals("onMessage")) {
+
                 String topic = bundle.getString("topic");
                 String message = bundle.getString("message");
-                Log.i(TAG, "NETPIE Event Listener:    topic: " + topic);
+                if (topic.equals(ConfigData.rawDataTopic)) {
+                    rawDataBean = new RawDataBean(message);
+                    updateRawData(rawDataBean);
+                } else if (topic.equals(ConfigData.hasPhotoTopic)) {
+                    new SubscribeTask(getString(R.string.loadingImage)).execute(ConfigData.photoTopic);
 
-                if (topic.equals("response")) {
-                    ResponseBean responseBean = new ResponseBean(message);
+                } else if (topic.equals(ConfigData.slatStatusTopic)) {
+                    updateSlatStatus(Integer.parseInt(message));
+
+                } else if (topic.equals(ConfigData.responsesTopic)) {
+                    responseBean = new ResponseBean(message);
+
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    if (publishBean != null) {
-                        if (publishBean.getTopic() != null) {
-                            if (publishBean.getTopic().equals(responseBean.getTopic())) {
-                                if (responseBean.isSuccess()) {
-                                    if (publishHandle != null) {
-                                        Log.e(TAG, "remove task");
-                                        publishHandle.removeCallbacks(publistask);
+                    if (publishHandle != null) {
+                        Log.e(TAG, "remove task");
+                        publishHandle.removeCallbacks(publistask);
+                    }
+
+                    if ((publishBean != null) && (publishBean.getTopic() != null)) {
+                        if (publishBean.getTopic().equals(responseBean.getTopic())) {
+                            Log.e(TAG, "responses topic: " + responseBean.getTopic());
+                            Log.e(TAG, "success: " + String.valueOf(responseBean.isSuccess()));
+                            if (responseBean.isSuccess()) {
+                                if (responseBean.getTopic().equals(ConfigData.refreshTopic)) {
+                                    refreshLayout.setRefreshing(false);
+                                } else if (responseBean.getTopic().equals(ConfigData.settingStandardTopic)) {
+                                    if (DetailsActivity.resultSetStandard != null) {
+                                        DetailsActivity.resultSetStandard.result(true, "");
                                     }
-                                    if (responseBean.getTopic().equals("settingDetails")) {
-
-                                        JsonObject objDetails = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                        if (objDetails.get(fqPubRawDataTAG) != null) {
-                                            editor.putInt(fqPubRawDataTAG, objDetails.get(fqPubRawDataTAG).getAsInt());
-                                        }
-                                        if (objDetails.get(fqInsertRawDataTAG) != null) {
-                                            editor.putInt(fqInsertRawDataTAG, objDetails.get(fqInsertRawDataTAG).getAsInt());
-                                        }
-                                        if (objDetails.get(dayStorageTAG) != null) {
-                                            editor.putInt(dayStorageTAG, objDetails.get(dayStorageTAG).getAsInt());
-
-                                        }
-                                        if (objDetails.get(fqPubImageTAG) != null) {
-                                            editor.putInt(fqPubImageTAG, objDetails.get(fqPubImageTAG).getAsInt());
-                                        }
-                                        if (objDetails.get(autoModeTAG) != null) {
-                                            editor.putBoolean(autoModeTAG, objDetails.get(autoModeTAG).getAsBoolean());
-                                        }
-                                        if (objDetails.get("objNETPIE") != null) {
-                                            JsonObject object = objDetails.get("objNETPIE").getAsJsonObject();
-                                            if (object.get(appIdTAG) != null) {
-                                                editor.putString(appIdTAG, object.get(appIdTAG).getAsString());
-                                            }
-                                            if (object.get(appKeyTAG) != null) {
-                                                editor.putString(appKeyTAG, object.get(appKeyTAG).getAsString());
-                                            }
-                                            if (object.get(appSecretTAG) != null) {
-                                                editor.putString(appSecretTAG, object.get(appSecretTAG).getAsString());
-                                            }
-
-                                            editor.commit();
-                                            Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
-                                            Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
-                                            Log.e(TAG, "fqInsertRawData: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
-                                            Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                            Log.e(TAG, "autoMode: " + sharedPreferences.getInt(autoModeTAG, 0));
-                                            Log.e(TAG, "AppId: " + sharedPreferences.getString(appIdTAG, "null"));
-                                            Log.e(TAG, "AppKey: " + sharedPreferences.getString(appKeyTAG, "null"));
-                                            Log.e(TAG, "AppSecret: " + sharedPreferences.getString(appSecretTAG, "null"));
-                                            reStartActivity();
-                                        }
-
-                                        editor.commit();
-                                        Log.e(TAG, "fqPubRawData: " + sharedPreferences.getInt(fqPubRawDataTAG, 0));
-                                        Log.e(TAG, "fqPubImage: " + sharedPreferences.getInt(fqPubImageTAG, 0));
-                                        Log.e(TAG, "fqInsertRawDataTAG: " + sharedPreferences.getInt(fqInsertRawDataTAG, 0));
-                                        Log.e(TAG, "dayStorage: " + sharedPreferences.getInt(dayStorageTAG, 0));
-                                        Log.e(TAG, "autoMode: " + sharedPreferences.getBoolean(autoModeTAG, false));
-                                        alertDialog(getResources().getString(R.string.saveSetting),
-                                                getResources().getString(R.string.success));
-
-                                    } else if (responseBean.getTopic().equals("settingStandard")) {
-                                        JsonObject object = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                        if (object.get("moisture") != null) {
-                                            editor.putFloat("moisture", object.get("moisture").getAsFloat());
-                                        }
-                                        if (object.get("temp") != null) {
-                                            editor.putFloat("temp", object.get("temp").getAsFloat());
-                                        }
-                                        if (object.get("light") != null) {
-                                            editor.putFloat("light", object.get("light").getAsFloat());
-                                        }
-                                        editor.commit();
-                                        alertDialog(getResources().getString(R.string.saveSetting),
-                                                getResources().getString(R.string.success));
-
-                                    } else if (responseBean.getTopic().equals("controlDevices")) {
-                                        JsonObject object = new JsonObject();
-                                        object = GsonProvider.getInstance().fromJson(publishBean.getPayload(), JsonObject.class);
-                                        JsonObject obj = GsonProvider.getInstance().fromJson(responseBean.getMessage(), JsonObject.class);
-                                        if (object.get("1") != null) {
-                                            alertDialog(getResources().getString(R.string.water)
-                                                            + " " + getResources().getString(R.string.success),
-                                                    getResources().getString(R.string.moistureBefore)
-                                                            + ": " + String.valueOf(String.format("%.2f", obj.get("mBAverage").getAsFloat())) + " %\n"
-                                                            + getString(R.string.moistureAfter) + ": "
-                                                            + String.valueOf(String.format("%.2f", obj.get("mAAverage").getAsFloat())) + " %");
-                                        } else if (object.get("2") != null) {
-                                            alertDialog(getString(R.string.shower) + " " + getString(R.string.success),
-                                                    getString(R.string.tempBefore) + ": " + String.valueOf(String.format("%.2f", obj.get("tBAverage").getAsFloat())) + " °C\n"
-                                                            + getString(R.string.tempAfter) + ": " + String.valueOf(String.format("%.2f", obj.get("tAAverage").getAsFloat())) + " °C");
-                                        } else if (object.get("3") != null) {
-                                            alertDialog(getResources().getString(R.string.acOpenSlat),//acOpenSlat
-                                                    getResources().getString(R.string.success));
-                                            //actionListener.onUpdateSlatStatus.onUpdateSlatStatus();
-                                        } else if (object.get("4") != null) {
-                                            alertDialog(getString(R.string.acCloseSlat) + " " + getString(R.string.success),
-                                                    getString(R.string.lightBefore) + ": " + String.valueOf(String.format("%.2f", obj.get("lB2").getAsFloat())) + " Lux\n"
-                                                            + getString(R.string.lightAfter) + ": " + String.valueOf(String.format("%.2f", obj.get("lA2").getAsFloat())) + " Lux");//acCloseSlat
-
-                                        }
-
-                                    } else if (responseBean.getTopic().equals("refreshIM")) {
-
+                                    JsonObject obj = new Gson().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    if (obj.get(ConfigData.mosStd) != null) {
+                                        shareData.putInt(ConfigData.mosStd, obj.get(ConfigData.mosStd).getAsInt());
                                     }
-                                } else {
-                                    //for error control device
-                                    if (publishHandle != null) {
-                                        Log.e(TAG, "remove task");
-                                        publishHandle.removeCallbacks(publistask);
+                                    if (obj.get(ConfigData.tmpStd) != null) {
+                                        shareData.putInt(ConfigData.tmpStd, obj.get(ConfigData.tmpStd).getAsInt());
                                     }
-                                    if (responseBean.getTopic().equals("controlDevices")) {
-                                        switch (responseBean.getMessage()) {
-                                            case "error1":
-                                                alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
-                                                break;
-                                            case "error2":
-                                                alertDialog(getString(R.string.exception), getString(R.string.noWateringArea));
-                                                break;
-                                            case "error3":
-                                                alertDialog(getString(R.string.exception), getString(R.string.tempNotDecrease));
-                                                break;
-                                            case "error4":
-                                                alertDialog(getString(R.string.exception), getString(R.string.lightInNotDecrease));
-                                                break;
-                                            case "error5":
-                                                alertDialog(getString(R.string.exception), getString(R.string.SlatIsOpened));
-                                                break;
-                                            case "error6":
-                                                alertDialog(getString(R.string.exception), getString(R.string.SlatIsClosed));
-                                                break;
-                                            case "error7":
-                                                alertDialog(getString(R.string.exception), getString(R.string.notTimeToShower));
-                                                break;
-                                            default:
-                                                alertDialog(getString(R.string.warning), responseBean.getMessage());
-                                                break;
-                                        }
+                                    if (obj.get(ConfigData.ligStd) != null) {
+                                        shareData.putInt(ConfigData.ligStd, obj.get(ConfigData.ligStd).getAsInt());
                                     }
-                                    //Log.e(TAG, responseBean.getMessage());
-                                    //notificationSnackBar(responseBean.getMessage());
+
+                                } else if (responseBean.getTopic().equals(ConfigData.setDetailsTopic)) {
+                                    JsonObject obj = new Gson().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    saveDetails(obj);
+
+                                    showDialog(getString(R.string.success), getString(R.string.saveSettingSuccess));
+
+                                } else if (responseBean.getTopic().equals(ConfigData.ctrlDevicesTopic)) {
+                                    JsonObject messageObj = new Gson().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    int working = 0;
+                                    float valBefore = 0, valAfter = 0;
+                                    if (messageObj.get("working") != null) {
+                                        working = messageObj.get("working").getAsInt();
+                                    }
+                                    if (messageObj.get("valBefore") != null) {
+                                        valBefore = messageObj.get("valBefore").getAsFloat();
+                                    }
+                                    if (messageObj.get("valAfter") != null) {
+                                        valAfter = messageObj.get("valAfter").getAsFloat();
+                                    }
+
+                                    StringBuilder builder = new StringBuilder();
+
+                                    if (working == 1) {
+                                        builder.append(getString(R.string.before) + " ");
+                                        builder.append(String.valueOf(valBefore) + " %\n");
+                                        builder.append(getString(R.string.after) + " ");
+                                        builder.append(String.valueOf(valAfter) + " %");
+                                        alertDialog(getString(R.string.waterSuccess), builder.toString());
+                                    } else if (working == 2) {
+                                        builder.append(getString(R.string.before) + " ");
+                                        builder.append(String.valueOf(valBefore) + " °C\n");
+                                        builder.append(getString(R.string.after) + " ");
+                                        builder.append(String.valueOf(valAfter) + " °C");
+                                        alertDialog(getString(R.string.foggySuccess), builder.toString());
+                                    } else if (working == 3) {
+                                        builder.append(getString(R.string.before) + " ");
+                                        builder.append(String.valueOf(valBefore) + " Lux\n");
+                                        builder.append(getString(R.string.after) + " ");
+                                        builder.append(String.valueOf(valAfter) + " Lux");
+                                        alertDialog(getString(R.string.openSlatSuccess), builder.toString());
+                                    } else if (working == 4) {
+                                        builder.append(getString(R.string.before) + " ");
+                                        builder.append(String.valueOf(valBefore) + " Lux\n");
+                                        builder.append(getString(R.string.after) + " ");
+                                        builder.append(String.valueOf(valAfter) + " Lux");
+                                        alertDialog(getString(R.string.closeSlatSuccess), builder.toString());
+                                    }
                                 }
+
                             } else {
-                                // if topic not math
+                                //for error control device
+                                if (responseBean.getTopic().equals(ConfigData.ctrlDevicesTopic)) {
+                                    JsonObject messageObj = new Gson().fromJson(responseBean.getMessage(), JsonObject.class);
+                                    int working = 0, errorCode = 0;
+                                    if (messageObj.get("working") != null) {
+                                        working = messageObj.get("working").getAsInt();
+                                    }
+                                    if (messageObj.get("errorCode") != null) {
+                                        errorCode = messageObj.get("errorCode").getAsInt();
+                                    }
+
+                                    if (working == 1) {
+                                        if (errorCode == 0) {
+                                            if ((messageObj.get("valBefore") != null) && (messageObj.get("valAfter") != null)) {
+                                                StringBuilder builder = new StringBuilder();
+                                                builder.append(getString(R.string.before) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valBefore").getAsFloat()) + " %\n");
+                                                builder.append(getString(R.string.after) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valAfter").getAsFloat()) + " %\n");
+                                                builder.append(getString(R.string.but) + " ");
+                                                builder.append(getString(R.string.canNotSaveData));
+                                                alertDialog(getString(R.string.waterSuccess), builder.toString());
+
+                                            } else {
+                                                alertDialog(getString(R.string.exception), getString(R.string.canNotSaveData));
+                                            }
+                                        } else if (errorCode == 1) {
+                                            //showDialog(getString(R.string.exception), getString(R.string.waterFalse));
+                                            alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
+                                        } else if (errorCode == 2) {
+                                            StringBuilder builder = new StringBuilder();
+                                            builder.append(getString(R.string.waterSuccess) + " " + getString(R.string.but) + "\n");
+                                            builder.append(getString(R.string.moistureNotRising));
+                                            alertDialog(getString(R.string.exception), builder.toString());
+                                        }
+
+
+                                    } else if (working == 2) {
+                                        if (errorCode == 0) {
+                                            if ((messageObj.get("valBefore") != null) && (messageObj.get("valAfter") != null)) {
+                                                StringBuilder builder = new StringBuilder();
+                                                builder.append(getString(R.string.before) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valBefore").getAsFloat()) + " °C\n");
+                                                builder.append(getString(R.string.after) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valAfter").getAsFloat()) + " °C\n");
+                                                builder.append(getString(R.string.but) + " ");
+                                                builder.append(getString(R.string.canNotSaveData));
+                                                alertDialog(getString(R.string.foggySuccess), builder.toString());
+
+                                            } else {
+                                                alertDialog(getString(R.string.exception), getString(R.string.canNotSaveData));
+                                            }
+                                        } else if (errorCode == 1) {
+                                            alertDialog(getString(R.string.exception), getString(R.string.waterFalse));
+                                        } else if (errorCode == 3) {
+                                            StringBuilder builder = new StringBuilder();
+                                            builder.append(getString(R.string.foggySuccess) + " " + getString(R.string.but) + "\n");
+                                            builder.append(getString(R.string.tempNotDrop));
+                                            alertDialog(getString(R.string.exception), builder.toString());
+                                        } else if (errorCode == 4) {
+                                            StringBuilder builder = new StringBuilder();
+                                            builder.append(getString(R.string.canNotFoggy) + " " + getString(R.string.until) + "\n");
+                                            builder.append(getDateTime(messageObj.get("msg").getAsLong()));
+                                            alertDialog(getString(R.string.exception), builder.toString());
+                                        }
+
+                                    } else if (working == 3) {
+                                        if (errorCode == 0) {
+                                            if ((messageObj.get("valBefore") != null) && (messageObj.get("valAfter") != null)) {
+                                                StringBuilder builder = new StringBuilder();
+                                                builder.append(getString(R.string.before) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valBefore").getAsFloat()) + " Lux\n");
+                                                builder.append(getString(R.string.after) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valAfter").getAsFloat()) + " Lux\n");
+                                                builder.append(getString(R.string.but) + " ");
+                                                builder.append(getString(R.string.canNotSaveData));
+                                                alertDialog(getString(R.string.openSlatSuccess), builder.toString());
+
+                                            } else {
+                                                alertDialog(getString(R.string.exception), getString(R.string.canNotSaveData));
+                                            }
+                                        } else if (errorCode == 5) {
+                                            alertDialog(getString(R.string.slatOpen), "");
+                                        }
+
+
+                                    } else if (working == 4) {
+                                        if (errorCode == 0) {
+                                            if ((messageObj.get("valBefore") != null) && (messageObj.get("valAfter") != null)) {
+                                                StringBuilder builder = new StringBuilder();
+                                                builder.append(getString(R.string.before) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valBefore").getAsFloat()) + " Lux\n");
+                                                builder.append(getString(R.string.after) + " ");
+                                                builder.append(String.valueOf(messageObj.get("valAfter").getAsFloat()) + " Lux\n");
+                                                builder.append(getString(R.string.but) + " ");
+                                                builder.append(getString(R.string.canNotSaveData));
+                                                alertDialog(getString(R.string.closeSlatSuccess), builder.toString());
+
+                                            } else {
+                                                alertDialog(getString(R.string.exception), getString(R.string.canNotSaveData));
+                                            }
+                                        } else if (errorCode == 6) {
+                                            alertDialog(getString(R.string.slatClose), "");
+                                        } else if (errorCode == 7) {
+                                            StringBuilder builder = new StringBuilder();
+                                            builder.append(getString(R.string.closeSlatSuccess) + " " + getString(R.string.but) + "\n");
+                                            builder.append(getString(R.string.lightNotDrops));
+                                            alertDialog(getString(R.string.exception), builder.toString());
+                                        }
+
+                                    }
+
+                                }
                             }
                         }
-                    }
-                } else if (topic.equals("rawData")) {
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), "");
-                    rawDataBean = new RawDataBean(GsonProvider.getInstance().fromJson(message, JsonObject.class));
-                    try {
-                        actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
-                    } catch (IllegalStateException e) {
-
-                    } catch (NullPointerException e) {
 
                     }
 
-                } else if (topic.equals("STSlat")) {
-                    STSlat = Integer.parseInt(message);
-                    try {
-                        actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
-                    } catch (IllegalStateException e) {
-
-                    } catch (NullPointerException e) {
-
-                    }
-                } else if (topic.equals("hasPhoto")) {
-                    new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                    appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                    sharedPreferences.getString(appSecretTAG, ""),
-                                    "photo");
-                } else if (topic.equals("hasRawList")) {
-                    new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                    appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                    sharedPreferences.getString(appSecretTAG, ""),
-                                    "rawDataList");
-                } else if (topic.equals("hasLogList")) {
-                    new SubscribeTask(getResources().getString(R.string.fetching))
-                            .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                    appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                    sharedPreferences.getString(appSecretTAG, ""),
-                                    "logDataList");
-                } else if (topic.equals("onPresent")) {
-                    JsonObject object = GsonProvider.getInstance().fromJson(message, JsonObject.class);
-                    try {
-                        new MaterialDialog.Builder(getContextManual())
-                                .title(getString(R.string.onPresent))
-                                .content(object.get("alias").getAsString())
-                                .positiveText(getResources().getString(R.string.ok))
-                                .show();
-                    } catch (NullPointerException e) {
-
-                    }
-                } else if (topic.equals("onAbsent")) {
-                    JsonObject object = GsonProvider.getInstance().fromJson(message, JsonObject.class);
-                    try {
-                        new MaterialDialog.Builder(getContextManual())
-                                .title(getString(R.string.onAbsent))
-                                .content(object.get("alias").getAsString())
-                                .positiveText(getResources().getString(R.string.ok))
-                                .show();
-                    } catch (NullPointerException e) {
-
-                    }
                 }
-            } else if (head.equals("connect")) {
-                boolean status = bundle.getBoolean("status");
-                if (status) {
-                    Log.i(TAG, "NETPIE Event Listener: onConnect: Connected to NETPIE!!");
-                    notificationSnackBar(getApplicationContext().getString(R.string.connectedNETPIE));
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE), null);
-                    //microgear.publish("token", sharedPreferences.getString("token", ""), 0, true);
-                    new PublishTask().execute("token", sharedPreferences.getString("token", ""));
-                    //new PublishTask().execute("mem",GsonProvider.getInstance().toJson(getMem()));
-                    Log.e(TAG, "publush token after connected");
-                    if (mBottomBar != null) {
-                        Log.e(TAG, "create BottomBar: position " + mBottomBar.getCurrentTabPosition());
-                        if (mBottomBar.getCurrentTabPosition() == 0) {
-                            if (actionListener.onRequestUpdateImage != null) {
-                                actionListener.onRequestUpdateImage.onRequestUpdateImage();
-                            }
-                        } else if (mBottomBar.getCurrentTabPosition() == 1) {
-                            if (actionListener.onRequestRawData != null) {
-                                actionListener.onRequestRawData.OnRequestRawData();
-                            }
-                        } else if (mBottomBar.getCurrentTabPosition() == 2) {
-                            if (actionListener.onRequestRawData != null) {
-                                actionListener.onRequestRawData.OnRequestRawData();
-                            }
-                        } else if (mBottomBar.getCurrentTabPosition() == 3) {
-                            if (actionListener.onRequestRawData != null) {
-                                actionListener.onRequestRawData.OnRequestRawData();
-                            }
-                        } else if (mBottomBar.getCurrentTabPosition() == 4) {
-                            if (actionListener.onRequestLog != null) {
-                                actionListener.onRequestLog.onRequestLog();
-                            }
-                        }
-                    } else {
-                        Log.e(TAG, "not create BottomBar");
-                    }
 
+            } else if (action.equals("onPresent")) {
+                String token = bundle.getString("token");
+                Log.e(TAG, "onPresent: token = " + token);
+
+            } else if (action.equals("onAbsent")) {
+                String token = bundle.getString("token");
+                Log.e(TAG, "onAbsent: token = " + token);
+
+            } else if (action.equals("onDisconnect")) {
+                isConnectNetPie = false;
+                notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+
+            } else if (action.equals("onError")) {
+                String error = bundle.getString("error");
+
+                if (error.equals("connection Lost") || error.equals("No Internet connection")) {
+                    isConnectNetPie = false;
+                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
                 } else {
-                    Log.i(TAG, "NETPIE Event Listener: onConnectFalse: Can't connect to NETPIE!!");
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                            getApplicationContext().getString(R.string.notConnectedNETPIE));
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                            getResources().getString(R.string.notConnectedNETPIE));
-                    notificationSnackBar(statusBean.getException());
-                    actionListener.onException.onException(statusBean.getException());
+                    setContentView(R.layout.activity_main);
+                    init();
+                    setException(error);
                 }
+
             }
+
         }
     };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+        setSplashScreen();
+
+        shareData = new ShareData(this);
+        shareData.createSharePreference();
+
+        registerReceiver();
+        if (checkPlayServices()) {
+            registerGcm();
+        }
+
+        if (!checkNetPie()) {
+            Log.e(TAG, "is first open application");
+            setLoginScreen();
+        } else {
+            setContentView(R.layout.activity_main);
+            init();
+
+            if (isConnectInternet(getContext())) {
+                connectNetPie();
+            } else {
+                setException(getString(R.string.noInternet));
+            }
+
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "onStart");
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume");
+        super.onResume();
+        registerReceiver();
+        if (microgear != null) {
+            microgear.bindServiceResume();
+        }
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i(TAG, "onPause");
+        super.onPause();
+        unregisterReceiver();
+
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "onStop");
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.i(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
+        if (microgear != null) {
+            microgear.disconnect();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "onBackPressed");
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptionsMenu");
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.i(TAG, "onOptionsItemSelected: id " + id);
+
+        if (id == 16908332) {
+            onBackPressed();
+            return true;
+        } else if (id == R.id.actionSetting) {
+            SettingActivity.onSaveSettingListener = getSettingListener();
+            startActivity(new Intent(getContext(), SettingActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.i(TAG, "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+        //mBottomBar.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "onRestoreInstanceState");
+    }
+
+    /*private void setMainScreen() {
+        Log.e(TAG, "setMainScreen");
+
+        if (isConnectNetPie) {
+
+        } else {
+
+            setException(getString(R.string.noNetPieData));
+        }
+
+        if (checkNetPie()) {
+            if (isConnectInternet(this)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        exception.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                });
+                connectNetPie();
+            } else {
+
+                setException(getString(R.string.noInternet));
+            }
+
+        } else {
+
+        }
+    }*/
+
+    private synchronized void setSplashScreen() {
+        Log.e(TAG, "setSplashScreen");
+        setContentView(R.layout.splash_screen);
+    }
+
+    private void init() {
+        Log.i(TAG, "init");
+        rootLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        MagScreen magScreen = new MagScreen(this, metrics);
+
+
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
+        scrollView = (NestedScrollView) findViewById(R.id.scrollView);
+
+        image = (ImageView) findViewById(R.id.image_garden);
+        RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
+                magScreen.getWidthGardenImage(), magScreen.getHeightGardenImage());
+        image.setLayoutParams(param);
+
+        moistureLayout = (RelativeLayout) findViewById(R.id.moisture_layout);
+        templayout = (RelativeLayout) findViewById(R.id.temp_layout);
+        lightLatout = (RelativeLayout) findViewById(R.id.light_layout);
+
+        moistureValue = (TextView) findViewById(R.id.moisture_value);
+        tempValue = (TextView) findViewById(R.id.temp_value);
+        lightValue = (TextView) findViewById(R.id.light_value);
+        lsatUpdateValue = (TextView) findViewById(R.id.time_value);
+        history = (Button) findViewById(R.id.history);
+        slatStatus = (TextView) findViewById(R.id.slat_status_value);
+
+        btnWater = (Button) findViewById(R.id.btn_water);
+        btnFoggy = (Button) findViewById(R.id.btn_foggy);
+        btnSlat = (Button) findViewById(R.id.btn_slat);
+
+
+        exception = (TextView) findViewById(R.id.exception);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        progressBarImage = (ProgressBar) findViewById(R.id.progress_image);
+
+        exception.setVisibility(View.GONE);
+        refreshLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+
+
+        moistureLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rawDataBean != null) {
+                    //Log.e(TAG,"66666: "+String.valueOf(rawDataBean.getMoistureBean().getAverage()));
+
+                    startDetailsActivity("moisture", new Gson().toJson(rawDataBean.getMoistureBean()));
+                }
+            }
+        });
+
+        templayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rawDataBean != null) {
+                    startDetailsActivity("temp", new Gson().toJson(rawDataBean.getTempBean()));
+                }
+            }
+        });
+
+        lightLatout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rawDataBean != null) {
+                    startDetailsActivity("light", new Gson().toJson(rawDataBean.getLightBean()));
+                }
+            }
+        });
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectNetPie) {
+                    //refreshLayout.setRefreshing(false);
+                    publish(ConfigData.refreshTopic, "1", "null");
+                } else {
+                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+                }
+
+            }
+        });
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), HistoryActivity.class));
+            }
+        });
+
+        btnWater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                controlsDevices("1", getString(R.string.onWater));
+            }
+        });
+        btnFoggy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                controlsDevices("2", getString(R.string.onFoggy));
+            }
+        });
+        btnSlat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnSlat.getText().toString().trim().equals(getString(R.string.openSlat))) {
+                    controlsDevices("3", getString(R.string.onOpenSlat));
+
+                } else if (btnSlat.getText().toString().trim().equals(getString(R.string.closeSlat))) {
+
+                    controlsDevices("4", getString(R.string.onOpenSlat));
+                }
+            }
+        });
+
+    }
+
+    private void controlsDevices(String payload, String messageDialog) {
+        if (isConnectInternet(getContext())) {
+            if (isConnectNetPie) {
+                publish(ConfigData.ctrlDevicesTopic, payload, messageDialog);
+
+            } else {
+                notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+            }
+
+        } else {
+            notificationSnackBar(rootLayout, getString(R.string.noInternet));
+        }
+    }
+
+    private void connectNetPie() {
+        Log.i(TAG, "connectNetPie");
+
+        try {
+            callBack = new MicroGearCallBack();
+            microgear.setCallback(callBack);
+            microgear.connect(
+                    shareData.getAppId(),
+                    shareData.getAppKey(),
+                    shareData.getAppSecret(),
+                    alias);
+            //microgear.subscribe(ConfigData.preferencesTopic);
+            microgear.subscribe(ConfigData.rawDataTopic);
+            microgear.subscribe(ConfigData.hasPhotoTopic);
+            microgear.subscribe(ConfigData.slatStatusTopic);
+            microgear.subscribe(ConfigData.responsesTopic);
+           /* checkConnectNetPieHandler = new Handler();
+            checkConnectNetPieRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    setMainScreen();
+                }
+            };
+            checkConnectNetPieHandler.postDelayed(checkConnectNetPieRunnable, 10000);*/
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            callBack.onError("Error on connect NETPIE");
+            Log.e(TAG, "Error on connect NETPIE 7777777777");
+
+        }
+
+    }
+
+   /* private void setExceptionScreen(final String error) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setContentView(R.layout.except_screen);
+                TextView except = (TextView) findViewById(R.id.exception);
+                except.setText(error);
+            }
+        });
+
+
+    }*/
+
+    private void setException(String error) {
+        refreshLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        exception.setText(error);
+        exception.setVisibility(View.VISIBLE);
+        if (error.equals(getString(R.string.noInternet))) {
+            exception.setText(error + "\n" + getString(R.string.tryAgain));
+            exception.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+    }
+
+    private void startDetailsActivity(String sensor, String data) {
+
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("sensor", sensor);
+        intent.putExtra("data", data);
+        startActivity(intent);
+        MagDiscreteSeekBar.setOnSetStandardListener(this);
+
+    }
+
+
+    private Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void updateImageListener() {
+
+    }
+
+    @Override
+    public void updateRawDataListener(RawDataBean rawDataBean) {
+
+    }
+
+    @Override
+    public void onSaveSettingListener(JsonObject objNetPie, JsonObject objDetails) {
+        Log.i(TAG, "onSaveSettingListener");
+        if ((objNetPie.size() > 0) && (objDetails.size() > 0)) {
+            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
+            saveNetPie(objNetPie);
+            saveDetails(objDetails);
+            shareData.putSendPrefer();
+            reStartActivity();
+        } else if (objNetPie.size() > 0) {
+            saveNetPie(objNetPie);
+            reStartActivity();
+        } else if (objDetails.size() > 0) {
+            if (objDetails.get(ConfigData.fqPData) == null) {
+                objDetails.addProperty(ConfigData.fqPData, shareData.getFqPData());
+            }
+            if (objDetails.get(ConfigData.fqPImage) == null) {
+                objDetails.addProperty(ConfigData.fqPImage, shareData.getFqPImage());
+            }
+            if (objDetails.get(ConfigData.fqIData) == null) {
+                objDetails.addProperty(ConfigData.fqIData, shareData.getFqIData());
+            }
+            if (objDetails.get(ConfigData.fqShower) == null) {
+                objDetails.addProperty(ConfigData.fqShower, shareData.getFqShower());
+            }
+            if (objDetails.get(ConfigData.ageData) == null) {
+                objDetails.addProperty(ConfigData.ageData, shareData.getAgeData());
+            }
+            if (objDetails.get(ConfigData.autoMode) == null) {
+                objDetails.addProperty(ConfigData.autoMode, shareData.isAutoMode());
+            }
+            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
+
+            publish(ConfigData.setDetailsTopic,
+                    new Gson().toJson(objDetails),
+                    getResources().getString(R.string.onSaveSetting));
+        }
+    }
+
+
+    private void onSubscribeCallBack(SubscribeBean result) {
+        if (result != null) {
+            try {
+                Log.e(TAG, "onSubscribeCallBack topic: " + result.getTopic());
+                if (result.getTopic().equals(ConfigData.photoTopic)) {
+                    ImageBean imageBean = new ImageBean(result.getPayload());
+                    image.setImageBitmap(imageBean.getBitmap());
+                    progressBarImage.setVisibility(View.GONE);
+                }
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void updateRawData(final RawDataBean bean) {
+        Log.i(TAG, "updateRawData");
+        rawDataBean = bean;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (rawDataBean != null) {
+                    try {
+                        if (rawDataBean.getMoistureBean().getAverage() > 0) {
+                            moistureValue.setText(String.valueOf(rawDataBean.getMoistureBean().getAverage()) + " %");
+                        } else {
+                            moistureValue.setText(getString(R.string.sensorError));
+                        }
+                        if (rawDataBean.getTempBean().getAverage() > 0) {
+                            tempValue.setText(String.valueOf(rawDataBean.getTempBean().getAverage()) + " °C");
+                        } else {
+                            tempValue.setText(getString(R.string.sensorError));
+                        }
+                        if (rawDataBean.getLightBean().getLightIn() > 0) {
+                            lightValue.setText(String.valueOf(rawDataBean.getLightBean().getLightIn()) + " Lux");
+                        } else {
+                            lightValue.setText(getString(R.string.sensorError));
+                        }
+                        lsatUpdateValue.setText(getDateTime((rawDataBean.getTime() * 1000)));
+
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    private String getDateTime(long time) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            Date date = (new Date(time));
+            return dateFormat.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
+    private void updateSlatStatus(int status) {//0 is close , 1 is open
+        Log.i(TAG, "updateSlatStatus: " + status);
+
+        if (status == 0) {
+            slatStatus.setText(getString(R.string.slatClose));
+            btnSlat.setText(getString(R.string.openSlat));
+        } else if (status == 1) {
+            slatStatus.setText(getString(R.string.slatOpen));
+            btnSlat.setText(getString(R.string.closeSlat));
+        }
+
+
+    }
+
+
+    public void reStartActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    public void notificationSnackBar(View v, String message) {
+        Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+    }
+
     private BroadcastReceiver mRegistrationBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -422,608 +916,375 @@ public class MainActivity extends AppCompatActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                apiAvailability.getErrorDialog(this, resultCode, ConfigData.PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
             return false;
         }
         return true;
     }
 
+    private OnSaveSettingListener getSettingListener() {
+        return this;
+    }
+
+    private boolean checkNetPie() {
+        Log.i(TAG, "checkNetPie");
+        if (shareData.getAppId().equals("") ||
+                shareData.getAppKey().equals("") ||
+                shareData.getAppSecret().equals("")) {
+            Log.e(TAG, "no Netpie data");
+            return false;
+        } else {
+            Log.i(TAG, "application id: " + (shareData.getAppId()));
+            Log.i(TAG, "key: " + (shareData.getAppKey()));
+            Log.i(TAG, "secret: " + (shareData.getAppSecret()));
+            return true;
+        }
+    }
+
+    private void setLoginScreen() {
+        Log.e(TAG, "setLoginScreen");
+        setContentView(R.layout.layout_login);
+        final Button cancel, login;
+        final TextInputLayout appIdLayout, keyLayout, secretLayout;
+        final EditText appId, key, secret;
+
+        appIdLayout = (TextInputLayout) findViewById(R.id.TextInputLayoutAppID);
+        keyLayout = (TextInputLayout) findViewById(R.id.TextInputLayoutAppKey);
+        secretLayout = (TextInputLayout) findViewById(R.id.TextInputLayoutAppSecret);
+        appId = (EditText) findViewById(R.id.editTextAppID);
+        key = (EditText) findViewById(R.id.editTextAppKey);
+        secret = (EditText) findViewById(R.id.editTextAppSecret);
+        cancel = (Button) findViewById(R.id.btnCancel);
+        login = (Button) findViewById(R.id.btnLogin);
+
+
+        appId.addTextChangedListener(new MyTextWatcher(appIdLayout));
+        key.addTextChangedListener(new MyTextWatcher(keyLayout));
+        secret.addTextChangedListener(new MyTextWatcher(secretLayout));
+
+        appId.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (appId.getText().toString().trim().isEmpty()) {
+                        appIdLayout.setError(getString(R.string.enterKey) + " " + getString(R.string.appId));
+                    }
+                }
+                return false;
+            }
+        });
+
+        key.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (key.getText().toString().trim().isEmpty()) {
+                        keyLayout.setError(getString(R.string.enterKey) + " " + getString(R.string.appKey));
+                    }
+                }
+                return false;
+            }
+        });
+        secret.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    login.callOnClick();
+                }
+                return false;
+            }
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean re = true;
+                if (secret.getText().toString().trim().isEmpty()) {
+                    secretLayout.setError(getString(R.string.enterKey) + " " + getString(R.string.appSecret));
+                    re = false;
+                }
+                if (appId.getText().toString().trim().isEmpty()) {
+                    appIdLayout.setError(getString(R.string.enterKey) + " " + getString(R.string.appId));
+                    re = false;
+                }
+                if (key.getText().toString().trim().isEmpty()) {
+                    keyLayout.setError(getString(R.string.enterKey) + " " + getString(R.string.appKey));
+                    re = false;
+                }
+                if (re) {
+                    shareData.putAppId(appId.getText().toString().trim());
+                    shareData.putKey(key.getText().toString().trim());
+                    shareData.putSecret(secret.getText().toString().trim());
+                    setSplashScreen();
+                    connectNetPie();
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialDialog.Builder(getContext())
+                        .title(getString(R.string.warning))
+                        .content(getString(R.string.warningExitSetNetPie))
+                        .positiveText(R.string.ok)
+                        .negativeText(R.string.cancel)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                setContentView(R.layout.activity_main);
+                                init();
+                                setException(getString(R.string.noNetPieData));
+                                dialog.dismiss();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
+            }
+        });
+    }
+
+    private void saveNetPie(JsonObject objNetPie) {
+        if (objNetPie.get(ConfigData.appId) != null) {
+            shareData.putAppId(objNetPie.get(ConfigData.appId).getAsString());
+        }
+        if (objNetPie.get(ConfigData.key) != null) {
+            shareData.putKey(objNetPie.get(ConfigData.key).getAsString());
+        }
+        if (objNetPie.get(ConfigData.secret) != null) {
+            shareData.putSecret(objNetPie.get(ConfigData.secret).getAsString());
+        }
+    }
+
+    private void saveDetails(JsonObject objDetails) {
+        if (objDetails.get(ConfigData.fqPData) != null) {
+            shareData.putFqPData(objDetails.get(ConfigData.fqPData).getAsInt());
+        }
+        if (objDetails.get(ConfigData.fqPImage) != null) {
+            shareData.putFqPImage(objDetails.get(ConfigData.fqPImage).getAsInt());
+        }
+        if (objDetails.get(ConfigData.fqIData) != null) {
+            shareData.putFqIData(objDetails.get(ConfigData.fqIData).getAsInt());
+        }
+        if (objDetails.get(ConfigData.fqShower) != null) {
+            shareData.putFqShower(objDetails.get(ConfigData.fqShower).getAsInt());
+        }
+        if (objDetails.get(ConfigData.ageData) != null) {
+            shareData.putAgeData(objDetails.get(ConfigData.ageData).getAsInt());
+        }
+        if (objDetails.get(ConfigData.autoMode) != null) {
+            shareData.putAutoMode(objDetails.get(ConfigData.autoMode).getAsBoolean());
+
+        }
+    }
+
+
+    public boolean isConnectInternet(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-
-        sharedPreferences = getSharedPreferences("Details", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-
-        setContentView(R.layout.activity_main);
-
-        rootLayout = (RelativeLayout) findViewById(R.id.rootLayoutMain);
-
-        registerReceiver();
+    public void onSetStandardListener(String sensor, int val) {
+        JsonObject object = new JsonObject();
+        object.addProperty(sensor, val);
+        Log.e(TAG, "payload: " + object.toString());
+        publishStandard(object.toString());
+    }
 
 
-        if (checkPlayServices()) {
-            registerGcm();
+    public class MicroGearCallBack implements MicrogearEventListener {
+        private final String TAG = "MicroGearCallBack";
+        private RawDataBean rawDataBean;
+
+        @Override
+        public void onConnect() {
+            Log.i(TAG, "MicroGearCallBack, onConnect");
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onConnect");
+            msg.setData(bundle);
+            handler.sendMessage(msg);
         }
 
+        @Override
+        public void onMessage(String topic, String message) {
 
-        //Log.e(TAG,"token: "+sharedPreferences.getString("token",""));
+            String[] subTopic = topic.split("/");
+            if (subTopic.length == 3) {
+                topic = subTopic[2];
+            }
+            subTopic = null;
+
+            Log.i(TAG, "MicroGearCallBack, onMessage");
+            Log.i(TAG, " topic: " + topic);
+            Log.i(TAG, " message: " + message);
 
 
-        setActionListener();
-        setNetPieEventListener();
-        setNetworkChangeListener();
-        if (checkFirstOpenApp()) {
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onMessage");
+            bundle.putString("topic", topic);
+            bundle.putString("message", message);
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+
+
+        }
+
+        @Override
+        public void onPresent(String token) {
+            Log.i(TAG, "MicroGearCallBack, onPresent");
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onPresent");
+            bundle.putString("token", token);//onPresent,onAbsent
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+
+        }
+
+        @Override
+        public void onAbsent(String token) {
+            Log.i(TAG, "MicroGearCallBack, onAbsent");
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onAbsent");
+            bundle.putString("token", token);//onPresent,onAbsent
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+
+        }
+
+        @Override
+        public void onDisconnect() {
+            Log.i(TAG, "MicroGearCallBack, onDisconnect");
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onDisconnect");
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+        }
+
+        @Override
+        public void onError(final String error) {
+            Log.i(TAG, "MicroGearCallBack, onError: " + error);
+            Message msg = handler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "onError");
+            bundle.putString("error", error);
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+        }
+
+    }
+
+    public void alertDialog(String title, String message) {
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .content(message)
+                .positiveText(getResources().getString(R.string.ok))
+                .show();
+    }
+
+    private void showProgressDialog(String messageDialog) {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage(messageDialog);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    public void showDialog(String title, String message) {
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .content(message)
+                .positiveText(R.string.ok)
+                .negativeText(R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void publishStandard(String payload) {
+
+        if (isConnectInternet(getContext())) {
+            if (isConnectNetPie) {
+                publishBean = new PublishBean(ConfigData.settingStandardTopic, payload);
+                Log.e(TAG, "publishStandard");
+                microgear.publish(ConfigData.settingStandardTopic, payload);
+
+            } else {
+                if (DetailsActivity.resultSetStandard != null) {
+                    DetailsActivity.resultSetStandard.result(false, getString(R.string.notConnectNetPie));
+                }
+            }
 
         } else {
-            connectNETPIE();
+            if (DetailsActivity.resultSetStandard != null) {
+                DetailsActivity.resultSetStandard.result(false, getString(R.string.noInternet));
+            }
+
         }
-        mBottomBar = BottomBar.attach(this, savedInstanceState);
-//        mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinatorLayout),
-//                findViewById(R.id.nestedScrollView), savedInstanceState);
-        mBottomBar.noTabletGoodness();
-        mBottomBar.setItems(R.menu.bottom_bar_menu);
-        //mBottomBar.setDefaultTabPosition(bottomPosition);
-        //mBottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.grey));
-
-
-        mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
-            @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                setFragment(menuItemId);
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-
-            }
-        });
-        mBottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
-        mBottomBar.mapColorForTab(1, ContextCompat.getColor(this, R.color.blue));
-        mBottomBar.mapColorForTab(2, ContextCompat.getColor(this, R.color.deepOrange));
-        mBottomBar.mapColorForTab(3, ContextCompat.getColor(this, R.color.amber));
-        mBottomBar.mapColorForTab(4, ContextCompat.getColor(this, R.color.grey));
-
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragmentContain,
-                        new ImageFragment().newInstance(),
-                        "im").commit();
-
-        //startActivity(new Intent(this,SettingActivity.class));
     }
 
-    @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart");
-        super.onStart();
-        //BusProvider.getInstance().register(this);
-//        MagPDF magPDF = new MagPDF();
-//        try {
-//            magPDF.createPdf(MagPDF.PATH);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (DocumentException e) {
-//            e.printStackTrace();
-//        }
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        Log.i(TAG, "onResume");
-        super.onResume();
-        microgear.bindServiceResume();
-        registerReceiver();
-        editor.putString("activity", "onResume");
-        editor.commit();
-        Log.e(TAG, "COMMIT");
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        Log.i(TAG, "onPause");
-        super.onPause();
-        unregisterReceiver();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.i(TAG, "onStop");
-        super.onStop();
-        BusProvider.getInstance().unregister(this);
-        editor.putString("activity", "onStop");
-        editor.commit();
-    }
-
-    @Override
-    protected void onRestart() {
-        Log.i(TAG, "onRestart");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.i(TAG, "onDestroy");
-        super.onDestroy();
-        if (microgear != null) {
-            microgear.disconnect();
-            Log.w(TAG, "Disconnect Microgear!!");
-        }
-        editor.putString("activity", "onDestroy");
-        editor.commit();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.i(TAG, "onBackPressed");
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "onCreateOptionsMenu");
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected");
-        int id = item.getItemId();
-        if (id == 16908332) {
-            onBackPressed();
-            return true;
-        }
-        if (id == R.id.actionSetting) {
-            startActivity(new Intent(getContextManual(), SettingActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.i(TAG, "onSaveInstanceState");
-        super.onSaveInstanceState(outState);
-        //mBottomBar.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(TAG, "onRestoreInstanceState");
-    }
-
-    public Handler getPublishHandle() {
-        return publishHandle;
-    }
-
-    public void setActionListener() {
-        Log.i(TAG, "setActionListener");
-        actionListener.setOnFinishSetupNETPIE(new ActionListener.OnFinishSetupNETPIE() {
-            @Override
-            public void onFinishSetupNETPIE(boolean event) {
-                if (event) {
-                    connectNETPIE();
-                } else {
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                            getResources().getString(R.string.notSetupNETPIE));
-                    actionListener.onException.onException(statusBean.getException());
-
-
-                }
-            }
-        });
-        actionListener.setOnException(new ActionListener.OnException() {
-            @Override
-            public void onException(String error) {
-
-            }
-        });
-        actionListener.setOnSaveSetting(new ActionListener.OnSaveSetting() {
-
-            @Override
-            public void onSaveSetting(boolean changeNETPIE, boolean changeDetails, JsonObject objNETPIE, JsonObject objDetails) {
-                if (changeNETPIE && changeDetails) {
-                    objDetails.addProperty("objNETPIE", GsonProvider.getInstance().toJson(objNETPIE));
-                    Log.e(TAG, "gson: " + GsonProvider.getInstance().toJson(objDetails));
-                    publish("settingDetails",
-                            GsonProvider.getInstance().toJson(objDetails),
-                            getResources().getString(R.string.onSaveSetting));
-                } else if (changeNETPIE) {
-                    if (objNETPIE.get(appIdTAG) != null) {
-                        editor.putString(appIdTAG, objNETPIE.get(appIdTAG).getAsString());
-                    }
-                    if (objNETPIE.get(appKeyTAG) != null) {
-                        editor.putString(appKeyTAG, objNETPIE.get(appKeyTAG).getAsString());
-                    }
-                    if (objNETPIE.get(appSecretTAG) != null) {
-                        editor.putString(appSecretTAG, objNETPIE.get(appSecretTAG).getAsString());
-                    }
-                    editor.commit();
-                    reStartActivity();
-                } else if (changeDetails) {
-                    Log.e(TAG, "gson: " + GsonProvider.getInstance().toJson(objDetails));
-                    publish("settingDetails",
-                            GsonProvider.getInstance().toJson(objDetails),
-                            getResources().getString(R.string.onSaveSetting));
-                }
-            }
-        });
-        actionListener.setOnSaveStandard(new ActionListener.OnSaveStandard() {
-            @Override
-            public void onSaveStandard(JsonObject obj) {
-                publish("settingStandard",
-                        GsonProvider.getInstance().toJson(obj),
-                        getResources().getString(R.string.onSaveSetting));
-            }
-        });
-        actionListener.setOnControlDevice(new ActionListener.OnControlDevice() {
-
-            @Override
-            public void onControlDevice(int device, boolean isOpen) {
-                JsonObject object = new JsonObject();
-                object.addProperty(String.valueOf(device), isOpen);
-                String message = "";
-                if (device == 1) {
-                    message = getResources().getString(R.string.water___);
-                } else if (device == 2) {
-                    message = getResources().getString(R.string.shower___);
-                } else if (device == 3) {
-                    message = getResources().getString(R.string.openSlat___);//openSlat___
-                } else if (device == 4) {
-                    message = getResources().getString(R.string.closeSlat___);
-                }
-                publish("controlDevices",
-                        GsonProvider.getInstance().toJson(object),
-                        message);
-
-
-            }
-        });
-        actionListener.setOnRequestUpdateImage(new ActionListener.OnRequestUpdateImage() {
-            @Override
-            public void onRequestUpdateImage() {
-                if (statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)) {
-                    if (imageBean.getTimeStamp() > 0l) {
-                        actionListener.onUpdateImage.onUpdateImage(statusBean, imageBean);
-                    } else {
-                        //load
-                        new SubscribeTask(getResources().getString(R.string.fetching))
-                                .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                        appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                        sharedPreferences.getString(appSecretTAG, ""),
-                                        "photo");
-                    }
-                } else {
-                    actionListener.onException.onException(statusBean.getException());
-                }
-
-            }
-        });
-
-        actionListener.setOnRequestRawBean(new ActionListener.OnRequestRawBean() {
-            @Override
-            public void onRequestRawBean() {
-                if (statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)) {
-                    if (actionListener.onUpdateRawBean != null) {
-                        actionListener.onUpdateRawBean.onUpdateRawBean(rawDataBean);
-                    }
-                } else if (statusBean.getStatus() == getResources().getInteger(R.integer.NO_INTERNET)) {
-                    if (actionListener.onNoInternet != null) {
-                        actionListener.onNoInternet.onNoInternet(statusBean.getException());
-                    }
-                } else if (statusBean.getStatus() == getResources().getInteger(R.integer.ERROR)) {
-                    if (actionListener.onException != null) {
-                        actionListener.onException.onException(statusBean.getException());
-                    }
-
-                }
-            }
-        });
-        actionListener.setOnRequestRawList(new ActionListener.OnRequestRawList() {
-            @Override
-            public void onRequestRawList() {
-                if (statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)) {
-                    if (rawListAsJsonString != null) {
-                        if (actionListener.onUpdateRawList != null) {
-                            actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
-                        }
-                    } else {
-                        //load
-                        new SubscribeTask(getResources().getString(R.string.fetching))
-                                .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                        appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                        sharedPreferences.getString(appSecretTAG, ""),
-                                        "rawDataList");
-                    }
-                } else {
-                    actionListener.onException.onException(statusBean.getException());
-                }
-            }
-        });
-
-        actionListener.setOnRequestLog(new ActionListener.OnRequestLog() {
-            @Override
-            public void onRequestLog() {
-                if (statusBean.getStatus() == getResources().getInteger(R.integer.IS_CONNECT_NETPIE)) {
-                    if (logListAsJsonString != null) {
-                        actionListener.onUpdateLog.onUpdateLog(statusBean, logListAsJsonString);
-                    } else {
-                        //load
-                        new SubscribeTask(getResources().getString(R.string.fetching))
-                                .execute(appID = sharedPreferences.getString(appIdTAG, ""),
-                                        appKey = sharedPreferences.getString(appKeyTAG, ""),
-                                        sharedPreferences.getString(appSecretTAG, ""),
-                                        "logDataList");
-                    }
-                } else {
-                    actionListener.onException.onException(statusBean.getException());
-                }
-
-            }
-        });
-        actionListener.setOnRequestSlatStatus(new ActionListener.OnRequestSlatStatus() {
-            @Override
-            public void onRequestSlatStatus() {
-                actionListener.onUpdateSlatStatus.onUpdateSlatStatus(STSlat);
-            }
-        });
-        actionListener.setOnCheckPermission(new ActionListener.OnCheckPermission() {
-            @Override
-            public void onCheckPermission(String method, String permission) {
-                methodUsePermission = method;
-            }
-        });
-        actionListener.setOnRefreshImage(new ActionListener.OnRefreshImage() {
-            @Override
-            public void onRefreshImage() {
-                publish("refreshIM", "1", getResources().getString(R.string.refreshIM));
-            }
-        });
-        actionListener.setOnRegisterGCMFinish(new ActionListener.OnRegisterGCMFinish() {
-            @Override
-            public void onRegisterGCMFinish(String token) {
-                //microgear.publish("token",token,0,true);
-                microgear.publish("token", token, 1, true);
-                //if(microgear != null){
-                //    new NetPieRestApi(appID,appKey,appSecret).publish("token",sharedPreferences.getString("token",""),true);
-                //    Log.e(TAG,"update Token");
-                //}
-
-            }
-        });
-        actionListener.setOnNoti(new ActionListener.OnNoti() {
-            @Override
-            public void onNoti(Bundle data) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(String.valueOf(data.get("title")))
-                        .content(String.valueOf(data.get("body")))
-                        .positiveText(getResources().getString(R.string.ok))
-                        .show();
-            }
-        });
-
-
-    }
-
-    public void setNetPieEventListener() {
-        Log.e(TAG, "setNetPieEventListener");
-        eventListener.setConnectEventListener(new EventListener.OnServiceConnect() {
-            @Override
-            public void onConnect(Boolean status) {
-                Message msg = handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("head", "connect");
-                bundle.putBoolean("status", status);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
-            }
-
-        });
-
-        eventListener.setMessageEventListener(new EventListener.OnMessageReceived() {
-            @Override
-            public void onMessage(String topic, String message) {
-                topic = topic.substring(1);
-                topicList = topic.split("/");
-                topic = topicList[1];
-//                Log.e(TAG,"NETPIE Event Listener: onMessage");
-//                Log.e(TAG,"NETPIE Event Listener:    topic: "+topic);
-//                Log.e(TAG,"NETPIE Event Listener:    message: "+message);
-                Message msg = handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("head", "subscribe");
-                bundle.putString("topic", topic);
-                bundle.putString("message", message);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
-            }
-        });
-
-        eventListener.setPresentEventListener(new EventListener.OnPresent() {
-            @Override
-            public void onPresent(String name) {
-                Log.e(TAG, "NETPIE Event Listener: onPresent: " + name);
-                Message msg = handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("head", "subscribe");
-                bundle.putString("topic", "onPresent");//onPresent,onAbsent
-                bundle.putString("message", name);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
-            }
-        });
-
-        eventListener.setAbsentEventListener(new EventListener.OnAbsent() {
-            @Override
-            public void onAbsent(String name) {
-                Log.e(TAG, "NETPIE Event Listener: onAbsent: " + name);
-                Message msg = handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("head", "subscribe");
-                bundle.putString("topic", "onAbsent");
-                bundle.putString("message", name);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
-            }
-        });
-
-        eventListener.setDisconnectEventListener(new EventListener.OnClose() {
-            @Override
-            public void onDisconnect(Boolean status) {
-                Log.e(TAG, "NETPIE Event Listener: onDisconnect: " + String.valueOf(status));
-            }
-        });
-
-        eventListener.setOnException(new EventListener.OnException() {
-            @Override
-            public void onException(String error) {
-                Log.e(TAG, "NETPIE Event Listener: onException: " + error);
-                statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR), error);
-                actionListener.onException.onException(error);
-
-            }
-        });
-
-    }
-
-    private void setFragment(int menuItemId) {
-        Log.e(TAG, "setFragment");
-        if (menuItemId == R.id.bottomBarImage) {
-            imFragment = ImageFragment.newInstance();
-            clearFragment();
-            supportFragmentManager.beginTransaction().replace(
-                    R.id.fragmentContain,
-                    imFragment,
-                    getApplicationContext().getString(R.string.image)
-            ).commit();
-            setTitle(R.string.image);
-            this.menuItemId = R.id.bottomBarImage;
-        } else if (menuItemId == R.id.bottomBarMoisture) {
-            moistureFragment = MoistureFragment.newInstance().newInstance();
-            clearFragment();
-            supportFragmentManager.beginTransaction().replace(
-                    R.id.fragmentContain,
-                    moistureFragment,
-                    getApplicationContext().getString(R.string.moisture)
-            ).commit();
-            setTitle(R.string.moisture);
-            this.menuItemId = R.id.bottomBarMoisture;
-        } else if (menuItemId == R.id.bottomBarTemp) {
-            tempFragment = TempFragment.newInstance();
-            clearFragment();
-            supportFragmentManager.beginTransaction().replace(
-                    R.id.fragmentContain,
-                    tempFragment,
-                    getApplicationContext().getString(R.string.temp)
-            ).commit();
-            setTitle(R.string.temp);
-            this.menuItemId = R.id.bottomBarTemp;
-        } else if (menuItemId == R.id.bottomBarLight) {
-            lightFragment = LightFragment.newInstance();
-            clearFragment();
-            supportFragmentManager.beginTransaction().replace(
-                    R.id.fragmentContain,
-                    lightFragment,
-                    getApplicationContext().getString(R.string.light)
-            ).commit();
-            setTitle(R.string.light);
-            this.menuItemId = R.id.bottomBarLight;
-        } else if (menuItemId == R.id.bottomBarLog) {
-            logFragment = LogFragment.newInstance();
-            clearFragment();
-            supportFragmentManager.beginTransaction().replace(
-                    R.id.fragmentContain,
-                    logFragment,
-                    getApplicationContext().getString(R.string.log)
-            ).commit();
-            setTitle(R.string.log);
-            this.menuItemId = R.id.bottomBarLog;
-        }
-
-    }
-
-    private void clearFragment() {
-        fragment = supportFragmentManager.findFragmentByTag(getApplicationContext().getString(R.string.image));
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        fragment = supportFragmentManager.findFragmentByTag(getApplicationContext().getString(R.string.moisture));
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        fragment = supportFragmentManager.findFragmentByTag(getApplicationContext().getString(R.string.temp));
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        fragment = supportFragmentManager.findFragmentByTag(getApplicationContext().getString(R.string.light));
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        fragment = supportFragmentManager.findFragmentByTag(getApplicationContext().getString(R.string.log));
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit();
-        }
-
-    }
-
-    public void setNetworkChangeListener() {
-        networkChangeListener.setNetworkChange(new NetworkChangeListener.OnNetworkChange() {
-            @Override
-            public void onNetworkChange(boolean isConnect) {
-                if (isConnect) {
-                    notificationSnackBar("is Connect Internet");
-
-                } else {
-                    //notificationSnackBar("no Connect Internet");
-                }
-
-            }
-        });
-    }
-
-
-    public void publish(String topic, String payload, String messageDialog) {
+    public void publish(final String topic, String payload, String messageDialog) {
         Log.e(TAG, "publish");
         Log.e(TAG, "  topic: " + topic);
         Log.e(TAG, "  payload: " + payload);
 
-        //for get return object
-//        objSetting = GsonProvider.getInstance().fromJson(payload,JsonObject.class);
-//        if(objSetting.get("settingDetails")!= null){
-//            Log.e(TAG,"settingDetails!= null");
-//            JsonObject jsonObject = GsonProvider.getInstance().fromJson(objSetting.get("settingDetails").getAsString(),JsonObject.class);
-//            if(jsonObject.get("objNETPIE")!=null){
-//                Log.e(TAG,"has changeNETPIE");
-//                JsonObject objNETPIE = GsonProvider.getInstance().fromJson(jsonObject.get("objNETPIE").getAsString(),JsonObject.class);
-//                if(objNETPIE.get("appID")!=null){
-//                    Log.e(TAG,"appID: "+objNETPIE.get("appID").getAsString());
-//                }
-//            }
-//        }
-        //------------------------------------
-        if (isConnectingToInternet(getContextManual())) {
-            progressDialog = new ProgressDialog(getContextManual());
-            progressDialog.setMessage(messageDialog);
-            progressDialog.setIndeterminate(false);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+        if (isConnectInternet(getContext())) {
+
+            if (!messageDialog.equals("null")) {
+                showProgressDialog(messageDialog);
+            }
+
             publishBean = new PublishBean(topic, payload);
 
 
-            if(topic.equals("controlDevices")){
-                microgear.publish(topic, payload);
-            }
-            else{
-                new PublishTask().execute(topic, payload);
+            if (topic.equals(ConfigData.ctrlDevicesTopic) || (topic.equals(ConfigData.refreshTopic))) {
+                Log.e(TAG, "normal publish");
+                if (isConnectNetPie) {
+                    microgear.publish(topic, payload);
+                } else {
+                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+                }
+            } else {
+                /*if (isConnectNetPie) {
+                    Log.e(TAG, "rest api publish");
+                    new PublishTask().execute(topic, payload);
+                } else {
+                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+                }*/
+                if (isConnectNetPie) {
+                    microgear.publish(topic, payload, 1, true);
+                } else {
+                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
+                }
             }
 
             publishHandle = new Handler();
@@ -1031,232 +1292,35 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.i(TAG, "run task");
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
+                    hideProgressDialog();
+                    if (topic.equals(ConfigData.refreshTopic)) {
+                        refreshLayout.setRefreshing(false);
                     }
-                    new MaterialDialog.Builder(getContextManual())
-                            .title(getResources().getString(R.string.exception))
-                            .content(getResources().getString(R.string.piNotResponse))
-                            .positiveText(getResources().getString(R.string.ok))
-                            .show();
-//                    if(publishBean.getTopic().equals("settingStandard")){
-//
-//                        //actionListener.onSetStandardFalse.onSetStandardFalse();
-//                    }
+                    showDialog(getString(R.string.exception), getString(R.string.piNotResponse));
                 }
             };
-            publishHandle.postDelayed(publistask, getResources().getInteger(R.integer.waitPublish));
+            publishHandle.postDelayed(publistask, 25000); //20 second
         } else {
-            statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
-                    getResources().getString(R.string.noInternet));
-            actionListener.onNoInternet.onNoInternet(statusBean.getException());
-            notificationSnackBar(getResources().getString(R.string.noInternet));
+            notificationSnackBar(rootLayout, getString(R.string.noInternet));
         }
     }
 
-    private boolean checkFirstOpenApp() {
-        Log.i(TAG, "checkFirstOpenApp");
-        if (sharedPreferences.getBoolean("first", true)) {
-            editor.putBoolean("first", false); //open first app
-            editor.putFloat("moisture", (float) 20.00); //persen
-            editor.putFloat("temp", (float) 40.00); //°C
-            editor.putFloat("light", (float) 5000.00);//Lux
-            editor.putInt("dayStorage", 7); //unit day
-            editor.putInt("fqPubRawData", 1); // unit minute
-            editor.putInt("fqPubImage", 1); // unit hour
-            editor.putInt("fqInsertRawData", 1); // unit hour
-            editor.putBoolean("autoMode", true);
-            editor.commit();
-            Intent onBoarding = new Intent(getContextManual(), SetupNETPIEActivity.class);
-            startActivity(onBoarding);
-            Log.i(TAG, "Is First OpenApp : create onBoarding activity");
-            return true;
-        } else {
-            Log.i(TAG, "Ever open this application");
-            return false;
+    private void checkErrorConnectNetPie() {
+        //Please Check your App id,Key,Secret
 
-        }
-
-    }
-
-    public JsonObject getMem() {
-        JsonObject object = new JsonObject();
-        object.addProperty("moisture", sharedPreferences.getFloat("moisture", 0));
-        object.addProperty("temp", sharedPreferences.getFloat("temp", 0));
-        object.addProperty("light", sharedPreferences.getFloat("light", 0));
-        object.addProperty("autoMode", sharedPreferences.getBoolean("autoMode", true));
-        object.addProperty("dayStorage", sharedPreferences.getInt("dayStorage", 7));
-        object.addProperty("fqPubRawData", sharedPreferences.getInt("fqPubRawData", 1));
-        object.addProperty("fqPubImage", sharedPreferences.getInt("fqPubImage", 1));
-        object.addProperty("fqInsertRawData", sharedPreferences.getInt("fqInsertRawData", 1));
-        return object;
-
-    }
-
-    private boolean checkAndGetKeyNetPie() {
-        Log.e(TAG, "checkAndGetKeyNetPie");
-        if (!sharedPreferences.getString(appIdTAG, "").equals("")) {
-            if (!sharedPreferences.getString(appKeyTAG, "").equals("")) {
-                if (!sharedPreferences.getString(appSecretTAG, "").equals("")) {
-                    appID = sharedPreferences.getString(appIdTAG, "");
-                    appKey = sharedPreferences.getString(appKeyTAG, "");
-                    appSecret = sharedPreferences.getString(appSecretTAG, "");
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
+        checkConnectNetPieHandler = new Handler();
+        checkConnectNetPieRunnable = new Runnable() {
+            @Override
+            public void run() {
+                setException(getString(R.string.incorrectNetPie));
             }
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isConnectingToInternet(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
-    }
-
-    public void connectNETPIE() {
-        Log.i(TAG, "connectNETPIE");
-
-        if (checkAndGetKeyNetPie()) {
-            Log.e(TAG, "appID: " + appID);
-            Log.e(TAG, "appKey: " + appKey);
-            Log.e(TAG, "appSecret: " + appSecret);
-            if (isConnectingToInternet(getContextManual())) {
-                //setNetPieEventListener();
-                microgear.setalias("Android");
-                microgear.connect(appID, appKey, appSecret);
-                microgear.subscribe("rawData");
-                microgear.subscribe("response");
-                microgear.subscribe("STSlat");
-                microgear.subscribe("hasPhoto");
-                microgear.subscribe("hasLogList");
-                microgear.subscribe("hasRawList");
-            } else {
-                statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
-                        getResources().getString(R.string.noInternet));
-                if (actionListener.onNoInternet != null) {
-                    actionListener.onNoInternet.onNoInternet(statusBean.getException());
-                }
-
-            }
-        } else {
-            statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR),
-                    getResources().getString(R.string.notSetupNETPIE));
-            if (actionListener.onException != null) {
-                actionListener.onException.onException(statusBean.getException());
-            }
-        }
-
+        };
+        checkConnectNetPieHandler.postDelayed(checkConnectNetPieRunnable, getResources().getInteger(R.integer.waitPublish));
 
     }
 
-    private class SubscribeTask extends AsyncTask<String, Void, String> {
-        private final String TAG = "SubscribeTask";
-        //private ProgressDialog progressDialog;
-        private String dialogMessage;
-        private String titleToolbar;
-
-        public SubscribeTask(String dialogMessage) {
-            this.dialogMessage = dialogMessage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.i(TAG, "onPreExecute");
-            //super.onPreExecute();
-//            progressDialog = new ProgressDialog(getContextManual());
-//            progressDialog.setMessage(dialogMessage);
-//            progressDialog.setIndeterminate(false);
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
-            titleToolbar = getTitle().toString();
-            setTitle(titleToolbar + " (" + dialogMessage + ")");
-
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            return new NetPieRestApi(params[0], params[1], params[2]).subscribe(params[3]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.i(TAG, "onPostExecute");
-            Log.e(TAG, "result: " + result);
-
-            //super.onPostExecute(result);
-//            if (progressDialog != null) {
-//                progressDialog.dismiss();
-//                progressDialog = null;
-//            }
-            setTitle(titleToolbar);
-
-            if (!result.equals("connectionLost")
-                    && !result.equals("Unauthorized.")
-                    && !result.equals("[]")
-                    && !result.equals("{\"code\":401,\"message\":\"Unauthorized\"}")) {
-                Log.e(TAG, "has result");
-                SubscribeBean bean = new SubscribeBean(result);
-                Log.e(TAG, "topic:" + bean.getTopic());
-                if (bean.getTopic().equals("logDataList")) {
-                    logListAsJsonString = bean.getPayload();
-                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    if (actionListener.onUpdateLog != null) {
-                        actionListener.onUpdateLog.onUpdateLog(statusBean, logListAsJsonString);
-                    }
-
-                }
-                if (bean.getTopic().equals("photo")) {
-                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    imageBean = new ImageBean(bean.getPayload());
-                    try {
-                        actionListener.onUpdateImage.onUpdateImage(statusBean, imageBean);
-                    } catch (NullPointerException e) {
-
-                    }
-
-                }
-                if (bean.getTopic().equals("rawDataList")) {
-                    rawListAsJsonString = bean.getPayload();
-                    //statusBean = new StatusBean(getResources().getInteger(R.integer.IS_CONNECT_NETPIE),"");
-                    try {
-                        actionListener.onUpdateRawList.onUpdateRawList(rawListAsJsonString);
-                    } catch (NullPointerException e) {
-
-                    }
-
-                }
-            } else {
-                Log.e(TAG, "error: " + result);
-                if (result.equals("connectionLost")) {
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.NO_INTERNET),
-                            getResources().getString(R.string.connectionLost));
-                    try {
-                        actionListener.onNoInternet.onNoInternet(statusBean.getException());
-                    } catch (NullPointerException e) {
-
-                    }
-
-
-                } else {
-                    statusBean = new StatusBean(getResources().getInteger(R.integer.ERROR), result);
-                    try {
-                        actionListener.onException.onException(result);
-                    } catch (NullPointerException e) {
-
-                    }
-                }
-            }
-        }
-    }
 
     public class PublishTask extends AsyncTask<String, Void, String> {
-
         @Override
         protected void onPreExecute() {
 
@@ -1264,69 +1328,60 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            checkAndGetKeyNetPie();
             Log.d(TAG, "publish topic: " + strings[0]);
-            return new NetPieRestApi(appID, appKey, appSecret).publish(strings[0], strings[1], true);
-
+            return new RestApiNetPie(
+                    shareData.getAppId(),
+                    shareData.getAppKey(),
+                    shareData.getAppSecret())
+                    .publish(strings[0], strings[1], true);
         }
 
         @Override
         protected void onPostExecute(String result) {
-            //alertDialog("result",result);
             if (result.equals("ok")) {
                 Log.d(TAG, "publish success");
             }
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.e(TAG, "onRequestPermissionsResult");
-        Log.e(TAG, "requestCode: " + requestCode);
-        Log.e(TAG, "permissions: " + permissions);
-        switch (requestCode) {
-            case 123:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e(TAG, "Permission Granted");
+    private class SubscribeTask extends AsyncTask<String, Void, SubscribeBean> {
+        private final String TAG = "SubscribeTask";
+        private String message;
 
-                    if (actionListener.onPermissionResult != null) {
-                        actionListener.onPermissionResult.onPermissionResult(methodUsePermission, true);
-                    }
-                } else {
-                    Log.e(TAG, "Permission Denied");
-                    if (actionListener.onPermissionResult != null) {
-                        actionListener.onPermissionResult.onPermissionResult(methodUsePermission, false);
-                        alertDialog(getResources().getString(R.string.notLoadIm),
-                                getResources().getString(R.string.PermissionWRITE_EXTERNALDenied));
-                    }
 
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        public SubscribeTask(String message) {
+            this.message = message;
         }
-    }
 
-    public void alertDialog(String title, String message) {
-        new MaterialDialog.Builder(getContextManual())
-                .title(title)
-                .content(message)
-                .positiveText(getResources().getString(R.string.ok))
-                .show();
-    }
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute");
+            getSupportActionBar().setTitle(message);
+            if (message.equals(getString(R.string.loadingImage))) {
+                progressBarImage.setVisibility(View.VISIBLE);
+            }
 
-    public Context getContextManual() {
-        return this;
-    }
+        }
 
-    public void reStartActivity() {
-        Intent intent = new Intent(getContextManual(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+        @Override
+        protected SubscribeBean doInBackground(String... params) {
+            return new RestApiNetPie(
+                    shareData.getAppId(),
+                    shareData.getAppKey(),
+                    shareData.getAppSecret())
+                    .subscribe(params[0]);
+        }
 
-    public void notificationSnackBar(String message) {
-        Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
+        @Override
+        protected void onPostExecute(SubscribeBean result) {
+            Log.i(TAG, "onPostExecute");
+            //Log.e(TAG, "result: " + result);
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+            if (message.equals(getString(R.string.loadingImage)) && progressBarImage != null) {
+                progressBarImage.setVisibility(View.GONE);
+            }
+            onSubscribeCallBack(result);
+        }
     }
 
 }

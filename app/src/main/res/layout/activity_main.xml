@@ -1,15 +1,341 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.MainActivity"
-    android:id="@+id/rootLayoutMain">
-    <FrameLayout
+    tools:context=".activity.MainActivity">
+
+    <include layout="@layout/app_bar">
+
+    </include>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragmentContain">
-    </FrameLayout>
-</RelativeLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/container_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/image_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/image_garden"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:background="@color/Grey_900"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/bg_im_blure" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_image"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="false"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_value_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_layout"
+                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                    android:layout_marginTop="@dimen/MarginSpaceXXL"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/PaddingSpaceXL"
+                    android:paddingRight="@dimen/PaddingSpaceXL">
+
+                    <RelativeLayout
+                        android:id="@+id/moisture_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:id="@+id/ic_moisture"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_moisture" />
+
+                        <TextView
+                            android:id="@+id/moisture_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ic_moisture"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:text="@string/moisture"
+                            android:textSize="@dimen/FontSizeM" />
+
+                        <TextView
+                            android:id="@+id/moisture_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/moisture_title"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:textSize="@dimen/FontSizeM" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/temp_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:id="@+id/ic_temp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_temp" />
+
+                        <TextView
+                            android:id="@+id/temp_tile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ic_temp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:text="@string/temperature"
+                            android:textSize="@dimen/FontSizeM" />
+
+                        <TextView
+                            android:id="@+id/temp_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/temp_tile"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:textSize="@dimen/FontSizeM" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/light_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:id="@+id/ic_sun_light"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_sun_light" />
+
+                        <TextView
+                            android:id="@+id/light_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ic_sun_light"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:text="@string/lightIntensity"
+                            android:textSize="@dimen/FontSizeM" />
+
+                        <TextView
+                            android:id="@+id/light_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/light_title"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/MarginSpace"
+                            android:textSize="@dimen/FontSizeM" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/controls_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sensor_value_layout"
+                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/PaddingSpaceXL"
+                    android:paddingRight="@dimen/PaddingSpaceXL">
+
+                    <Button
+                        android:id="@+id/btn_water"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/water"
+                        android:textAllCaps="false"
+                        android:textColor="@color/Blue" />
+
+                    <Button
+                        android:id="@+id/btn_foggy"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/foggy"
+                        android:textAllCaps="false"
+                        android:textColor="@color/DeepOrange" />
+
+                    <Button
+                        android:id="@+id/btn_slat"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/openSlat"
+                        android:textAllCaps="false"
+                        android:textColor="@color/Amber" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/details_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/controls_layout"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/PaddingSpaceXL"
+                    android:paddingRight="@dimen/PaddingSpaceXL">
+
+                    <View
+                        android:id="@+id/line1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#4D000000" />
+
+                    <TextView
+                        android:id="@+id/time_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line1"
+                        android:layout_marginBottom="@dimen/MarginSpaceL"
+                        android:layout_marginTop="@dimen/MarginSpaceL"
+                        android:text="@string/lastUpdate"
+                        android:textSize="@dimen/FontSizeM" />
+
+                    <TextView
+                        android:id="@+id/time_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/line1"
+                        android:layout_marginBottom="@dimen/MarginSpaceL"
+                        android:layout_marginTop="@dimen/MarginSpaceL"
+                        android:gravity="right"
+                        android:text="00:34 18/10/2016"
+                        android:textSize="@dimen/FontSizeM" />
+
+                    <View
+
+                        android:id="@+id/line2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/time_title"
+                        android:background="#4D000000" />
+
+
+                    <TextView
+                        android:id="@+id/slat_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/line2"
+                        android:layout_marginBottom="@dimen/MarginSpaceL"
+                        android:layout_marginTop="@dimen/MarginSpaceL"
+                        android:text="@string/slatStatus"
+                        android:textSize="@dimen/FontSizeM" />
+
+                    <TextView
+                        android:id="@+id/slat_status_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/line2"
+                        android:layout_marginBottom="@dimen/MarginSpaceL"
+                        android:layout_marginTop="@dimen/MarginSpaceL"
+                        android:gravity="right"
+                        android:text="on"
+                        android:textSize="@dimen/FontSizeM" />
+
+                    <View
+
+                        android:id="@+id/line3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/slat_status"
+                        android:background="#4D000000" />
+
+                    <Button
+                        android:id="@+id/history"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line3"
+                        android:gravity="left|center"
+                        android:text="@string/history"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorAccent" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/exception"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:padding="@dimen/PaddingSpaceXL"
+        android:text="@string/exception"
+        android:textSize="@dimen/FontSizeM"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:visibility="gone" />
+
+
+</android.support.design.widget.CoordinatorLayout>
+

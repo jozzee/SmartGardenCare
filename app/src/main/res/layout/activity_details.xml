@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sitthiphong.smartgardencare.activity.DetailsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Grey_50"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:id="@+id/contain_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/lineChart_layout"
+                android:layout_width="match_parent"
+                android:layout_height="320dp">
+
+                <WebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/Grey_50"></WebView>
+
+                <ProgressBar
+                    android:id="@+id/progressWebView"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="false"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sensors_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lineChart_layout"
+                android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                android:layout_marginTop="@dimen/MarginSpaceXXL"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/PaddingSpaceXL"
+                android:paddingRight="@dimen/PaddingSpaceXL">
+
+
+                <TextView
+                    android:id="@+id/point_title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginTop="@dimen/MarginSpaceL"
+                    android:text="@string/point1"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <TextView
+                    android:id="@+id/value1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginTop="@dimen/MarginSpaceL"
+                    android:gravity="right"
+                    android:text="44.44 %"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <View
+
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/point_title1"
+                    android:background="#4D000000" />
+
+                <TextView
+                    android:id="@+id/point_title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/line2"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginTop="@dimen/MarginSpaceL"
+                    android:text="@string/point2"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <TextView
+                    android:id="@+id/value2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/line2"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginTop="@dimen/MarginSpaceL"
+                    android:gravity="right"
+                    android:text="44.44 %"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <View
+
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/point_title2"
+                    android:background="#4D000000" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/set_standard_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sensors_layout"
+                android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                android:paddingLeft="@dimen/PaddingSpaceXL"
+                android:paddingRight="@dimen/PaddingSpaceXL">
+
+                <TextView
+                    android:id="@+id/standard_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:text="Standard Value"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <TextView
+                    android:id="@+id/standard_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginLeft="@dimen/MarginSpace"
+                    android:gravity="right"
+                    android:text="44.44 %"
+                    android:textSize="@dimen/FontSizeM" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/seekBarValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/standard_value"
+                    android:layout_marginBottom="@dimen/MarginSpaceL"
+                    android:layout_marginTop="@dimen/MarginSpaceL"
+                    android:paddingLeft="@dimen/PaddingSpace"
+                    android:paddingRight="@dimen/PaddingSpace"
+                    app:dsb_indicatorColor="@color/colorAccent"
+                    app:dsb_progressColor="@color/colorAccent" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <TextView
+        android:id="@+id/exception"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:padding="@dimen/PaddingSpaceXL"
+        android:text="@string/exception"
+        android:textSize="@dimen/FontSizeM"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:visibility="gone" />
+
+</android.support.design.widget.CoordinatorLayout>

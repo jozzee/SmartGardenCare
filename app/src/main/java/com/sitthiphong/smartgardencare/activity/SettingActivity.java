@@ -1,9 +1,7 @@
 package com.sitthiphong.smartgardencare.activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -20,631 +18,461 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.listener.ActionListener;
-import com.sitthiphong.smartgardencare.provider.BusProvider;
+import com.sitthiphong.smartgardencare.datamodel.ConfigData;
+import com.sitthiphong.smartgardencare.libs.ShareData;
+import com.sitthiphong.smartgardencare.listener.OnSaveSettingListener;
+
+import java.util.HashMap;
 
 public class SettingActivity extends AppCompatActivity {
     private final String TAG = "SettingActivity";
+
+    public static OnSaveSettingListener onSaveSettingListener;
+
     private CoordinatorLayout rootLayout;
     private Toolbar toolbar;
     private Menu menu;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private RelativeLayout layoutAppID;
-    private RelativeLayout layoutAppKey;
-    private RelativeLayout layoutAppSecret;
-    private RelativeLayout layoutSendDataSensor;
-    private RelativeLayout layoutInsertDataSensor;
-    private RelativeLayout layoutStorageData;
-    private TextView textViewAppID;
-    private TextView textViewAppKey;
-    private TextView textViewAppSecret;
-    private TextView sendDataValue;
-    private TextView insertDataValue;
-    private TextView storageDataValue;
-    private TextView autoMote;
-    private Switch swAutoMode;
-    private int fqPubRawData;
-    private int fqInsertRawData;
-    private int dayStorage;
+    private ShareData shareData;
+    private RelativeLayout appIdLayout, keyLayout, secretLayout, fqPDataLayout, fqPImageLayout,
+            fqIDataLayout, fqShowerLayout, ageDataLayout, autoModeLayout;
 
-    private final String dayStorageTAG ="dayStorage";
-    private final String fqPubRawDataTAG ="fqPubRawData";
-    private final String fqPubImageTAG ="fqPubImage";  //ไปตั้งค่าอยู่หน้า image fragment
-    private final String fqInsertRawDataTAG = "fqInsertRawData";
-    private final String appIdTAG = "appId";
-    private final String appKeyTAG = "appKey";
-    private final String appSecretTAG ="appSecret";
+    private TextView appId, key, secret, fqPData, fqPImage, fqIData, fqShower, ageData, autoMode;
+    private Switch swAutoMode;
+
+    private int fqPDataValue, fqPImageValue, fqIDataValue, fqShowerValue, ageDataValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BusProvider.getInstance().register(this);
-
-        sharedPreferences = getSharedPreferences("Details", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-
         setContentView(R.layout.activity_setting);
 
-        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayoutSetting);  //set RootLayout
+        shareData = new ShareData(this);
+        shareData.createSharePreference();
+
+        rootLayout = (CoordinatorLayout) findViewById(R.id.root_layout);  //set RootLayout
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.setting);
-//        toolbar = (Toolbar) findViewById(R.id.toolbarSetting); //Set Toolbar replace Actionbar
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setHomeButtonEnabled(true);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle(R.string.setting);
-
-        fqPubRawData = sharedPreferences.getInt(fqPubRawDataTAG,1);
-        fqInsertRawData = sharedPreferences.getInt(fqInsertRawDataTAG,1);
-        dayStorage = sharedPreferences.getInt(dayStorageTAG,7);
-
-        layoutAppID = (RelativeLayout) findViewById(R.id.layoutSetAppId);
-        layoutAppKey = (RelativeLayout)findViewById(R.id.layoutSetAppKey);
-        layoutAppSecret = (RelativeLayout)findViewById(R.id.layoutSetAppSecret);
-        layoutSendDataSensor = (RelativeLayout)findViewById(R.id.layoutSetSendData);
-        layoutInsertDataSensor = (RelativeLayout)findViewById(R.id.layoutSetInsertData);
-        layoutStorageData = (RelativeLayout)findViewById(R.id.layoutSetStorageData);
 
 
-        textViewAppID = (TextView)findViewById(R.id.appIdValue);
-        textViewAppKey =(TextView)findViewById(R.id.appKeyValue);
-        textViewAppSecret = (TextView)findViewById(R.id.appSecretValue);
-        sendDataValue = (TextView)findViewById(R.id.sendDataValue);
-        insertDataValue = (TextView)findViewById(R.id.insertDataValue);
-        storageDataValue = (TextView)findViewById(R.id.storageDataValue);
+        appIdLayout = (RelativeLayout) findViewById(R.id.app_id_layout);
+        keyLayout = (RelativeLayout) findViewById(R.id.key_layout);
+        secretLayout = (RelativeLayout) findViewById(R.id.secret_layout);
+        fqPDataLayout = (RelativeLayout) findViewById(R.id.fqPData_layout);
+        fqPImageLayout = (RelativeLayout) findViewById(R.id.fqPImage_layout);
+        fqIDataLayout = (RelativeLayout) findViewById(R.id.fqIData_layout);
+        fqShowerLayout = (RelativeLayout) findViewById(R.id.fqShower_layout);
+        ageDataLayout = (RelativeLayout) findViewById(R.id.ageData_layout);
+        autoModeLayout = (RelativeLayout) findViewById(R.id.auto_mode_layout);
 
-        autoMote = (TextView)findViewById(R.id.titleAutoMote);
-        swAutoMode = (Switch)findViewById(R.id.swAutoMode);
+        appId = (TextView) findViewById(R.id.app_id_value);
+        key = (TextView) findViewById(R.id.key_value);
+        secret = (TextView) findViewById(R.id.secret_value);
+        fqPData = (TextView) findViewById(R.id.fqPData_value);
+        fqPImage = (TextView) findViewById(R.id.fqPImage_value);
+        fqIData = (TextView) findViewById(R.id.fqIData_value);
+        fqShower = (TextView) findViewById(R.id.fqShower_value);
+        ageData = (TextView) findViewById(R.id.ageData_value);
+        autoMode = (TextView) findViewById(R.id.auto_mode_value);
+        swAutoMode = (Switch) findViewById(R.id.swAutoMode);
 
-        swAutoMode.setChecked(sharedPreferences.getBoolean("autoMode",false));
-        if(swAutoMode.isChecked()){
-            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                    getResources().getString(R.string.open));
-            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
+        setValues();
+    }
+
+    private void setValues() {
+        appId.setText(shareData.getAppId());
+        key.setText(shareData.getAppKey());
+        secret.setText(shareData.getAppSecret());
+        key.setText(shareData.getAppKey());
+
+        fqPDataValue = shareData.getFqPData();
+        fqPData.setText(getString(R.string.every) + " "
+                + String.valueOf(fqPDataValue) + " "
+                + getString(R.string.minute));
+
+        fqPImageValue = shareData.getFqPImage();
+        fqPImage.setText(getString(R.string.every) + " "
+                + String.valueOf(fqPImageValue) + " "
+                + getString(R.string.hour));
+
+        fqIDataValue = shareData.getFqIData();
+        fqIData.setText(getString(R.string.every) + " "
+                + String.valueOf(fqIDataValue) + " "
+                + getString(R.string.hour));
+
+        fqShowerValue = shareData.getFqShower();
+        if (fqShowerValue == 0) {
+            fqShower.setText(getString(R.string.accordingToTheSystem));
+        } else {
+            fqShower.setText(String.valueOf(fqShowerValue) + " " + getString(R.string.minute));
         }
-        else{
-            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                    getResources().getString(R.string.close));
-            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
+
+        ageDataValue = shareData.getAgeData();
+        ageData.setText(String.valueOf(ageDataValue) + " " + getString(R.string.days));
+
+        swAutoMode.setChecked(shareData.isAutoMode());
+        if (swAutoMode.isChecked()) {
+            autoMode.setText(getString(R.string.on));
+        } else {
+            autoMode.setText(getString(R.string.off));
         }
 
-
-        textViewAppID.setText(sharedPreferences.getString(appIdTAG,"no directory"));
-        textViewAppKey.setText(sharedPreferences.getString(appKeyTAG,"no directory"));
-        textViewAppSecret.setText(sharedPreferences.getString(appSecretTAG,"no directory"));
-        sendDataValue.setText(
-                getResources().getString(R.string.every)+" "+ fqPubRawData+" "+
-                getResources().getString(R.string.minute));
-        insertDataValue.setText(
-                getResources().getString(R.string.every)+" "+
-                        fqInsertRawData+" "+
-                getResources().getString(R.string.hour));
-        storageDataValue.setText(
-                dayStorage+" "+
-                getResources().getString(R.string.day));
-
-        swAutoMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        appIdLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                            getResources().getString(R.string.open));
-                    autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
+            public void onClick(View view) {
+                edtDialog(getString(R.string.appId), appId);
+            }
+        });
+        keyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edtDialog(getString(R.string.appKey), key);
+            }
+        });
+        secretLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edtDialog(getString(R.string.appSecret), secret);
+            }
+        });
+        fqPDataLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listDialog(getString(R.string.frequency) + " " + getString(R.string.publishData),
+                        R.array.fqPDataArray,
+                        fqPDataValue,
+                        fqPData);
+            }
+        });
+        fqPImageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listDialog(getString(R.string.frequency) + " " + getString(R.string.publishImage),
+                        R.array.fqPImageArray,
+                        fqPImageValue,
+                        fqPImage);
+            }
+        });
+        fqIDataLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listDialog(getString(R.string.frequency) + " " + getString(R.string.insertData),
+                        R.array.fqIDataArray,
+                        fqIDataValue,
+                        fqIData);
+
+            }
+        });
+
+        fqShowerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listDialog(getString(R.string.timeOfFoggy),
+                        R.array.fqShowerArray,
+                        fqShowerValue,
+                        fqShower);
+            }
+        });
+        ageDataLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listDialog(getString(R.string.ageData),
+                        R.array.ageDataArray,
+                        ageDataValue,
+                        ageData);
+            }
+        });
+
+
+        autoModeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (swAutoMode.isChecked()) {
+                    swAutoMode.setChecked(false);
+                    autoMode.setText(getString(R.string.off));
+                } else {
+                    swAutoMode.setChecked(true);
+                    autoMode.setText(getString(R.string.on));
                 }
-                else {
-                    autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                            getResources().getString(R.string.close));
-                    autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
-                }
-                if(b!=sharedPreferences.getBoolean("autoMode",false)){
-                    menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                }else{
-                    if(textViewAppID.getText().toString().trim().equals(sharedPreferences.getString(appIdTAG,"no directory")) &&
-                            textViewAppKey.getText().toString().trim()
-                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                            && textViewAppSecret.getText().toString().trim()
-                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
-                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                        menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                        if(b){
-                            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                                    getResources().getString(R.string.open));
-                            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.green));
-                        }
-                        else {
-                            autoMote.setText(getResources().getString(R.string.autoMode)+" "+
-                                    getResources().getString(R.string.close));
-                            autoMote.setTextColor(ContextCompat.getColor(getContextManual(),R.color.grey_700));
-                        }
+                validChange();
+            }
+        });
+
+
+    }
+
+
+    private void edtDialog(String title, final TextView textView) {
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
+                .input(title, textView.getText().toString().trim(), new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        // Do something
+                        textView.setText(input.toString());
+                        validChange();
                     }
-                }
-            }
-        });
+                }).show();
+    }
 
-        layoutAppID.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.editAppId))
-                        //.content(R.string.input_content)
-                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
-                        .input(getResources().getString(R.string.textHintAppId),textViewAppID.getText().toString().trim(), new MaterialDialog.InputCallback() {
+    private void listDialog(String title, final int arrId, int values, final TextView textView) {
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .items(arrId)
+                .itemsCallbackSingleChoice(getIndicatorFromValue(values, arrId),
+                        new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                // Do something
-                                Log.e(TAG,"Dialog Callback input App ID: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString(appIdTAG,"no directory")))){
-                                    textViewAppID.setText(input.toString());
-                                    menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                }else{
-                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                            && textViewAppKey.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                                            && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
-                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                                        menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                        textViewAppID.setText(input);
-                                    }
-                                }
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                setValue(getValueFromIndicator(which, arrId), arrId);
+                                textView.setText(text);
+                                validChange();
+                                return true;
                             }
-                        }).show();
-            }
-        });
-        layoutAppKey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.editAppKey))
-                        //.content(R.string.input_content)
-                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
-                        .input(getResources().getString(R.string.textHintAppKey),textViewAppKey.getText().toString().trim(), new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                // Do something
-                                Log.e(TAG,"Dialog Callback input App key: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString(appKeyTAG,"no directory")))){
-                                    textViewAppKey.setText(input.toString());
-                                    menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                }else{
-                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                            &&textViewAppID.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appIdTAG,"no directory"))
-                                            && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
-                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                                        menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                        textViewAppKey.setText(input);
-                                    }
-                                }
-                            }
-                        }).show();
-            }
-        });
-        layoutAppSecret.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.editAppSecret))
-                        //.content(R.string.input_content)
-                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
-                        .input(getResources().getString(R.string.textHintAppSecret)
-                                ,textViewAppSecret.getText().toString().trim(),
-                                new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                // Do something
-                                Log.e(TAG,"Dialog Callback input App Secret: "+input.toString());
-                                if(!(input.toString().equals(sharedPreferences.getString(appSecretTAG,"no directory")))){
-                                    textViewAppSecret.setText(input.toString());
-                                    menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                }else{
-                                    if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                            &&textViewAppKey.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                                            && textViewAppSecret.getText().toString().trim()
-                                            .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                            && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                                            && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
-                                            && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                                        menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                        textViewAppSecret.setText(input);
-                                    }
-                                }
-                            }
-                        }).show();
-            }
-        });
-        layoutSendDataSensor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.frequencySendData))
-                        .items(R.array.ftPubRDArray)
-                        .itemsCallbackSingleChoice(getWhichFromSendData(fqPubRawData),
-                                new MaterialDialog.ListCallbackSingleChoice() {
-                                    @Override
-                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                        int value = getValueSendDataFromWhich(which);
-
-                                        if(value != (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
-                                            fqPubRawData = value;
-                                            sendDataValue.setText(text);
-                                            menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                        }
-                                        else{
-                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                                    &&textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
-                                                    && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                                                    && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                                    //&& ftPubRD == (sharedPreferences.getInt("ftPubRD",1))
-                                                    && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))
-                                                    && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                                                menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                            }
-                                            fqPubRawData = sharedPreferences.getInt(fqPubRawDataTAG,1);
-                                            sendDataValue.setText(text);
-                                        }
-                                        return true;
-                                    }
-                                })
-                        .positiveText(R.string.choose)
-                        .negativeText(R.string.cancel)
-                        .show();
-            }
-        });
-        layoutInsertDataSensor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.frequencyInsertData))
-                        .items(R.array.ftPubIM_IRDArray)
-                        .itemsCallbackSingleChoice(getWhichFromInsertDataValue(fqInsertRawData),
-                                new MaterialDialog.ListCallbackSingleChoice() {
-                                    @Override
-                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                        int value = getValueInsertDataValueFromWhich(which);
-
-                                        if(value != (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
-                                            fqInsertRawData = value;
-                                            insertDataValue.setText(text);
-                                            menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                        }
-                                        else{
-                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                                    &&textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
-                                                    && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                                                    && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                                    && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                                                    //&& ftIRD == (sharedPreferences.getInt("ftIRD",1))
-                                                    && dayStorage == (sharedPreferences.getInt(dayStorageTAG,7))){
-                                                menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                            }
-                                            fqInsertRawData = sharedPreferences.getInt(fqInsertRawDataTAG,1);
-                                            sendDataValue.setText(text);
-                                        }
-                                        return true;
-                                    }
-                                })
-                        .positiveText(R.string.choose)
-                        .negativeText(R.string.cancel)
-                        .show();
-            }
-        });
-        layoutStorageData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(getContextManual())
-                        .title(getResources().getString(R.string.dayStorageData))
-                        .items(R.array.dayOfStorageArray)
-                        .itemsCallbackSingleChoice(getWhichFromStorageDataValue(dayStorage),
-                                new MaterialDialog.ListCallbackSingleChoice() {
-                                    @Override
-                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                        int value = getValueStorageDataValueFromWhich(which);
-
-                                        if(value != (sharedPreferences.getInt(dayStorageTAG,7))){
-                                            dayStorage = value;
-                                            storageDataValue.setText(text);
-                                            menu.findItem(R.id.actionSaveSetting).setVisible(true);
-                                        }
-                                        else{
-                                            if(swAutoMode.isChecked() == sharedPreferences.getBoolean("autoMode",false)
-                                                    &&textViewAppID.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appIdTAG,"no directory"))
-                                                    && textViewAppKey.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appKeyTAG,"no directory"))
-                                                    && textViewAppSecret.getText().toString().trim()
-                                                    .equals(sharedPreferences.getString(appSecretTAG,"no directory"))
-                                                    && fqPubRawData == (sharedPreferences.getInt(fqPubRawDataTAG,1))
-                                                    && fqInsertRawData == (sharedPreferences.getInt(fqInsertRawDataTAG,1))){
-                                                    //&& dayStore == (sharedPreferences.getInt("dayStore",7))){
-                                                menu.findItem(R.id.actionSaveSetting).setVisible(false);
-                                            }
-                                            dayStorage = sharedPreferences.getInt(dayStorageTAG,7);
-                                            storageDataValue.setText(text);
-                                        }
-                                        return true;
-                                    }
-                                })
-                        .positiveText(R.string.choose)
-                        .negativeText(R.string.cancel)
-                        .show();
-            }
-        });
-
-    }
-    @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume(){
-        Log.i(TAG, "onResume");
-        super.onResume();
+                        })
+                .positiveText(R.string.choose)
+                .negativeText(R.string.cancel)
+                .show();
 
     }
 
-    @Override
-    protected void onPause() {
-        Log.i(TAG, "onPause");
-        super.onPause();
-    }
 
-    @Override
-    protected void onStop() {
-        Log.i(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart(){
-        Log.i(TAG, "onRestart");
-        super.onRestart();
-    }
-    @Override
-    protected void onDestroy(){
-        Log.i(TAG, "onDestroy");
-        super.onDestroy();
-        BusProvider.getInstance().unregister(this);
-    }
-    @Override
-    public void onBackPressed() {
-        Log.i(TAG, "onBackPressed");
-        super.onBackPressed();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "onCreateOptionsMenu");
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_done_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_setting, menu);
         menu.findItem(R.id.actionSaveSetting).setVisible(false);
+        this.menu = menu;
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected");
         int id = item.getItemId();
-        if(id == 16908332){
+        if (id == 16908332) {
             onBackPressed();
             return true;
         }
-        if(id== R.id.actionSaveSetting){
-            Log.e(TAG,"onSaveSetting");
-            validateChange();
-            //new ActionListener().mOnReStartActivity.onReStartActivity();
+        if (id == R.id.actionSaveSetting) {
+            Log.e(TAG, "onSaveSetting");
+            onSaveSetting();
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.i(TAG, "onSaveInstanceState");
-        super.onSaveInstanceState(outState);
+
+    private void onSaveSetting() {
+        JsonObject objDetails = new JsonObject();
+        JsonObject objNetPie = new JsonObject();
+
+        if (!(appId.getText().toString().trim().equals(shareData.getAppId()))) {
+            objNetPie.addProperty(ConfigData.appId, appId.getText().toString().trim());
+        }
+        if (!(key.getText().toString().trim().equals(shareData.getAppKey()))) {
+            objNetPie.addProperty(ConfigData.key, key.getText().toString().trim());
+        }
+        if (!(secret.getText().toString().trim().equals(shareData.getAppSecret()))) {
+            objNetPie.addProperty(ConfigData.secret, secret.getText().toString().trim());
+        }
+
+        if(fqPDataValue != shareData.getFqPData()){
+            objDetails.addProperty(ConfigData.fqPData,fqPDataValue);
+        }
+        if(fqPImageValue != shareData.getFqPImage()){
+            objDetails.addProperty(ConfigData.fqPImage,fqPImageValue);
+        }
+        if(fqIDataValue != shareData.getFqIData()){
+            objDetails.addProperty(ConfigData.fqIData,fqIDataValue);
+        }
+        if(fqShowerValue != shareData.getFqShower()){
+            objDetails.addProperty(ConfigData.fqShower,fqShowerValue);
+        }
+        if(ageDataValue != shareData.getAgeData()){
+            objDetails.addProperty(ConfigData.ageData,ageDataValue);
+        }
+        if(swAutoMode.isChecked() != shareData.isAutoMode()){
+            objDetails.addProperty(ConfigData.autoMode,swAutoMode.isChecked());
+        }
+
+        if(onSaveSettingListener != null){
+            onSaveSettingListener.onSaveSettingListener(objNetPie,objDetails);
+        }
+
+
+
 
     }
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(TAG, "onRestoreInstanceState");
 
-    }
-    public Context getContextManual(){
+
+    private Context getContext() {
         return this;
     }
 
-    public void validateChange(){
-        Log.e(TAG,"validateChange");
-        boolean changeNETPIE = false;
-        boolean changeDetails = false;
-        JsonObject objDetails = new JsonObject();
-        JsonObject objNETPIE = new JsonObject();
-        if(!textViewAppID.getText().toString().trim()
-                .equals(sharedPreferences.getString(appIdTAG,"no directory"))){
-            //editor.putString("appID",textViewAppID.getText().toString().trim());
-            objNETPIE.addProperty(appIdTAG,textViewAppID.getText().toString().trim());
-            changeNETPIE = true;
+    private boolean validChange() {
+        boolean result = true;
+        if (shareData.getAppId().equals(appId.getText().toString().trim())) {
+            if (shareData.getAppKey().equals(key.getText().toString().trim())) {
+                if (shareData.getAppSecret().equals(secret.getText().toString().trim())) {
+                    if (shareData.getFqPData() == fqPDataValue) {
+                        if (shareData.getFqPImage() == fqPImageValue) {
+                            if (shareData.getFqIData() == fqIDataValue) {
+                                if (shareData.getFqPImage() == fqPImageValue) {
+                                    if (shareData.getFqShower() == fqShowerValue) {
+                                        if (shareData.getAgeData() == ageDataValue) {
+                                            if (shareData.isAutoMode() == swAutoMode.isChecked()) {
+                                                menu.findItem(R.id.actionSaveSetting).setVisible(false);
+                                                result = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if(!textViewAppKey.getText().toString().trim()
-                .equals(sharedPreferences.getString(appKeyTAG,"no directory"))){
-            //editor.putString("appKey",textViewAppKey.getText().toString().trim());
-            objNETPIE.addProperty(appKeyTAG,textViewAppKey.getText().toString().trim());
-            changeNETPIE = true;
+        if (result) {
+            menu.findItem(R.id.actionSaveSetting).setVisible(true);
         }
-        if(!textViewAppSecret.getText().toString().trim()
-                .equals(sharedPreferences.getString(appSecretTAG,"no directory"))){
-            //editor.putString("appSecret",textViewAppSecret.getText().toString().trim());
-            objNETPIE.addProperty(appSecretTAG,textViewAppSecret.getText().toString().trim());
-            changeNETPIE = true;
+        return result;
+    }
+
+    private int getIndicatorFromValue(int value, int arrId) {
+        int result = 0;
+        if (arrId == R.array.fqPDataArray) {
+            if (value == 1) {
+                result = 0;
+            } else if (value == 5) {
+                result = 1;
+            } else if (value == 10) {
+                result = 2;
+            } else if (value == 20) {
+                result = 3;
+            } else if (value == 30) {
+                result = 4;
+            }
+        } else if (arrId == R.array.fqPImageArray) {
+            if (value == 1) {
+                result = 0;
+            } else if (value == 2) {
+                result = 1;
+            } else if (value == 3) {
+                result = 2;
+            } else if (value == 6) {
+                result = 3;
+            } else if (value == 12) {
+                result = 4;
+            }
+        } else if (arrId == R.array.fqIDataArray) {
+            if (value == 1) {
+                result = 0;
+            } else if (value == 2) {
+                result = 1;
+            } else if (value == 3) {
+                result = 2;
+            } else if (value == 6) {
+                result = 3;
+            } else if (value == 12) {
+                result = 4;
+            }
+        } else if (arrId == R.array.fqShowerArray) {
+            if (value == 0) {
+                result = 0;
+            } else if (value == 1) {
+                result = 1;
+            } else if (value == 5) {
+                result = 2;
+            } else if (value == 10) {
+                result = 3;
+            } else if (value == 15) {
+                result = 4;
+            } else if (value == 20) {
+                result = 4;
+            }
+        } else if (arrId == R.array.ageDataArray) {
+            if (value == 1) {
+                result = 0;
+            } else if (value == 2) {
+                result = 1;
+            } else if (value == 3) {
+                result = 2;
+            }
         }
 
-        changeDetails = true;
-        objDetails.addProperty(fqPubRawDataTAG,fqPubRawData);
-        objDetails.addProperty(fqInsertRawDataTAG,fqInsertRawData);
-        objDetails.addProperty(dayStorageTAG,dayStorage);
-        objDetails.addProperty("autoMode",swAutoMode.isChecked());
-        objDetails.addProperty("fqPubImage",sharedPreferences.getInt("fqPubImage",1));
-        new ActionListener().onSaveSetting.onSaveSetting(
-                changeNETPIE,
-                changeDetails,
-                objNETPIE,
-                objDetails
-        );
-    }
-    public int getValueSendDataFromWhich(int which){
-        if(which == 0){
-            return 1;
-        }
-        else if(which == 1){
-            return 5;
-        }
-        else if(which == 2){
-            return 10;
-        }
-        else if(which == 3){
-            return 20;
-        }
-        else if(which == 4){
-            return 30;
-        }
-        else if(which == 5){
-            return 60;
-        }else {
-            return 1;
-        }
+        return result;
 
     }
-    public int getWhichFromSendData(int sendData){
-        if(sendData == 1){
-            return 0;
+
+    private int getValueFromIndicator(int indicator, int arrId) {
+        int result = 1;
+        if (arrId == R.array.fqPDataArray) {
+            if (indicator == 0) {
+                result = 1;
+            } else if (indicator == 1) {
+                result = 5;
+            } else if (indicator == 2) {
+                result = 10;
+            } else if (indicator == 3) {
+                result = 20;
+            } else if (indicator == 4) {
+                result = 30;
+            }
+        } else if ((arrId == R.array.fqPImageArray) || (arrId == R.array.fqIDataArray)) {
+            if (indicator == 0) {
+                result = 1;
+            } else if (indicator == 1) {
+                result = 2;
+            } else if (indicator == 2) {
+                result = 3;
+            } else if (indicator == 3) {
+                result = 6;
+            } else if (indicator == 4) {
+                result = 12;
+            }
+        } else if (arrId == R.array.fqShowerArray) {
+            if (indicator == 0) {
+                result = 0;
+            } else if (indicator == 1) {
+                result = 1;
+            } else if (indicator == 2) {
+                result = 5;
+            } else if (indicator == 3) {
+                result = 10;
+            } else if (indicator == 4) {
+                result = 15;
+            } else if (indicator == 5) {
+                result = 20;
+            }
+        } else if (arrId == R.array.ageDataArray) {
+            if (indicator == 0) {
+                result = 1;
+            } else if (indicator == 1) {
+                result = 2;
+            } else if (indicator == 2) {
+                result = 3;
+            }
         }
-        else if(sendData == 5){
-            return 1;
-        }
-        else if(sendData == 10){
-            return 2;
-        }
-        else if(sendData == 20){
-            return 3;
-        }
-        else if(sendData == 30){
-            return 4;
-        }
-        else if(sendData == 60){
-            return 5;
-        }else {
-            return 0;
+        return result;
+    }
+
+
+    private void setValue(int value, int arrId) {
+        if (arrId == R.array.fqPDataArray) {
+            fqPDataValue = value;
+        } else if (arrId == R.array.fqPImageArray) {
+            fqPImageValue = value;
+        } else if (arrId == R.array.fqIDataArray) {
+            fqIDataValue = value;
+        } else if (arrId == R.array.fqShowerArray) {
+            fqShowerValue = value;
+        } else if (arrId == R.array.ageDataArray) {
+            ageDataValue = value;
         }
     }
-    public int getValueInsertDataValueFromWhich(int which){
-        if(which == 0){
-            return 1;
-        }
-        else if(which == 1){
-            return 2;
-        }
-        else if(which == 2){
-            return 3;
-        }
-        else if(which == 3){
-            return 6;
-        }
-        else if(which == 4){
-            return 12;
-        }
-        else if(which == 5){
-            return 24;
-        }else {
-            return 1;
-        }
-    }
-    public int getWhichFromInsertDataValue(int insertDataValue){
-        if(insertDataValue == 1){
-            return 0;
-        }
-        else if(insertDataValue == 2){
-            return 1;
-        }
-        else if(insertDataValue == 3){
-            return 2;
-        }
-        else if(insertDataValue == 6){
-            return 3;
-        }
-        else if(insertDataValue == 12){
-            return 4;
-        }
-        else if(insertDataValue == 24){
-            return 5;
-        }else {
-            return 0;
-        }
-    }
-    public int getValueStorageDataValueFromWhich(int which){
-        if(which == 0){
-            return 1;
-        }
-        else if(which == 1){
-            return 2;
-        }
-        else if(which == 2){
-            return 3;
-        }
-        else if(which == 3){
-            return 4;
-        }
-        else if(which == 4){
-            return 5;
-        }
-        else if(which == 5){
-            return 6;
-        }
-        else if(which == 6){
-            return 7;
-        }
-        else {
-            return 1;
-        }
-    }
-    public int getWhichFromStorageDataValue(int storageDataValue){
-        if(storageDataValue == 1){
-            return 0;
-        }
-        else if(storageDataValue == 2){
-            return 1;
-        }
-        else if(storageDataValue == 3){
-            return 2;
-        }
-        else if(storageDataValue == 4){
-            return 3;
-        }
-        else if(storageDataValue == 5){
-            return 4;
-        }
-        else if(storageDataValue == 6){
-            return 5;
-        }
-        else if(storageDataValue == 7){
-            return 6;
-        }
-        else {
-            return 0;
-        }
-    }
+
 
 }

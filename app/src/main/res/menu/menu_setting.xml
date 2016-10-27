@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.rmuti.ecp.smartgarden.setting.SettingActivity">
+
+    <item android:id="@+id/actionSaveSetting"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_done_white"
+        app:showAsAction="ifRoom"
+        android:title="Save" />
+</menu>

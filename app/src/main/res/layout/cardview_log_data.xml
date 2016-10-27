@@ -1,83 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_left_right_gard_view"
-        android:layout_marginRight="@dimen/margin_left_right_gard_view"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/PaddingSpaceXL"
+        android:paddingRight="@dimen/PaddingSpaceXL"
+        android:paddingTop="@dimen/PaddingSpaceXL">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_working"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/MarginSpaceL"
+            android:text="Working"
+            android:textColor="@color/PrimaryText_Black"
+            android:textSize="@dimen/FontSizeM" />
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/MarginSpaceL"
+            android:text="Type"
+            android:textColor="@color/PrimaryText_Black"
+            android:textSize="@dimen/FontSizeM" />
+
+        <TextView
+            android:id="@+id/tv_val_before_after"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_working"
+            android:layout_marginRight="@dimen/MarginSpaceL"
+            android:layout_toLeftOf="@+id/tv_time"
+            android:text="Before, After"
+            android:textColor="@color/SecondaryText_Black"
+            android:textSize="@dimen/FontSizeS" />
 
-            <RelativeLayout
-                android:id="@+id/layout_logData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_working"
+            android:text="19:34 19/12/2012"
+            android:textColor="@color/SecondaryText_Black"
+            android:textSize="@dimen/FontSizeS" />
 
-                <RelativeLayout
-                    android:id="@+id/lo_actionAndType_logData"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_time"
+            android:layout_marginTop="@dimen/PaddingSpaceXL"
+            android:background="@color/Grey_300" />
+    </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/tv_cv_action_logData"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Action"
-                        android:textColor="@color/textColorPrimary"
-                        android:textSize="@dimen/text_size_action_log" />
 
-                    <TextView
-                        android:id="@+id/tv_cv_type_logData"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="bottom"
-                        android:text="type"
-                        android:textSize="@dimen/text_size_action_log" />
+</android.support.v7.widget.CardView>
 
-                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_cv_timeStamp_logData"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lo_actionAndType_logData"
-                    android:layout_marginTop="8dp"
-                    android:text="timeStamp"
-                    android:textSize="@dimen/test_size_time_log" />
-
-                <TextView
-                    android:id="@+id/tv_before_after"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/lo_actionAndType_logData"
-                    android:layout_marginTop="8dp"
-                    android:text="Before-After"
-                    android:textSize="@dimen/test_size_time_log" />
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/layout_logData"
-                android:background="#F0F0F0" />
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>

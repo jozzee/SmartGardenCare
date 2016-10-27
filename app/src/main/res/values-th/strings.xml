@@ -1,180 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ระบบดูแลสวนหย่อม</string>
-    <string name="lineChart">กราฟ</string>
-    <string name="more">เพิ่มเติม</string>
-    <string name="exception">ผิดพลาด!</string>
-    <string name="setting">ตั้งค่า</string>
-    <string name="changeLanguage">เปลี่ยนภาษา</string>
-    <string name="warning">คำเตือน</string>
-    <string name="ok">ตกลง</string>
-    <string name="cancel">ยกเลิก</string>
-    <string name="choose">เลือก</string>
-    <string name="fetching">กำลังโหลดข้อมูล</string>
-    <string name="errorSensorMoisture">เซ็นเซอร์วัดความชื้นในดินผิดพลาด!</string>
-    <string name="errorSensorDHT22">เซ็นเซอร์วัดอุณหภูมิผิดพลาด!</string>
-    <string name="errorSensorBH1750">เซ็นเซอร์วัดความเข้มแสงผิดพลาด!</string>
-    <string name="saveSetting">บันทึกการตั้งค่า</string>
-    <string name="success">สำเร็จ</string>
-    <string name="onSaveSetting">กำลังบันทึกค่า...</string>
-    <string name="water...">กำลังรดน้ำ...</string>
-    <string name="shower...">กำลังฉีดฝักบัว...</string>
-    <string name="openSlat...">กำลังเปิดไม้ระแนง...</string>
-    <string name="closeSlat...">กำลังปิดไม้ระแนง...</string>
-    <string name="notLoadIm">ไม่สามารถดาวน์โหลดรูปภาพได้</string>
-    <string name="PermissionWRITE_EXTERNALDenied">เนื่องจากไม่สามารถเข้าถึงรูปภาพ</string>
-    <string name="loadIMSuccess">โหลดรูปภาพเสร็จแล้ว</string>
-    <string name="waterFalse">น้ำไม่ไหล!</string>
-    <string name="refreshIM">โหลดรูปภาพ...</string>
-    <string name="moistureSensor1">เซนเซอร์วัดความชื้นตัวที่ 1</string>
-    <string name="moistureSensor2">เซนเซอร์วัดความชื้นตัวที่ 2</string>
-    <string name="tempSensor1">เซนเซอร์วัดอุณหภูมิตัวที่ 1</string>
-    <string name="tempSensor2">เซนเซอร์วัดอุณหภูมิตัวที่ 2</string>
-    <string name="lightSensor1">เซนเซอร์วัดแสงตัวที่ 1</string>
-    <string name="lightSensor2">เซนเซอร์วัดแสงตัวที่ 2</string>
-    <string name="autoMode">โหมดอัตโนมัติ</string>
-    <string name="noWateringArea">รดน้ำไม่ตรงพื้นที่</string>
-    <string name="tempNotDecrease">อุณหภูมิไม่ลงหลังจากฉีดฝักบัว</string>
-    <string name="lightInNotDecrease">ค่าความเข้มแสงไม่ลดลงหลังจากปิดไม้ระแนง</string>
-    <string name="onPresent">ตรวจพบอุปกรณ์เชื่อมต่อ Netpie</string>
-    <string name="onAbsent">อุปกรณ์ขาดการเชื่อมต่อ Netpie</string>
-    <string name="SlatIsOpened">ไม้ระแรงเปิดไว้อยู่</string>
-    <string name="SlatIsClosed">ไม้ระแนงปิดไว้แล้ว</string>
-    <string name="moistureBefore">ค่าความชื้นก่อนรดน้ำ</string>
-    <string name="moistureAfter">ค่าความชื้นหลังรดน้ำ</string>
-    <string name="tempBefore">ค่าอุณหภูมิก่อนฉีดฝักบัว</string>
-    <string name="tempAfter">ค่าอุณหภูมิหลังฉีดฝักบัว</string>
-    <string name="lightBefore">ก่อนปิดไม้ระแนง</string>
-    <string name="lightAfter">หลังปิดไม้ระแนง</string>
-    <string name="notTimeToShower">ยังไม่ถึงเวลารดน้ำอีกครั้ง</string>
+    <string name="app_name">สมาร์ท การ์เดน</string>
 
-    <!--set up netpie -->
-    <string name="appId">แอป ไอดี</string>
+    <!-- A -->
+    <string name="appId">ไอดี</string>
     <string name="appKey">คีย์</string>
     <string name="appSecret">ซีเคร็ท</string>
-    <string name="submit">ตกลง</string>
-    <string name="setupNETPIE">ตั้งค่า NETPIE</string>
-    <string name="warningExitSetupNetPie">การตั้งค่า NETPIE ยังไม่สำเร็จ</string>
-
-    <!--image fragment -->
-    <string name="image">รูปภาพ</string>
-    <string name="lastUpdate">เวลาล่าสุด</string>
-    <string name="sendImage">ส่งรูปภาพ</string>
-    <string name="sendImageValue1">ทุก 1 ชั่วโมง</string>
-    <string name="sendImageValue2">ทุก 2 ชั่วโมง</string>
-    <string name="sendImageValue3">ทุก 3 ชั่วโมง</string>
-    <string name="sendImageValue4">ทุก 6 ชั่วโมง</string>
-    <string name="sendImageValue5">ทุก 12 ชั่วโมง</string>
-
-    <!--moisture fragment -->
-    <string name="moisture">ความชื้น</string>
-    <string name="water">รดน้ำ</string>
-    <string name="autoWater">รดน้ำอัตโนมัติ</string>
-    <string name="moistureStandard">ค่าความชื้นมาตรฐาน</string>
-    <string name="unitMoisture"> %</string>
-
-
-    <!--temp fragment -->
-    <string name="temp">อุณหภูมิ</string>
-    <string name="shower">เปิดฝักบัว</string>
-    <string name="autoShower">เปิดฝักบัวอัตโนมัติ</string>
-    <string name="tempStandard">ค่าอุณหภูมิมาตรฐาน</string>
-    <string name="unitTemp"> °C</string>
-
-    <!--light fragment -->
-    <string name="light">ความเข้มแสง</string>
-    <string name="slatOpen">ไม้ระแนงเปิดไว้อยู่</string>
-    <string name="slatHalfClose">ไม้ระแนงถูกปิดไว้ครึ่งหนึ่ง</string>
-    <string name="slatClose">ไม้ระแนงไม่ได้ถูกเปิดไว้</string>
-    <string name="unitLight"> Lux</string>
-    <string name="open">เปิด</string>
-    <string name="close">ปิด</string>
-    <string name="autoSlat">เปิด/ปิด ไม้ระแรงอัตโนมัติ</string>
-    <string name="lightIn">แสงข้างใน</string>
-    <string name="lightOut">แสงจากข้างนอก</string>
-    <string name="before">ก่อน</string>
+    <string name="ageData">ระยะเวลาการเก็บข้อมูล</string>
+    <string name="autoMode">โหมดอัตโนมัติ</string>
+    <string name="accordingToTheSystem">ตามระบบ</string>
     <string name="after">หลัง</string>
 
 
+    <!-- B -->
+    <string name="before">ก่อน</string>
+    <string name="but">แต่</string>
 
-    <!--log fragment -->
-    <string name="log">ประวัติการทำงาน</string>
-    <string name="acCloseSlat">ปิดไม้ระแนง</string>
-    <string name="acOpenSlat">เปิดไม้ระแนง</string>
-    <string name="typeActionAuto">อัตโนมัติ</string>
-    <string name="typeActionManual">โดยผู้ใช้งาน</string>
 
-    <!--setting activity-->
-    <string name="transmissions">การส่งข้อมูล</string>
-    <string name="senDataSensor">ส่งข้อมูลเซนเซอร์</string>
-    <string name="data">ข้อมูล</string>
-    <string name="insertData">เก็บข้อมูลเซนเซอร์</string>
-    <string name="TimeDataStorage">ระยะเวลาการเก็บข้อมูล</string>
-    <string name="every">ทุกๆ</string>
-    <string name="minute">นาที</string>
-    <string name="hour">ชั่วโมง</string>
-    <string name="day">วัน</string>
+    <!-- C -->
+    <string name="closeSlat">ปิดไม้ระแนง</string>
+    <string name="closeSlatSuccess">ปิดไม้ระแนง สำเร็จ</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="change">แก้ไข</string>
+    <string name="choose">เลือก</string>
+    <string name="canNotSaveData">ไม่สามารถบันทึกข้อมูล</string>
+    <string name="canNotFoggy">ยังไม่สามารถฉีดฟ็อกกี้ได้</string>
 
+
+
+    <!-- D -->
+    <string name="days">วัน</string>
+    <string name="details">รายละเอียด</string>
+
+    <!-- E -->
+    <string name="exception">ผิดพลาด</string>
+    <string name="enterKey">กรุณากรอก</string>
     <string name="editAppId">แก้ไข App ID</string>
-    <string name="textHintAppId">กรอก App ID ของคุณ</string>
-    <string name="editAppKey">แก้ไข App Key</string>
-    <string name="textHintAppKey">กรอก App Key ของคุณ</string>
-    <string name="editAppSecret">แก้ไข App Secret</string>
-    <string name="textHintAppSecret">กรอก App secret ของคุณ</string>
-    <string name="frequencySendData">ความถี่ของการส่งข้อมูล</string>
-    <string name="frequencySendImage">ความถี่ในการส่งรูปภาพ</string>
-    <string name="frequencyInsertData">ความถี่ของการเก็บข้อมูล</string>
-    <string name="dayStorageData">ระยะเวลการเก็บข้อมูล</string>
+    <string name="every">ทุก</string>
 
-    <string-array name="ftPubRDArray">
-        <item>ทุกๆ 1 นาที</item>
-        <item>ทุกๆ 5 นาท</item>
-        <item>ทุกๆ 10 นาท</item>
-        <item>ทุกๆ 20 นาท</item>
-        <item>ทุกๆ 30 นาท</item>
-        <item>ทุกๆ 60 นาท</item>
+
+    <!-- F -->
+    <string name="foggy">ฟ็อกกี้</string>
+    <string name="foggySuccess">ฉีดฟ็อกกี้ สำเร็จ</string>
+    <string name="frequency">การตั้งค่าด้านความถี่</string>
+    <string name="frequencyShower">ความถี่ในดารฉีดฟ็อกซี่</string>
+
+
+
+    <!-- G -->
+
+
+    <!-- H -->
+    <string name="history">ประวัติการทำงาน</string>
+    <string name="hour">ชั่วโมง</string>
+
+
+    <!-- I -->
+    <string name="image">รูปภาพ</string>
+    <string name="insertData">บันทึกข้อมูล</string>
+    <string name="incorrectNetPie">กรุณาเช็ค App id,Key,Secret ของคุณ</string>
+
+
+
+    <!-- J -->
+
+    <!-- K -->
+
+    <!-- L -->
+    <string name="lightIntensity">ความเข้มแสง</string>
+    <string name="lightNotDrops">ความเข้มแสงไม่ลดลง</string>
+    <string name="lastUpdate">รับข้อมูลล่าสุด</string>
+    <string name="login">เข้าใช้งาน</string>
+    <string name="loading">กำลังโหลดข้อมูล...</string>
+    <string name="loadingImage">กำลังโหลดรูปภาพ...</string>
+    <string name="lightIn">แสงข้างในไม้ระแรง</string>
+    <string name="lightOut">แสงข้างนอกไม้ระแนง</string>
+
+
+    <!-- M -->
+    <string name="moisture">ความชื้นในดิน</string>
+    <string name="minute">นาที</string>
+    <string name="manualMode">โดยผู้ใช้งาน</string>
+    <string name="moistureNotRising">ความชื้นไม่เพิ่มขึ้น</string>
+
+
+    <!-- N -->
+    <string name="noNetPieData">ไม่มีข้อมูลของ Netpie</string>
+    <string name="noInternet">ไม่มีการเชื่อมต่ออินเตอร์เน็ต</string>
+    <string name="notConnectNetPie">ไม่ได้เชื่อต่อกับ Netpie</string>
+
+
+
+    <!-- O -->
+    <string name="openSlat">เปิดไม้ระแนง</string>
+    <string name="openSlatSuccess">เปิดไม้ระแนง สำเร็จ</string>
+    <string name="ok">ตกลง</string>
+    <string name="on">เปิด</string>
+    <string name="off">ปิด</string>
+    <string name="onSaveSetting">กำลังบันทึกค่า...</string>
+    <string name="onWater">กำลังรถน้ำ....</string>
+    <string name="onFoggy">กำลังฉีด ฟ็อกกี้...</string>
+    <string name="onOpenSlat">กำลังเปิดไม้ระแนง...</string>
+    <string name="onCloseSlat">กำลังปิดไม้ระแนง...</string>
+
+    <!-- P -->
+    <string name="point1">จุดที่ 1</string>
+    <string name="point2">จุดที่ 2</string>
+    <string name="publishData">การส่งข้อมูล</string>
+    <string name="publishImage">การส่งรูปภาพ</string>
+    <string name="piNotResponse">ราชเบอรรี่พาย ไม่ตอบสนอง</string>
+    <string name="permissionDenied">การขออนุญาติถูกปกิเสธ</string>
+
+
+    <!-- Q -->
+
+
+    <!-- R -->
+    <string name="refresh">รีเฟรช...</string>
+
+
+
+    <!-- S -->
+    <string name="setting">ตั้งค่า</string>
+    <string name="setNetpie">ตั้งค่า NETPIE</string>
+    <string name="slatStatus">สถานะของไม้ระแนง</string>
+    <string name="slatOpen">ไม้ระแนงเปิดอยู่</string>
+    <string name="slatClose">ไม้ระแนงถูกปิดไว้</string>
+    <string name="sendData">ส่งข้อมูล</string>
+    <string name="sendImage">ส่งรูปภาพ</string>
+    <string name="sensorError">เซ็นเซอร์ผิดพลาด</string>
+    <string name="standard">มาตรฐาน</string>
+    <string name="success">สำเร็จ</string>
+    <string name="saveSettingSuccess">บัยทึกค่าสำเร็จ</string>
+
+
+    <!-- T -->
+    <string name="temperature">อุณหภูมิ</string>
+    <string name="timeOfFoggy">การฉีดฟ็อกกี้</string>
+    <string name="tryAgain">ลองอีกครั้ง</string>
+    <string name="tempNotDrop">อุณหภูมิไม่ลดลง</string>
+
+
+    <!-- U -->
+    <string name="until">จนถึง</string>
+
+
+    <!-- V -->
+    <string name="version">Version 9.0.0</string>
+    <string name="value">ค่า</string>
+
+    <!-- W -->
+    <string name="water">รดน้ำ</string>
+    <string name="waterSuccess">รถน้ำสำเร็จ</string>
+    <string name="warning">คำเตือน</string>
+    <string name="warningExitSetNetPie">การตั้งค่ายังไม่เสร็จสิ้น</string>
+    <string name="waterFalse">น้ำไม่ไหล!</string>
+
+
+    <!-- X -->
+
+
+    <!-- Y -->
+
+    <!-- Z -->
+
+    <string-array name="fqPDataArray">
+        <item>ทุก 1 นาที</item>
+        <item>ทุก 5 นาท</item>
+        <item>ทุก 10 นาท</item>
+        <item>ทุก 20 นาท</item>
+        <item>ทุก 30 นาท</item>
     </string-array>
-    <string-array name="ftPubIM_IRDArray">
-        <item>ทุกๆ 1 ชั่วโมง</item>
-        <item>ทุกๆ 2 ชั่วโมง</item>
-        <item>ทุกๆ 3 ชั่วโมง</item>
-        <item>ทุกๆ 6 ชั่วโมง</item>
-        <item>ทุกๆ 12 ชั่วโมง</item>
-        <item>ทุกๆ 24 ชั่วโมง</item>
+    <string-array name="fqPImageArray">
+        <item>ทุก 1 ชั่วโมง</item>
+        <item>ทุก 2 ชั่วโมง</item>
+        <item>ทุก 3 ชั่วโมง</item>
+        <item>ทุก 6 ชั่วโมง</item>
+        <item>ทุก 12 ชั่วโมง</item>
     </string-array>
-    <string-array name="dayOfStorageArray">
+    <string-array name="fqIDataArray">
+        <item>ทุก 1 ชั่วโมง</item>
+        <item>ทุก 2 ชั่วโมง</item>
+        <item>ทุก 3 ชั่วโมง</item>
+        <item>ทุก 6 ชั่วโมง</item>
+        <item>ทุก 12 ชั่วโมง</item>
+    </string-array>
+    <string-array name="ageDataArray">
         <item>1 วัน</item>
         <item>2 วัน</item>
         <item>3 วัน</item>
-        <item>4 วัน</item>
-        <item>5 วัน</item>
-        <item>6 วัน</item>
-        <item>7 วัน</item>
-    </string-array>
-    <string-array name="titleTable">
-        <item>เวลา</item>
-        <item>การทำงาน</item>
-        <item>ประเภท</item>
-        <item>ก่อน</item>
-        <item>หลัง</item>
-        <item>*หมายเหต</item>
     </string-array>
 
 
-    <!--listener-->
-    <string name="notSetupNETPIE">ไม่มีการตั้งค่า NETPIE</string>
-    <string name="noInternet">ไม่มีการเชื่อมต่ออินเตอร์เน็ต</string>
-    <string name="notConnectedNETPIE">ไม่สามารถเชื่อมต่อ NETPIE</string>
-    <string name="connectionLost">ไม่มีการเชื่อมต่อ</string>
-    <string name="connectedNETPIE">เชื่อมต่อ NETPIE แล้ว</string>
 
-    <!--notification-->
-    <string name="piNotResponse">Raspberry Pi ไม่ตอบสนอง</string>
-
-    <!--setting activity-->
-    <string name="logMoisture">ประวัติค่าความชื้นในดิน</string>
-    <string name="logTemp">ประวัติค่าอุณหภูมิ</string>
-    <string name="logLight">ประวัติค่าความเข้มแสง</string>
 
 
 </resources>

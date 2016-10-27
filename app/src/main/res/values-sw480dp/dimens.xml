@@ -1,0 +1,57 @@
+<resources>
+    
+	<!--
+         Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw480dp devices (e.g. 5" ) Portrait here.
+    -->
+    
+    <dimen name="bar_cursor">5dp</dimen>
+    <dimen name="menu_padding">-10dp</dimen>
+    
+    <!-- Default Font Style -->
+    <dimen name="FontSize5S">10sp</dimen>
+    <dimen name="FontSizeSSS">14sp</dimen>
+    <dimen name="FontSizeSS">16sp</dimen>
+    <dimen name="FontSizeS">18sp</dimen>
+    <dimen name="FontSizeM">20sp</dimen>
+    <dimen name="FontSizeL">22sp</dimen>
+    <dimen name="FontSizeXL">24sp</dimen>
+    <dimen name="FontSizeXXL">26sp</dimen>
+    <dimen name="FontSizeXXXL">28sp</dimen>
+    <dimen name="FontSize5XL">32sp</dimen>
+    
+    <!-- ListView Dimension -->
+    <dimen name="PaddingSpaceSS">3dp</dimen>
+    <dimen name="PaddingSpaceS">5dp</dimen>
+    <dimen name="PaddingSpace">7dp</dimen>
+    <dimen name="PaddingSpaceL">12dp</dimen>
+    <dimen name="PaddingSpaceXL">17dp</dimen>
+    <dimen name="PaddingSpaceXXL">22dp</dimen>
+    <dimen name="PaddingSpace3XL">27dp</dimen>
+    <dimen name="PaddingSpace4XL">32dp</dimen>
+    <dimen name="MarginSpaceSS">2dp</dimen>
+    <dimen name="MarginSpaceS">5dp</dimen>
+    <dimen name="MarginSpace">10dp</dimen>
+    <dimen name="MarginSpaceL">15dp</dimen>
+    <dimen name="MarginSpaceXL">20dp</dimen>
+    <dimen name="MarginSpaceXXL">25dp</dimen>
+    <dimen name="WatchlistPageHeight">165dp</dimen>
+
+    <dimen name="XCalenRing">15dp</dimen>
+    <dimen name="XCalenCircle">17dp</dimen>
+
+    <!-- dateTitleLayout -->
+    <dimen name="dateTitleTextSize">@dimen/FontSizeM</dimen>
+    <dimen name="dateTitlePaddingBottom">@dimen/PaddingSpaceS</dimen>
+    <!-- weekLayout -->
+    <dimen name="weekDaysPaddingBottom">0dp</dimen>
+    <dimen name="dayOfWeekTextSize">@dimen/FontSizeS</dimen>
+    <!-- weekRowLayout -->
+    <dimen name="weekRowMinHeight">@dimen/PaddingSpaceXXL</dimen>
+    <dimen name="dayOfMonthTextSize">@dimen/FontSizeS</dimen>
+    <dimen name="dayOfMonthMinWidth">50dp</dimen>
+    <dimen name="dayOfMonthMinHeight">0dp</dimen>
+    <dimen name="dayOfMonthPaddingBottom">0dp</dimen>
+    <dimen name="dayOfMonthImageSize">4dp</dimen>
+    <dimen name="dayOfMonthImageMarginTop">@dimen/PaddingSpaceXXL</dimen>
+</resources>

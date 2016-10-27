@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Line Chart</title>
+		<style text="text/javascript">
+        body { padding:0px; margin:0px; }
+
+    </style>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript">
+			var chart;
+			//var testDataObject = {"name":"Moisture",
+			//											"categories":["09:00 20 Oct","10:00 20 Oct","11:00 20 Oct","12:00 20 Oct","13:00 20 Oct","14:00 20 Oct","15:00 20 Oct","16:00 20 Oct","17:00 20 Oct","18:00 20 Oct"],
+			//											"colorSet":['#F44336','#2196F3','#4CAF50','#FF9800'],
+			//											"sensorData":[{"name":"point1","data":[42.44,44.31,40.56,43.67,45.77,49.35,51.98,48.78,54.66,47.62]},
+			//																		{"name":"point2","data":[44.44,45.32,41.56,42.67,44.77,51.35,52.98,45.78,55.66,46.62]}],
+			//											"max":100,
+			//											"min":0,
+			//											"unit":" %"
+			//											};
+
+			$( document ).ready(function() {
+					//createChart(testDataObject);
+			});
+			function createChart(jsonObj){
+				//var colorSet = jsonObj["colorSet"];
+				var colorSet = ['#F44336','#2196F3','#4CAF50','#FF9800'];
+				var categories = jsonObj["categories"];
+				var data = jsonObj["sensorData"];
+				var max = jsonObj["max"];
+				var min = jsonObj["min"];
+				var unit = jsonObj["unit"];
+				var yAxisTitle = jsonObj["name"] +" (" +unit +")";
+				//alert(colorSet);
+				var options = {
+					chart: {
+						backgroundColor: '#FAFAFA',
+					},
+					title: {
+						text: jsonObj["name"],
+						x: -20 //center
+					},
+					// title: {
+					// 	//verticalAlign: 'middle',
+					// 	//floating: true,
+					// 	//text: 'My custom title'
+					// 	text: '',
+					// 	style: {
+					// 		display: 'none'
+					// 	}
+					// },
+					// subtitle: {
+					// 	text: 'Source: WorldClimate.com',
+					// 	x: -20
+					// },
+					credits: {
+						enabled: false
+					},
+					colors: colorSet,
+					xAxis: {
+						//categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+						//	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+						categories: []
+					},
+					yAxis: {
+						title: {
+							text: yAxisTitle
+						},
+						plotLines: [{
+							value: 0,
+							width: 1,
+							color: '#808080'
+						}],
+						"min": min,
+						"max": max,
+					},
+					tooltip: {
+						valueSuffix: unit
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle',
+						borderWidth: 0
+					},
+					// series: [
+					// 	{
+					// 		name: 'Tokyo',
+					// 		data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+					// 	},
+					// 	{
+					// 		name: 'New York',
+					// 		data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+					// 	},
+					// 	{
+					// 		name: 'Berlin',
+					// 		data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+					// 	},
+					// 	{
+					// 		name: 'London',
+					// 		data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+					// 	}],
+					series: [],
+						responsive: {
+							rules: [{
+								condition: {
+										maxWidth: 500
+								},
+								chartOptions: {
+										legend: {
+												align: 'center',
+												verticalAlign: 'bottom',
+												layout: 'horizontal'
+										},
+										yAxis: {
+												labels: {
+														align: 'left',
+														x: 0,
+														y: -5
+												},
+												title: {
+														text: null
+												}
+										},
+										subtitle: {
+												text: null
+										},
+										credits: {
+												enabled: false
+										}
+								}
+							}]
+						}
+					};
+					for(var i = 0;i<categories.length;i++){
+						options.xAxis.categories.push(categories[i]);
+					}
+					for(var i= 0;i<data.length;i++){
+						//alert(data[i]["name"]
+						options.series.push(data[i]);
+					}
+					chart = $('#container').highcharts(options);
+				}
+		</script>
+	</head>
+	<body style="background:#FAFAFA">
+		<div id="container" style="height:100%;width:100%;position:absolute;"></div>
+		<!--<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
+		<script type="text/javascript" src="js/highcharts.js"></script>
+		<!--<script type="text/javascript" src="js/exporting.js"></script>-->
+	</body>
+</html>

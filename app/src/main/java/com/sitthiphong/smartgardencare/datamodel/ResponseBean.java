@@ -1,7 +1,7 @@
 package com.sitthiphong.smartgardencare.datamodel;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.sitthiphong.smartgardencare.provider.GsonProvider;
 
 /**
  * Created by Sitthiphong on 7/21/2016 AD.
@@ -18,7 +18,7 @@ public class ResponseBean {
     }
 
     public ResponseBean(String payload) {
-        JsonObject object = GsonProvider.getInstance().fromJson(payload,JsonObject.class);
+        JsonObject object = new Gson().fromJson(payload,JsonObject.class);
         if(object.get("topic")!= null){
             this.topic = object.get("topic").getAsString();
         }

@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".service.NetworkChangeReceiver" >
+        <receiver android:name=".service.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -33,6 +33,7 @@
                 <category android:name="com.sitthiphong.smartgardencare" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".service.GcmDownstreamService"
             android:exported="false">
@@ -40,7 +41,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".service.GcmTokenRefreshService"
             android:exported="false">
@@ -48,10 +48,10 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
         <service
             android:name=".service.GcmRegisterService"
             android:exported="false" />
+
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
@@ -61,11 +61,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.SetupNETPIEActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.MoreActivity" />
         <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.HistoryActivity" />
+        <activity android:name=".activity.DetailsActivity"></activity>
     </application>
 
 </manifest>
