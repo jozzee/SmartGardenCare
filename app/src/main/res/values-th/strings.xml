@@ -88,6 +88,7 @@
     <string name="noNetPieData">ไม่มีข้อมูลของ Netpie</string>
     <string name="noInternet">ไม่มีการเชื่อมต่ออินเตอร์เน็ต</string>
     <string name="notConnectNetPie">ไม่ได้เชื่อต่อกับ Netpie</string>
+    <string name="noWateringArea">รถน้ำไม่ตรงพื้นที่สวนหย่อม</string>
 
 
 
