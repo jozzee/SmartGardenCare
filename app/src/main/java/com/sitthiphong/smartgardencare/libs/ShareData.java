@@ -172,15 +172,12 @@ public class ShareData {
         spEditor.putInt(ConfigData.ligStd,ligStd);
         spEditor.commit();
     }
-    public boolean isThLang(){
-        return Locale.getDefault().getDisplayLanguage().equals("ไทย");
-    }
-    public void setLang(int lang){
-        spEditor.putInt("lang",lang);
+    public void setLang(String lang){
+        spEditor.putString("language",lang);
         spEditor.commit();
     }
-    public int getLang(){
-        return sp.getInt("lang",ConfigData.LANG_EN);
+    public String getLang(){
+        return sp.getString("language","en");
     }
 
     public String getPreferencesAsObjString() {

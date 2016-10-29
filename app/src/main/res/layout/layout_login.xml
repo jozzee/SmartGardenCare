@@ -15,12 +15,12 @@
 
         <ImageView
             android:id="@+id/logoNETPIE"
-            android:layout_width="128dp"
+            android:layout_width="256dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
             android:gravity="center"
-            android:src="@drawable/app_logo" />
+            android:src="@drawable/app_logo_new" />
 
 
     </RelativeLayout>
@@ -117,5 +117,14 @@
         android:text="@string/login"
         android:textColor="@color/White"
         android:textSize="@dimen/FontSizeM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/version"
+        android:textColor="@color/White"
+        android:layout_marginBottom="@dimen/MarginSpace"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

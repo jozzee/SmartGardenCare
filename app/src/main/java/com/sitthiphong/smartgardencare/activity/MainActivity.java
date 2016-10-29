@@ -1,26 +1,36 @@
 package com.sitthiphong.smartgardencare.activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,11 +56,11 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.DetectedActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jozziga.microgear.Microgear;
 import com.jozziga.microgear.MicrogearEventListener;
+import com.sitthiphong.smartgardencare.BuildConfig;
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
@@ -66,55 +76,50 @@ import com.sitthiphong.smartgardencare.libs.MyTextWatcher;
 import com.sitthiphong.smartgardencare.libs.ShareData;
 import com.sitthiphong.smartgardencare.listener.OnSaveSettingListener;
 import com.sitthiphong.smartgardencare.listener.SetStandListener;
-import com.sitthiphong.smartgardencare.listener.UpdateImageListener;
-import com.sitthiphong.smartgardencare.listener.UpdateRawDataListener;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 import com.sitthiphong.smartgardencare.service.RestApiNetPie;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements
-        UpdateRawDataListener,
-        UpdateImageListener,
         OnSaveSettingListener,
         SetStandListener.OnSetStandardListener {
-    private final String TAG = "MainActivity";
-    private UpdateRawDataListener updateRawDataListener = null;
-    //private SetStandListener.Result resultSetStandard = null;
 
-    private boolean isReceiverRegistered;
+    private final String TAG = "MainActivity";
     private CoordinatorLayout rootLayout;
     private Toolbar toolbar;
-    private MicroGearCallBack callBack;
     private SwipeRefreshLayout refreshLayout;
-    private NestedScrollView scrollView;
-    private ImageView image;
-    private RelativeLayout moistureLayout, templayout, lightLatout;
-    private TextView moistureValue, tempValue, lightValue, lsatUpdateValue, slatStatus;
+    private ImageView image, btnLoadIm;
+    private RelativeLayout moistureLayout, tempLayout, lightLayout;
+    private TextView moistureValue, tempValue, lightValue, lsatUpdateValue, slatStatus, exception;
     private Button btnWater, btnFoggy, btnSlat, history;
     private ProgressDialog progressDialog;
+    private ProgressBar progressBar, progressBarImage;
+    private Bitmap bitmap;
+    private Menu menu;
+
+    private ShareData shareData;
     private RawDataBean rawDataBean;
     private ResponseBean responseBean;
-    private TextView exception;
-    private ProgressBar progressBar, progressBarImage;
-    private ShareData shareData;
-    private Bitmap bitmap;
-
-
     private PublishBean publishBean;
+
     private Handler publishHandle;
-    private Runnable publistask;
-    private Handler checkConnectNetPieHandler;
-    private Runnable checkConnectNetPieRunnable;
+    private Runnable publishTask;
+
+    private MicroGearCallBack callBack;
     private Microgear microgear = new Microgear(this);
-    private String appId = "SmartGardenCare"; //APP_ID
-    private String key = "L8LswNXzRY9nalS"; //KEY
-    private String secret = "KcysynAOjLxZ3BkGzqSq4WvSA"; //SECRET
-    private String alias = "android";
+
+    private boolean isReceiverRegistered;
     private boolean isConnectNetPie;
 
 
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     if (publishHandle != null) {
                         Log.e(TAG, "remove task");
-                        publishHandle.removeCallbacks(publistask);
+                        publishHandle.removeCallbacks(publishTask);
                     }
 
                     if ((publishBean != null) && (publishBean.getTopic() != null)) {
@@ -381,15 +386,17 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setSplashScreen();
 
         shareData = new ShareData(this);
         shareData.createSharePreference();
+
+        LocaleHelper.setLanguage(this, shareData.getLang());
+
+        setSplashScreen();
 
         registerReceiver();
         if (checkPlayServices()) {
@@ -460,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements
         if (microgear != null) {
             microgear.disconnect();
         }
-        if(bitmap != null){
+        if (bitmap != null) {
             bitmap.recycle();
         }
 
@@ -476,6 +483,13 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "onCreateOptionsMenu");
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
+        MenuItem chLang = menu.findItem(R.id.actionChangeLang);
+        if (shareData.getLang().equals(ConfigData.TH_LANG)) {
+            chLang.setTitle(getString(R.string.engLang));
+        } else {
+            chLang.setTitle(getString(R.string.thaiLang));
+        }
         return true;
     }
 
@@ -488,8 +502,20 @@ public class MainActivity extends AppCompatActivity implements
             onBackPressed();
             return true;
         } else if (id == R.id.actionSetting) {
-            SettingActivity.onSaveSettingListener = getSettingListener();
+            SettingActivity.onSaveSettingListener = getSvaeSettingListener();
             startActivity(new Intent(getContext(), SettingActivity.class));
+        } else if (id == R.id.actionChangeLang) {
+            if (shareData.getLang().equals(ConfigData.TH_LANG)) {
+                shareData.setLang(ConfigData.EN_LANG);
+                LocaleHelper.setLanguage(getContext(), shareData.getLang());
+                reStartActivity();
+                //recreate();
+            } else {
+                shareData.setLang(ConfigData.TH_LANG);
+                LocaleHelper.setLanguage(getContext(), shareData.getLang());
+                reStartActivity();
+                //recreate();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -499,7 +525,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         Log.i(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        //mBottomBar.onSaveInstanceState(outState);
     }
 
     @Override
@@ -507,36 +532,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.i(TAG, "onRestoreInstanceState");
     }
 
-    /*private void setMainScreen() {
-        Log.e(TAG, "setMainScreen");
-
-        if (isConnectNetPie) {
-
-        } else {
-
-            setException(getString(R.string.noNetPieData));
-        }
-
-        if (checkNetPie()) {
-            if (isConnectInternet(this)) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        exception.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-                });
-                connectNetPie();
-            } else {
-
-                setException(getString(R.string.noInternet));
-            }
-
-        } else {
-
-        }
-    }*/
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // refresh your views here
+        super.onConfigurationChanged(newConfig);
+    }
 
     private synchronized void setSplashScreen() {
         Log.e(TAG, "setSplashScreen");
@@ -557,16 +557,17 @@ public class MainActivity extends AppCompatActivity implements
 
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
-        scrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
         image = (ImageView) findViewById(R.id.image_garden);
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
                 magScreen.getWidthGardenImage(), magScreen.getHeightGardenImage());
         image.setLayoutParams(param);
+        btnLoadIm = (ImageView) findViewById(R.id.btn_load_im);
+        btnLoadIm.setVisibility(View.GONE);
 
         moistureLayout = (RelativeLayout) findViewById(R.id.moisture_layout);
-        templayout = (RelativeLayout) findViewById(R.id.temp_layout);
-        lightLatout = (RelativeLayout) findViewById(R.id.light_layout);
+        tempLayout = (RelativeLayout) findViewById(R.id.temp_layout);
+        lightLayout = (RelativeLayout) findViewById(R.id.light_layout);
 
         moistureValue = (TextView) findViewById(R.id.moisture_value);
         tempValue = (TextView) findViewById(R.id.temp_value);
@@ -600,7 +601,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        templayout.setOnClickListener(new View.OnClickListener() {
+        tempLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (rawDataBean != null) {
@@ -609,7 +610,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        lightLatout.setOnClickListener(new View.OnClickListener() {
+        lightLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (rawDataBean != null) {
@@ -656,11 +657,34 @@ public class MainActivity extends AppCompatActivity implements
 
                 } else if (btnSlat.getText().toString().trim().equals(getString(R.string.closeSlat))) {
 
-                    controlsDevices("4", getString(R.string.onOpenSlat));
+                    controlsDevices("4", getString(R.string.onCloseSlat));
                 }
             }
         });
+        btnLoadIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if(isPermissionWriteExternal()){
+                        new SaveIMTask().execute(bitmap);
+                    }else{
+                        requestPermissionWriteExternal();
+                    }
+                }else{
+                    new SaveIMTask().execute(bitmap);
+                }
 
+            }
+        });
+
+    }
+
+    private void startDetailsActivity(String sensor, String data) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("sensor", sensor);
+        intent.putExtra("data", data);
+        startActivity(intent);
+        MagDiscreteSeekBar.setOnSetStandardListener(this);
     }
 
     private void controlsDevices(String payload, String messageDialog) {
@@ -687,42 +711,16 @@ public class MainActivity extends AppCompatActivity implements
                     shareData.getAppId(),
                     shareData.getAppKey(),
                     shareData.getAppSecret(),
-                    alias);
-            //microgear.subscribe(ConfigData.preferencesTopic);
+                    "android");
             microgear.subscribe(ConfigData.rawDataTopic);
             microgear.subscribe(ConfigData.hasPhotoTopic);
             microgear.subscribe(ConfigData.slatStatusTopic);
             microgear.subscribe(ConfigData.responsesTopic);
-           /* checkConnectNetPieHandler = new Handler();
-            checkConnectNetPieRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    setMainScreen();
-                }
-            };
-            checkConnectNetPieHandler.postDelayed(checkConnectNetPieRunnable, 10000);*/
-
         } catch (NullPointerException e) {
             e.printStackTrace();
-            callBack.onError("Error on connect NETPIE");
-            Log.e(TAG, "Error on connect NETPIE 7777777777");
-
+            callBack.onError(getString(R.string.noNetPieData));
         }
-
     }
-
-   /* private void setExceptionScreen(final String error) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setContentView(R.layout.except_screen);
-                TextView except = (TextView) findViewById(R.id.exception);
-                except.setText(error);
-            }
-        });
-
-
-    }*/
 
     private void setException(String error) {
         refreshLayout.setVisibility(View.GONE);
@@ -740,70 +738,9 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void startDetailsActivity(String sensor, String data) {
-
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("sensor", sensor);
-        intent.putExtra("data", data);
-        startActivity(intent);
-        MagDiscreteSeekBar.setOnSetStandardListener(this);
-
-    }
-
-
     private Context getContext() {
         return this;
     }
-
-    @Override
-    public void updateImageListener() {
-
-    }
-
-    @Override
-    public void updateRawDataListener(RawDataBean rawDataBean) {
-
-    }
-
-    @Override
-    public void onSaveSettingListener(JsonObject objNetPie, JsonObject objDetails) {
-        Log.i(TAG, "onSaveSettingListener");
-        if ((objNetPie.size() > 0) && (objDetails.size() > 0)) {
-            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
-            saveNetPie(objNetPie);
-            saveDetails(objDetails);
-            shareData.putSendPrefer();
-            reStartActivity();
-        } else if (objNetPie.size() > 0) {
-            saveNetPie(objNetPie);
-            reStartActivity();
-        } else if (objDetails.size() > 0) {
-            if (objDetails.get(ConfigData.fqPData) == null) {
-                objDetails.addProperty(ConfigData.fqPData, shareData.getFqPData());
-            }
-            if (objDetails.get(ConfigData.fqPImage) == null) {
-                objDetails.addProperty(ConfigData.fqPImage, shareData.getFqPImage());
-            }
-            if (objDetails.get(ConfigData.fqIData) == null) {
-                objDetails.addProperty(ConfigData.fqIData, shareData.getFqIData());
-            }
-            if (objDetails.get(ConfigData.fqShower) == null) {
-                objDetails.addProperty(ConfigData.fqShower, shareData.getFqShower());
-            }
-            if (objDetails.get(ConfigData.ageData) == null) {
-                objDetails.addProperty(ConfigData.ageData, shareData.getAgeData());
-            }
-            if (objDetails.get(ConfigData.autoMode) == null) {
-                objDetails.addProperty(ConfigData.autoMode, shareData.isAutoMode());
-            }
-            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
-
-            publish(ConfigData.setDetailsTopic,
-                    new Gson().toJson(objDetails),
-                    getResources().getString(R.string.onSaveSetting));
-        }
-    }
-
 
     private void onSubscribeCallBack(SubscribeBean result) {
         if (result != null) {
@@ -814,23 +751,16 @@ public class MainActivity extends AppCompatActivity implements
                     bitmap = imageBean.getBitmap();
                     image.setImageBitmap(bitmap);
                     progressBarImage.setVisibility(View.GONE);
+                    Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+                    fadeIn.setDuration(750);
+                    image.startAnimation(fadeIn);
+                    btnLoadIm.setVisibility(View.VISIBLE);
                 }
 
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
-    }
-    private void setAnimation(TextView textView){
-        AnimationSet set = new AnimationSet(true);
-        TranslateAnimation trAnimation = new TranslateAnimation(0,0,textView.getHeight(),0);
-        trAnimation.setDuration(500);
-        trAnimation.setFillAfter(true);
-        set.addAnimation(trAnimation);
-        Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-        fadeIn.setDuration(750);
-        set.addAnimation(fadeIn);
-        textView.startAnimation(set);
     }
 
     private void updateRawData(final RawDataBean bean) {
@@ -872,21 +802,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-
-
-    }
-
-    private String getDateTime(long time) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-            Date date = (new Date(time));
-            return dateFormat.format(date);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-
     }
 
     private void updateSlatStatus(int status) {//0 is close , 1 is open
@@ -899,10 +814,78 @@ public class MainActivity extends AppCompatActivity implements
             slatStatus.setText(getString(R.string.slatOpen));
             btnSlat.setText(getString(R.string.closeSlat));
         }
-
-
     }
 
+    private void setAnimation(TextView textView) {
+        AnimationSet set = new AnimationSet(true);
+        TranslateAnimation trAnimation = new TranslateAnimation(0, 0, textView.getHeight(), 0);
+        trAnimation.setDuration(500);
+        trAnimation.setFillAfter(true);
+        set.addAnimation(trAnimation);
+        Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(750);
+        set.addAnimation(fadeIn);
+        textView.startAnimation(set);
+    }
+
+    @Override
+    public void onSaveSettingListener(JsonObject objNetPie, JsonObject objDetails) {
+        Log.i(TAG, "onSaveSettingListener");
+        if ((objNetPie.size() > 0) && (objDetails.size() > 0)) {
+            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
+            saveNetPie(objNetPie);
+            saveDetails(objDetails);
+            shareData.putSendPrefer();
+            reStartActivity();
+        } else if (objNetPie.size() > 0) {
+            saveNetPie(objNetPie);
+            reStartActivity();
+        } else if (objDetails.size() > 0) {
+            if (objDetails.get(ConfigData.fqPData) == null) {
+                objDetails.addProperty(ConfigData.fqPData, shareData.getFqPData());
+            }
+            if (objDetails.get(ConfigData.fqPImage) == null) {
+                objDetails.addProperty(ConfigData.fqPImage, shareData.getFqPImage());
+            }
+            if (objDetails.get(ConfigData.fqIData) == null) {
+                objDetails.addProperty(ConfigData.fqIData, shareData.getFqIData());
+            }
+            if (objDetails.get(ConfigData.fqShower) == null) {
+                objDetails.addProperty(ConfigData.fqShower, shareData.getFqShower());
+            }
+            if (objDetails.get(ConfigData.ageData) == null) {
+                objDetails.addProperty(ConfigData.ageData, shareData.getAgeData());
+            }
+            if (objDetails.get(ConfigData.autoMode) == null) {
+                objDetails.addProperty(ConfigData.autoMode, shareData.isAutoMode());
+            }
+            objDetails.addProperty("lastUpdate", String.valueOf(System.currentTimeMillis() / 1000));
+
+            publish(ConfigData.setDetailsTopic,
+                    new Gson().toJson(objDetails),
+                    getResources().getString(R.string.onSaveSetting));
+        }
+    }
+
+    @Override
+    public void onSetStandardListener(String sensor, int val) {
+        JsonObject object = new JsonObject();
+        object.addProperty(sensor, val);
+        Log.e(TAG, "payload: " + object.toString());
+        publishStandard(object.toString());
+    }
+
+    private String getDateTime(long time) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            Date date = (new Date(time));
+            return dateFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
 
     public void reStartActivity() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -914,6 +897,35 @@ public class MainActivity extends AppCompatActivity implements
         Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
     }
 
+    private OnSaveSettingListener getSvaeSettingListener() {
+        return this;
+    }
+
+    private boolean checkNetPie() {
+        Log.i(TAG, "check NetPie");
+        if (shareData.getAppId().equals("") ||
+                shareData.getAppKey().equals("") ||
+                shareData.getAppSecret().equals("")) {
+            Log.e(TAG, "no Netpie data");
+            return false;
+        } else {
+            Log.i(TAG, "application id: " + (shareData.getAppId()));
+            Log.i(TAG, "key: " + (shareData.getAppKey()));
+            Log.i(TAG, "secret: " + (shareData.getAppSecret()));
+            return true;
+        }
+    }
+
+    public boolean isConnectInternet(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
+    }
+
+
+    /**
+     * for GCM Google Cloud Message
+     */
     private BroadcastReceiver mRegistrationBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -952,25 +964,6 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         }
         return true;
-    }
-
-    private OnSaveSettingListener getSettingListener() {
-        return this;
-    }
-
-    private boolean checkNetPie() {
-        Log.i(TAG, "checkNetPie");
-        if (shareData.getAppId().equals("") ||
-                shareData.getAppKey().equals("") ||
-                shareData.getAppSecret().equals("")) {
-            Log.e(TAG, "no Netpie data");
-            return false;
-        } else {
-            Log.i(TAG, "application id: " + (shareData.getAppId()));
-            Log.i(TAG, "key: " + (shareData.getAppKey()));
-            Log.i(TAG, "secret: " + (shareData.getAppSecret()));
-            return true;
-        }
     }
 
     private void setLoginScreen() {
@@ -1117,21 +1110,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public boolean isConnectInternet(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
-    }
-
-    @Override
-    public void onSetStandardListener(String sensor, int val) {
-        JsonObject object = new JsonObject();
-        object.addProperty(sensor, val);
-        Log.e(TAG, "payload: " + object.toString());
-        publishStandard(object.toString());
-    }
-
-
     public class MicroGearCallBack implements MicrogearEventListener {
         private final String TAG = "MicroGearCallBack";
         private RawDataBean rawDataBean;
@@ -1218,6 +1196,124 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != ConfigData.REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
+            return;
+        }
+        for (int i = 0; i < permissions.length; i++) {
+            String permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                if (shouldShowRequestPermissionRationale(permission)) {
+                    Log.i(TAG, "Permission denied without 'NEVER ASK AGAIN': " + permission);
+                    showRequestPermissionsSnackbar();
+                } else {
+                    Log.i(TAG, "Permission denied with 'NEVER ASK AGAIN': " + permission);
+                    showLinkToSettingsSnackbar();
+                }
+            } else {
+                Log.i(TAG, "Permission granted, building GoogleApiClient");
+                new SaveIMTask().execute(bitmap);
+            }
+        }
+    }
+
+    private boolean isPermissionWriteExternal() {
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void requestPermissionWriteExternal() {
+        ActivityCompat.requestPermissions(
+                (Activity) getContext(),
+                new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                ConfigData.REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+    }
+    /**
+     * Displays {@link Snackbar} instructing user to visit Settings to grant permissions required by
+     * this application.
+     */
+    private void showLinkToSettingsSnackbar() {
+        Snackbar.make(rootLayout,
+                R.string.permissionDenied,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.setting, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Build intent that displays the App settings screen.
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package",
+                                BuildConfig.APPLICATION_ID, null);
+                        intent.setData(uri);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }).show();
+    }
+
+    /**
+     * Displays {@link Snackbar} with button for the user to re-initiate the permission workflow.
+     */
+    private void showRequestPermissionsSnackbar() {
+        Snackbar.make(rootLayout, R.string.permissionDenied,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request permission.
+                        requestPermissionWriteExternal();
+                    }
+                }).show();
+    }
+    public class SaveIMTask extends AsyncTask<Bitmap,Void,String> {
+
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute");
+            //super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            saveBitmapTpFile(params[0],getContext());
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute");
+            notificationSnackBar(rootLayout,getString(R.string.loadIMSuccess));
+
+        }
+        public void saveBitmapTpFile(Bitmap bitmap, Context context){Log.i(TAG, "saveBitmapTpFile");
+            String imageName = "SG_IMG" +String.valueOf(System.currentTimeMillis())+".jpg";
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imageName);
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
+            }
+            Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+            Uri contentUri = Uri.fromFile(file);
+            mediaScanIntent.setData(contentUri);
+            context.sendBroadcast(mediaScanIntent);
+            file = null;
+        }
+
+    }
     public void alertDialog(String title, String message) {
         new MaterialDialog.Builder(getContext())
                 .title(title)
@@ -1305,12 +1401,6 @@ public class MainActivity extends AppCompatActivity implements
                     notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
                 }
             } else {
-                /*if (isConnectNetPie) {
-                    Log.e(TAG, "rest api publish");
-                    new PublishTask().execute(topic, payload);
-                } else {
-                    notificationSnackBar(rootLayout, getString(R.string.notConnectNetPie));
-                }*/
                 if (isConnectNetPie) {
                     microgear.publish(topic, payload, 1, true);
                 } else {
@@ -1319,7 +1409,7 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             publishHandle = new Handler();
-            publistask = new Runnable() {
+            publishTask = new Runnable() {
                 @Override
                 public void run() {
                     Log.i(TAG, "run task");
@@ -1330,48 +1420,9 @@ public class MainActivity extends AppCompatActivity implements
                     showDialog(getString(R.string.exception), getString(R.string.piNotResponse));
                 }
             };
-            publishHandle.postDelayed(publistask, 25000); //20 second
+            publishHandle.postDelayed(publishTask, 25000); //20 second
         } else {
             notificationSnackBar(rootLayout, getString(R.string.noInternet));
-        }
-    }
-
-    private void checkErrorConnectNetPie() {
-        //Please Check your App id,Key,Secret
-
-        checkConnectNetPieHandler = new Handler();
-        checkConnectNetPieRunnable = new Runnable() {
-            @Override
-            public void run() {
-                setException(getString(R.string.incorrectNetPie));
-            }
-        };
-        checkConnectNetPieHandler.postDelayed(checkConnectNetPieRunnable, getResources().getInteger(R.integer.waitPublish));
-
-    }
-
-
-    public class PublishTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.d(TAG, "publish topic: " + strings[0]);
-            return new RestApiNetPie(
-                    shareData.getAppId(),
-                    shareData.getAppKey(),
-                    shareData.getAppSecret())
-                    .publish(strings[0], strings[1], true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.equals("ok")) {
-                Log.d(TAG, "publish success");
-            }
         }
     }
 
@@ -1389,10 +1440,15 @@ public class MainActivity extends AppCompatActivity implements
             Log.i(TAG, "onPreExecute");
             getSupportActionBar().setTitle(message);
             if (message.equals(getString(R.string.loadingImage))) {
-                if(bitmap != null){
-                    image.setImageBitmap(new BlurImage().make(getContext(),bitmap,25));
+                if (bitmap != null) {
+                    image.setImageBitmap(new BlurImage().make(getContext(), bitmap, 25));
                 }
-                progressBarImage.setVisibility(View.VISIBLE);
+                if (progressBarImage != null) {
+                    progressBarImage.setVisibility(View.VISIBLE);
+                }
+                if (btnLoadIm != null) {
+                    btnLoadIm.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -1404,10 +1460,10 @@ public class MainActivity extends AppCompatActivity implements
                     shareData.getAppSecret())
                     .subscribe(params[0]);
         }
+
         @Override
         protected void onPostExecute(SubscribeBean result) {
             Log.i(TAG, "onPostExecute");
-            //Log.e(TAG, "result: " + result);
             getSupportActionBar().setTitle(getString(R.string.app_name));
             if (message.equals(getString(R.string.loadingImage)) && progressBarImage != null) {
                 progressBarImage.setVisibility(View.GONE);
@@ -1415,5 +1471,4 @@ public class MainActivity extends AppCompatActivity implements
             onSubscribeCallBack(result);
         }
     }
-
 }

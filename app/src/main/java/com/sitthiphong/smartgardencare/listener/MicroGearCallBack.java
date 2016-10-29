@@ -16,29 +16,11 @@ import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
 public class MicroGearCallBack implements MicrogearEventListener {
     private final String TAG = "MicroGearCallBack";
 
-    private static UpdateRawDataListener updateRawDataListener = null;
     private Activity activity;
     private RawDataBean rawDataBean;
 
     public MicroGearCallBack(Activity activity) {
         this.activity = activity;
-    }
-
-    public static void setUpdateRawDataListener(UpdateRawDataListener updateRawDataListener) {
-        MicroGearCallBack.updateRawDataListener = updateRawDataListener;
-    }
-
-    public void setUpdateRawData() {
-        if (updateRawDataListener != null) {
-            if (rawDataBean != null) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateRawDataListener.updateRawDataListener(rawDataBean);
-                    }
-                });
-            }
-        }
     }
 
 

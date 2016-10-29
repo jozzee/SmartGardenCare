@@ -20,6 +20,9 @@ public class ConfigData {
     public static final String rawDataListTopic =  "rawDataList";
     public static final String settingStandardTopic = "settingStandard";
 
+    public static final String TH_LANG = "th";
+    public static final String EN_LANG = "en";
+
 
 
     public static final String fqPData = "fqPData";
@@ -44,8 +47,7 @@ public class ConfigData {
 
     public static final int AUTO_TYPE = 1;
     public static final int MANUAL_TYPE = 2;
-    public static final int LANG_TH = 1;
-    public static final int LANG_EN = 2;
+    public static final int REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 123;
 
 
 

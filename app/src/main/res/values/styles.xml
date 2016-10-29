@@ -28,4 +28,16 @@
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/Grey_900</item>
     </style>
+    <style name="AppTheme.Button.Blue" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/Blue</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+    <style name="AppTheme.Button.DeepOrange" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/DeepOrange</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+    <style name="AppTheme.Button.Amber" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/Amber</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
 </resources>

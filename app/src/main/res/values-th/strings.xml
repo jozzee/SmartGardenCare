@@ -35,7 +35,7 @@
     <!-- E -->
     <string name="exception">ผิดพลาด</string>
     <string name="enterKey">กรุณากรอก</string>
-    <string name="editAppId">แก้ไข App ID</string>
+    <string name="editAppId">แก้ไข App Id</string>
     <string name="every">ทุก</string>
     <string name="engLang">ภาษาอังกฤษ</string>
 
@@ -76,6 +76,7 @@
     <string name="loadingImage">กำลังโหลดรูปภาพ...</string>
     <string name="lightIn">แสงข้างในไม้ระแรง</string>
     <string name="lightOut">แสงข้างนอกไม้ระแนง</string>
+    <string name="loadIMSuccess">โหลดรูปภาพเสร็จแล้ว</string>
 
 
     <!-- M -->
@@ -100,7 +101,7 @@
     <string name="on">เปิด</string>
     <string name="off">ปิด</string>
     <string name="onSaveSetting">กำลังบันทึกค่า...</string>
-    <string name="onWater">กำลังรถน้ำ....</string>
+    <string name="onWater">กำลังรดน้ำ....</string>
     <string name="onFoggy">กำลังฉีด ฟ็อกกี้...</string>
     <string name="onOpenSlat">กำลังเปิดไม้ระแนง...</string>
     <string name="onCloseSlat">กำลังปิดไม้ระแนง...</string>
@@ -133,7 +134,7 @@
     <string name="sensorError">เซ็นเซอร์ผิดพลาด</string>
     <string name="standard">มาตรฐาน</string>
     <string name="success">สำเร็จ</string>
-    <string name="saveSettingSuccess">บัยทึกค่าสำเร็จ</string>
+    <string name="saveSettingSuccess">บันทึกค่าสำเร็จ</string>
 
 
     <!-- T -->
@@ -149,12 +150,12 @@
 
 
     <!-- V -->
-    <string name="version">Version 9.0.0</string>
+    <string name="version">Version 9.0.5</string>
     <string name="value">ค่า</string>
 
     <!-- W -->
     <string name="water">รดน้ำ</string>
-    <string name="waterSuccess">รถน้ำสำเร็จ</string>
+    <string name="waterSuccess">รดน้ำสำเร็จ</string>
     <string name="warning">คำเตือน</string>
     <string name="warningExitSetNetPie">การตั้งค่ายังไม่เสร็จสิ้น</string>
     <string name="waterFalse">น้ำไม่ไหล!</string>

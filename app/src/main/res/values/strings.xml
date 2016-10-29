@@ -71,6 +71,7 @@
     <string name="loadingImage">Loading Image...</string>
     <string name="lightIn">Light In</string>
     <string name="lightOut">Light Out</string>
+    <string name="loadIMSuccess">Load Iamge Success</string>
 
 
     <!-- M -->
@@ -143,7 +144,7 @@
 
 
     <!-- V -->
-    <string name="version">Version 9.0.0</string>
+    <string name="version">Version 9.0.5</string>
     <string name="value">Value</string>
 
     <!-- TODO: Remove or change this placeholder text -->

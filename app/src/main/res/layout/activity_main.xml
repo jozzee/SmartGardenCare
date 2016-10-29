@@ -44,12 +44,21 @@
 
                     <ProgressBar
                         android:id="@+id/progress_image"
-                        style="?android:attr/progressBarStyleSmall"
+                        style="?android:attr/progressBarStyleLarge"
                         android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:indeterminate="false"
                         android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/btn_load_im"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:padding="@dimen/PaddingSpaceL"
+                        app:srcCompat="@drawable/ic_get_app" />
 
                 </RelativeLayout>
 
@@ -190,33 +199,30 @@
 
                     <Button
                         android:id="@+id/btn_water"
-                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/water"
                         android:textAllCaps="false"
-                        android:textColor="@color/Blue" />
+                        android:theme="@style/AppTheme.Button.Blue" />
 
                     <Button
                         android:id="@+id/btn_foggy"
-                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/foggy"
                         android:textAllCaps="false"
-                        android:textColor="@color/DeepOrange" />
+                        android:theme="@style/AppTheme.Button.DeepOrange" />
 
                     <Button
                         android:id="@+id/btn_slat"
-                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/openSlat"
                         android:textAllCaps="false"
-                        android:textColor="@color/Amber" />
+                        android:theme="@style/AppTheme.Button.Amber" />
 
                 </LinearLayout>
 
