@@ -33,6 +33,7 @@
     <string name="exception">Exception</string>
     <string name="enterKey">Enter your</string>
     <string name="every">Every</string>
+    <string name="engLang">English Language</string>
 
 
     <!-- F -->
@@ -133,6 +134,7 @@
     <string name="timeOfFoggy">Time of Foggy</string>
     <string name="tryAgain">Try Again</string>
     <string name="tempNotDrop">Temp not Drop</string>
+    <string name="thaiLang">Thai Language</string>
 
 
 

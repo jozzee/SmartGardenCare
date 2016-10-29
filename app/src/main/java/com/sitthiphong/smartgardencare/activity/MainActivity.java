@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -29,6 +30,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +58,8 @@ import com.sitthiphong.smartgardencare.datamodel.PublishBean;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
 import com.sitthiphong.smartgardencare.datamodel.ResponseBean;
 import com.sitthiphong.smartgardencare.datamodel.SubscribeBean;
+import com.sitthiphong.smartgardencare.libs.BlurImage;
+import com.sitthiphong.smartgardencare.libs.LocaleHelper;
 import com.sitthiphong.smartgardencare.libs.MagDiscreteSeekBar;
 import com.sitthiphong.smartgardencare.libs.MagScreen;
 import com.sitthiphong.smartgardencare.libs.MyTextWatcher;
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView exception;
     private ProgressBar progressBar, progressBarImage;
     private ShareData shareData;
+    private Bitmap bitmap;
 
 
     private PublishBean publishBean;
@@ -452,6 +460,9 @@ public class MainActivity extends AppCompatActivity implements
         if (microgear != null) {
             microgear.disconnect();
         }
+        if(bitmap != null){
+            bitmap.recycle();
+        }
 
     }
 
@@ -800,7 +811,8 @@ public class MainActivity extends AppCompatActivity implements
                 Log.e(TAG, "onSubscribeCallBack topic: " + result.getTopic());
                 if (result.getTopic().equals(ConfigData.photoTopic)) {
                     ImageBean imageBean = new ImageBean(result.getPayload());
-                    image.setImageBitmap(imageBean.getBitmap());
+                    bitmap = imageBean.getBitmap();
+                    image.setImageBitmap(bitmap);
                     progressBarImage.setVisibility(View.GONE);
                 }
 
@@ -808,6 +820,17 @@ public class MainActivity extends AppCompatActivity implements
                 e.printStackTrace();
             }
         }
+    }
+    private void setAnimation(TextView textView){
+        AnimationSet set = new AnimationSet(true);
+        TranslateAnimation trAnimation = new TranslateAnimation(0,0,textView.getHeight(),0);
+        trAnimation.setDuration(500);
+        trAnimation.setFillAfter(true);
+        set.addAnimation(trAnimation);
+        Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(750);
+        set.addAnimation(fadeIn);
+        textView.startAnimation(set);
     }
 
     private void updateRawData(final RawDataBean bean) {
@@ -820,20 +843,28 @@ public class MainActivity extends AppCompatActivity implements
                     try {
                         if (rawDataBean.getMoistureBean().getAverage() > 0) {
                             moistureValue.setText(String.valueOf(rawDataBean.getMoistureBean().getAverage()) + " %");
+                            setAnimation(moistureValue);
+
                         } else {
                             moistureValue.setText(getString(R.string.sensorError));
+                            setAnimation(moistureValue);
                         }
                         if (rawDataBean.getTempBean().getAverage() > 0) {
                             tempValue.setText(String.valueOf(rawDataBean.getTempBean().getAverage()) + " °C");
+                            setAnimation(tempValue);
                         } else {
                             tempValue.setText(getString(R.string.sensorError));
+                            setAnimation(tempValue);
                         }
                         if (rawDataBean.getLightBean().getLightIn() > 0) {
                             lightValue.setText(String.valueOf(rawDataBean.getLightBean().getLightIn()) + " Lux");
+                            setAnimation(lightValue);
                         } else {
                             lightValue.setText(getString(R.string.sensorError));
+                            setAnimation(lightValue);
                         }
                         lsatUpdateValue.setText(getDateTime((rawDataBean.getTime() * 1000)));
+                        setAnimation(lsatUpdateValue);
 
                     } catch (NullPointerException e) {
                         e.printStackTrace();
@@ -1358,9 +1389,11 @@ public class MainActivity extends AppCompatActivity implements
             Log.i(TAG, "onPreExecute");
             getSupportActionBar().setTitle(message);
             if (message.equals(getString(R.string.loadingImage))) {
+                if(bitmap != null){
+                    image.setImageBitmap(new BlurImage().make(getContext(),bitmap,25));
+                }
                 progressBarImage.setVisibility(View.VISIBLE);
             }
-
         }
 
         @Override
@@ -1371,7 +1404,6 @@ public class MainActivity extends AppCompatActivity implements
                     shareData.getAppSecret())
                     .subscribe(params[0]);
         }
-
         @Override
         protected void onPostExecute(SubscribeBean result) {
             Log.i(TAG, "onPostExecute");

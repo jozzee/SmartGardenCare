@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -170,6 +171,16 @@ public class ShareData {
     public void putLightStandard(int ligStd){
         spEditor.putInt(ConfigData.ligStd,ligStd);
         spEditor.commit();
+    }
+    public boolean isThLang(){
+        return Locale.getDefault().getDisplayLanguage().equals("ไทย");
+    }
+    public void setLang(int lang){
+        spEditor.putInt("lang",lang);
+        spEditor.commit();
+    }
+    public int getLang(){
+        return sp.getInt("lang",ConfigData.LANG_EN);
     }
 
     public String getPreferencesAsObjString() {

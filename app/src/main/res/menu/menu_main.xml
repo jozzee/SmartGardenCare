@@ -5,4 +5,8 @@
         android:title="@string/setting"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <!--<item android:id="@+id/actionChangeLang"
+        android:title="@string/setting"
+        android:orderInCategory="100"
+        app:showAsAction="never" />-->
 </menu>

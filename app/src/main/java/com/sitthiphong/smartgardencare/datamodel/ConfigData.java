@@ -44,6 +44,10 @@ public class ConfigData {
 
     public static final int AUTO_TYPE = 1;
     public static final int MANUAL_TYPE = 2;
+    public static final int LANG_TH = 1;
+    public static final int LANG_EN = 2;
+
+
 
 
 }

@@ -37,6 +37,7 @@
     <string name="enterKey">กรุณากรอก</string>
     <string name="editAppId">แก้ไข App ID</string>
     <string name="every">ทุก</string>
+    <string name="engLang">ภาษาอังกฤษ</string>
 
 
     <!-- F -->
@@ -140,6 +141,7 @@
     <string name="timeOfFoggy">การฉีดฟ็อกกี้</string>
     <string name="tryAgain">ลองอีกครั้ง</string>
     <string name="tempNotDrop">อุณหภูมิไม่ลดลง</string>
+    <string name="thaiLang">ภาษาไทย</string>
 
 
     <!-- U -->

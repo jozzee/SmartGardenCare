@@ -41,6 +41,7 @@ public class ImageBean {
     }
 
 
+
     public Bitmap getBitmap(){
         Log.e("ImageBean","getBitmap");
         //Log.e("ImageBean","imAsBase64: "+imAsBase64);

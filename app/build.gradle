@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.sitthiphong.smartgardencare"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName "9.0.2"
+        versionName "9.0.3"
         multiDexEnabled true
     }
     lintOptions {

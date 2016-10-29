@@ -96,6 +96,7 @@
                             android:layout_below="@+id/moisture_title"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:animateLayoutChanges="true"
                             android:textSize="@dimen/FontSizeM" />
 
                     </RelativeLayout>
