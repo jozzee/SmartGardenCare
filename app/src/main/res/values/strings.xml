@@ -99,6 +99,7 @@
     <string name="onFoggy">Foggy...</string>
     <string name="onOpenSlat">Open Slat...</string>
     <string name="onCloseSlat">Close Slat...</string>
+    <string name="open">open</string>
 
     <!-- P -->
     <string name="point1">Point 1</string>

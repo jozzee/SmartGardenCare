@@ -105,6 +105,7 @@
     <string name="onFoggy">กำลังฉีด ฟ็อกกี้...</string>
     <string name="onOpenSlat">กำลังเปิดไม้ระแนง...</string>
     <string name="onCloseSlat">กำลังปิดไม้ระแนง...</string>
+    <string name="open">เปิด</string>
 
     <!-- P -->
     <string name="point1">จุดที่ 1</string>

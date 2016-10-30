@@ -502,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements
             onBackPressed();
             return true;
         } else if (id == R.id.actionSetting) {
-            SettingActivity.onSaveSettingListener = getSvaeSettingListener();
+            SettingActivity.onSaveSettingListener = getSaveSettingListener();
             startActivity(new Intent(getContext(), SettingActivity.class));
         } else if (id == R.id.actionChangeLang) {
             if (shareData.getLang().equals(ConfigData.TH_LANG)) {
@@ -665,12 +665,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if(isPermissionWriteExternal()){
+                    if (isPermissionWriteExternal()) {
                         new SaveIMTask().execute(bitmap);
-                    }else{
+                    } else {
                         requestPermissionWriteExternal();
                     }
-                }else{
+                } else {
                     new SaveIMTask().execute(bitmap);
                 }
 
@@ -897,7 +897,7 @@ public class MainActivity extends AppCompatActivity implements
         Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
     }
 
-    private OnSaveSettingListener getSvaeSettingListener() {
+    private OnSaveSettingListener getSaveSettingListener() {
         return this;
     }
 
@@ -1235,6 +1235,7 @@ public class MainActivity extends AppCompatActivity implements
                 new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 ConfigData.REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
     }
+
     /**
      * Displays {@link Snackbar} instructing user to visit Settings to grant permissions required by
      * this application.
@@ -1272,26 +1273,45 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }).show();
     }
-    public class SaveIMTask extends AsyncTask<Bitmap,Void,String> {
+
+    private void showLoadImSuccessSnackbar(final Uri uri) {
+        Snackbar.make(rootLayout, R.string.loadIMSuccess,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.open, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setDataAndType(uri, "image/*");
+                        startActivity(intent);
+                    }
+                }).show();
+    }
+
+    public class SaveIMTask extends AsyncTask<Bitmap, Void, Uri> {
 
         @Override
         protected void onPreExecute() {
             Log.i(TAG, "onPreExecute");
             //super.onPreExecute();
         }
+
         @Override
-        protected String doInBackground(Bitmap... params) {
-            saveBitmapTpFile(params[0],getContext());
-            return null;
+        protected Uri doInBackground(Bitmap... params) {
+            return saveBitmapTpFile(params[0], getContext());
         }
+
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Uri result) {
             Log.i(TAG, "onPostExecute");
-            notificationSnackBar(rootLayout,getString(R.string.loadIMSuccess));
+            //notificationSnackBar(rootLayout,getString(R.string.loadIMSuccess));
+            showLoadImSuccessSnackbar(result);
 
         }
-        public void saveBitmapTpFile(Bitmap bitmap, Context context){Log.i(TAG, "saveBitmapTpFile");
-            String imageName = "SG_IMG" +String.valueOf(System.currentTimeMillis())+".jpg";
+
+        public Uri saveBitmapTpFile(Bitmap bitmap, Context context) {
+            Log.i(TAG, "saveBitmapTpFile");
+            String imageName = "SG_IMG" + String.valueOf(System.currentTimeMillis()) + ".jpg";
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imageName);
             OutputStream outputStream = null;
             try {
@@ -1311,9 +1331,11 @@ public class MainActivity extends AppCompatActivity implements
             mediaScanIntent.setData(contentUri);
             context.sendBroadcast(mediaScanIntent);
             file = null;
+            return contentUri;
         }
 
     }
+
     public void alertDialog(String title, String message) {
         new MaterialDialog.Builder(getContext())
                 .title(title)
