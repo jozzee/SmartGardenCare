@@ -60,6 +60,7 @@
     <string name="image">รูปภาพ</string>
     <string name="insertData">บันทึกข้อมูล</string>
     <string name="incorrectNetPie">กรุณาเช็ค App id,Key,Secret ของคุณ</string>
+    <string name="increasedHumidityNotSoMuch">ความชื้นเพิ่มขึ้นไม่มาก</string>
 
 
 
@@ -106,6 +107,9 @@
     <string name="onOpenSlat">กำลังเปิดไม้ระแนง...</string>
     <string name="onCloseSlat">กำลังปิดไม้ระแนง...</string>
     <string name="open">เปิด</string>
+    <string name="onLine">ออนไลน์</string>
+    <string name="offLine">ออฟไลน์</string>
+
 
     <!-- P -->
     <string name="point1">จุดที่ 1</string>
@@ -121,6 +125,7 @@
 
     <!-- R -->
     <string name="refresh">รีเฟรช...</string>
+    <string name="raspberryPi">ราชเบอรรี่พาย</string>
 
 
 
@@ -151,7 +156,7 @@
 
 
     <!-- V -->
-    <string name="version">Version 9.0.5</string>
+    <string name="version">Version 9.0.6</string>
     <string name="value">ค่า</string>
 
     <!-- W -->

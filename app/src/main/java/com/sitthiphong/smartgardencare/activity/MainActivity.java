@@ -271,6 +271,14 @@ public class MainActivity extends AppCompatActivity implements
                                             builder.append(getString(R.string.waterSuccess) + " " + getString(R.string.but) + "\n");
                                             builder.append(getString(R.string.moistureNotRising));
                                             alertDialog(getString(R.string.exception), builder.toString());
+                                        } else if (errorCode == 8) {
+                                            StringBuilder builder = new StringBuilder();
+                                            builder.append(getString(R.string.but) + " " + getString(R.string.increasedHumidityNotSoMuch) + "\n");
+                                            builder.append(getString(R.string.before) + " ");
+                                            builder.append(String.valueOf(messageObj.get("valBefore").getAsFloat()) + " %\n");
+                                            builder.append(getString(R.string.after) + " ");
+                                            builder.append(String.valueOf(messageObj.get("valAfter").getAsFloat()) + " %\n");
+                                            alertDialog(getString(R.string.waterSuccess), builder.toString());
                                         }
 
 
@@ -299,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements
                                         } else if (errorCode == 4) {
                                             StringBuilder builder = new StringBuilder();
                                             builder.append(getString(R.string.canNotFoggy) + " " + getString(R.string.until) + "\n");
-                                            builder.append(getDateTime(messageObj.get("msg").getAsLong()));
+                                            builder.append(getDateTime(messageObj.get("msg").getAsLong() * 1000));
                                             alertDialog(getString(R.string.exception), builder.toString());
                                         }
 
@@ -358,12 +366,24 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
             } else if (action.equals("onPresent")) {
-                String token = bundle.getString("token");
-                Log.e(TAG, "onPresent: token = " + token);
+                JsonObject tokenObj = new Gson().fromJson(bundle.getString("token"), JsonObject.class);
+                String alias = tokenObj.get("alias").getAsString();
+                if (alias.equals("Raaspbery Pi - Python")) {
+                    alertDialog(getString(R.string.raspberryPi), getString(R.string.onLine));
+                } else if(!alias.equals("android")){
+                    alertDialog(alias, getString(R.string.onLine));
+                }
 
             } else if (action.equals("onAbsent")) {
                 String token = bundle.getString("token");
                 Log.e(TAG, "onAbsent: token = " + token);
+                JsonObject tokenObj = new Gson().fromJson(bundle.getString("token"), JsonObject.class);
+                String alias = tokenObj.get("alias").getAsString();
+                if (alias.equals("Raaspbery Pi - Python")) {
+                    alertDialog(getString(R.string.raspberryPi), getString(R.string.offLine));
+                } else if(!alias.equals("android")) {
+                    alertDialog(alias, getString(R.string.offLine));
+                }
 
             } else if (action.equals("onDisconnect")) {
                 isConnectNetPie = false;

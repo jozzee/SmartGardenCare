@@ -95,6 +95,7 @@
                             android:layout_below="@+id/ic_moisture"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:gravity="center"
                             android:text="@string/moisture"
                             android:textSize="@dimen/FontSizeM" />
 
@@ -106,6 +107,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
                             android:animateLayoutChanges="true"
+                            android:gravity="center"
                             android:textSize="@dimen/FontSizeM" />
 
                     </RelativeLayout>
@@ -133,6 +135,7 @@
                             android:layout_below="@+id/ic_temp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:gravity="center"
                             android:text="@string/temperature"
                             android:textSize="@dimen/FontSizeM" />
 
@@ -143,6 +146,7 @@
                             android:layout_below="@+id/temp_tile"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:gravity="center"
                             android:textSize="@dimen/FontSizeM" />
 
                     </RelativeLayout>
@@ -170,6 +174,7 @@
                             android:layout_below="@+id/ic_sun_light"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:gravity="center"
                             android:text="@string/lightIntensity"
                             android:textSize="@dimen/FontSizeM" />
 
@@ -180,6 +185,7 @@
                             android:layout_below="@+id/light_title"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/MarginSpace"
+                            android:gravity="center"
                             android:textSize="@dimen/FontSizeM" />
 
                     </RelativeLayout>

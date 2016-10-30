@@ -55,6 +55,7 @@
     <string name="image">Image</string>
     <string name="insertData">insert data to database</string>
     <string name="incorrectNetPie">Please Check your App id,Key,Secret</string>
+    <string name="increasedHumidityNotSoMuch">Increased humidity not so much</string>
 
 
 
@@ -100,6 +101,8 @@
     <string name="onOpenSlat">Open Slat...</string>
     <string name="onCloseSlat">Close Slat...</string>
     <string name="open">open</string>
+    <string name="onLine">On line</string>
+    <string name="offLine">Off line</string>
 
     <!-- P -->
     <string name="point1">Point 1</string>
@@ -115,6 +118,7 @@
 
     <!-- R -->
     <string name="refresh">Refresh...</string>
+    <string name="raspberryPi">Raspberry Pi</string>
 
 
     <!-- S -->
@@ -145,7 +149,7 @@
 
 
     <!-- V -->
-    <string name="version">Version 9.0.5</string>
+    <string name="version">Version 9.0.6</string>
     <string name="value">Value</string>
 
     <!-- TODO: Remove or change this placeholder text -->
