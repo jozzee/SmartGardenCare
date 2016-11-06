@@ -98,7 +98,7 @@ public class MagDiscreteSeekBar extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-                Log.e(TAG, "จบแล้ววววว");
+                //Log.e(TAG, "จบแล้ววววว");
                 Log.e(TAG,"value: "+val);
                 if(onSetStandardListener != null){
                     onSetStandardListener.onSetStandardListener(sensor,val);

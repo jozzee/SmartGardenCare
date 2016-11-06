@@ -47,6 +47,8 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
                 holder.type.setText(context.getString(R.string.autoMode));
             } else if (bean.getType() == ConfigData.MANUAL_TYPE) {
                 holder.type.setText(context.getString(R.string.manualMode));
+            } else if(bean.getType() == 3){
+                holder.type.setText(context.getString(R.string.alarmClock));
             }
 
             switch (bean.getWorking()) {
@@ -95,7 +97,7 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
 
     private String getDateTime(long time) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
             Date date = (new Date(time));
             return dateFormat.format(date);
 

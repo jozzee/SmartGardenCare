@@ -10,11 +10,14 @@
     <string name="autoMode">โหมดอัตโนมัติ</string>
     <string name="accordingToTheSystem">ตามระบบ</string>
     <string name="after">หลัง</string>
+    <string name="alarmClock">การตั้งเวลา</string>
+
 
 
     <!-- B -->
     <string name="before">ก่อน</string>
     <string name="but">แต่</string>
+    <string name="byAlarmClock">ตามการตั้งเวลา</string>
 
 
     <!-- C -->
@@ -31,9 +34,11 @@
     <!-- D -->
     <string name="days">วัน</string>
     <string name="details">รายละเอียด</string>
+    <string name="deleteClock">คุนต้องการที่จะลบการตั้งเวลานี้</string>
 
     <!-- E -->
     <string name="exception">ผิดพลาด</string>
+    <string name="exceptionNoti">แจ้งความผิดพลาด</string>
     <string name="enterKey">กรุณากรอก</string>
     <string name="editAppId">แก้ไข App Id</string>
     <string name="every">ทุก</string>
@@ -70,7 +75,7 @@
 
     <!-- L -->
     <string name="lightIntensity">ความเข้มแสง</string>
-    <string name="lightNotDrops">ความเข้มแสงไม่ลดลง</string>
+    <string name="lightNotDrops">ความเข้มแสงไม่ลดลง หลังจากปิดไม้ระแนง</string>
     <string name="lastUpdate">รับข้อมูลล่าสุด</string>
     <string name="login">เข้าใช้งาน</string>
     <string name="loading">กำลังโหลดข้อมูล...</string>
@@ -126,6 +131,7 @@
     <!-- R -->
     <string name="refresh">รีเฟรช...</string>
     <string name="raspberryPi">ราชเบอรรี่พาย</string>
+    <string name="repeat">ตั้งซ้ำ</string>
 
 
 
@@ -141,13 +147,15 @@
     <string name="standard">มาตรฐาน</string>
     <string name="success">สำเร็จ</string>
     <string name="saveSettingSuccess">บันทึกค่าสำเร็จ</string>
+    <string name="setClock">ตั้งเวลา</string>
+    <string name="selectWorking">เลือกการทำงาน</string>
 
 
     <!-- T -->
     <string name="temperature">อุณหภูมิ</string>
     <string name="timeOfFoggy">การฉีดฟ็อกกี้</string>
     <string name="tryAgain">ลองอีกครั้ง</string>
-    <string name="tempNotDrop">อุณหภูมิไม่ลดลง</string>
+    <string name="tempNotDrop">อุณหภูมิไม่ลดลง หลังจากฉีดฟ็อกกี้</string>
     <string name="thaiLang">ภาษาไทย</string>
 
 
@@ -156,14 +164,16 @@
 
 
     <!-- V -->
-    <string name="version">Version 9.0.6</string>
+    <string name="version">Version 9.1.7</string>
     <string name="value">ค่า</string>
 
     <!-- W -->
+    <string name="working">การทำงาน</string>
     <string name="water">รดน้ำ</string>
     <string name="waterSuccess">รดน้ำสำเร็จ</string>
     <string name="warning">คำเตือน</string>
     <string name="warningExitSetNetPie">การตั้งค่ายังไม่เสร็จสิ้น</string>
+    <string name="warningExitClock">คุณจะกำลังออกจากการตั้งเวลา โดยยังไม่ได้บันทึกค่า</string>
     <string name="waterFalse">น้ำไม่ไหล!</string>
 
 
@@ -173,6 +183,15 @@
     <!-- Y -->
 
     <!-- Z -->
+
+    <!-- short day -->
+    <string name="monDay">จ.</string>
+    <string name="tuesDay">อ.</string>
+    <string name="wednesDay">พ.</string>
+    <string name="thursDay">พฤ.</string>
+    <string name="friDay">ศ.</string>
+    <string name="saturDay">ส.</string>
+    <string name="sunDay">อา.</string>
 
     <string-array name="fqPDataArray">
         <item>ทุก 1 นาที</item>
@@ -199,6 +218,12 @@
         <item>1 วัน</item>
         <item>2 วัน</item>
         <item>3 วัน</item>
+    </string-array>
+    <string-array name="selectWorkingArray">
+        <item>@string/water</item>
+        <item>@string/foggy</item>
+        <item>@string/openSlat</item>
+        <item>@string/closeSlat</item>
     </string-array>
 
 

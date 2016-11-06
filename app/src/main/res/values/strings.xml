@@ -8,6 +8,7 @@
     <string name="autoMode">Auto Mode</string>
     <string name="accordingToTheSystem">According to the system</string>
     <string name="after">After</string>
+    <string name="alarmClock">Alarm Clock</string>
 
 
     <!-- B -->
@@ -28,9 +29,11 @@
     <!-- D -->
     <string name="days">Days</string>
     <string name="details">Details</string>
+    <string name="deleteClock">Delete Alarm Clock</string>
 
     <!-- E -->
     <string name="exception">Exception</string>
+    <string name="exceptionNoti">Exception</string>
     <string name="enterKey">Enter your</string>
     <string name="every">Every</string>
     <string name="engLang">English Language</string>
@@ -56,7 +59,6 @@
     <string name="insertData">insert data to database</string>
     <string name="incorrectNetPie">Please Check your App id,Key,Secret</string>
     <string name="increasedHumidityNotSoMuch">Increased humidity not so much</string>
-
 
 
     <!-- J -->
@@ -119,6 +121,7 @@
     <!-- R -->
     <string name="refresh">Refresh...</string>
     <string name="raspberryPi">Raspberry Pi</string>
+    <string name="repeat">Repeat</string>
 
 
     <!-- S -->
@@ -133,6 +136,8 @@
     <string name="standard">Standard</string>
     <string name="success">Success</string>
     <string name="saveSettingSuccess">Save Setting Success</string>
+    <string name="setClock">Set Clock</string>
+    <string name="selectWorking">Select Working</string>
 
 
     <!-- T -->
@@ -143,24 +148,25 @@
     <string name="thaiLang">Thai Language</string>
 
 
-
     <!-- U -->
     <string name="until">until</string>
 
 
     <!-- V -->
-    <string name="version">Version 9.0.6</string>
+    <string name="version">Version 9.1.7</string>
     <string name="value">Value</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- W -->
+    <string name="working">Working</string>
     <string name="water">Water</string>
     <string name="waterSuccess">Water Success</string>
     <string name="warning">Warning</string>
     <string name="warningExitSetNetPie">The setup is not finished.</string>
     <string name="waterFalse">Water False!</string>
+    <string name="warningExitClock">The setup is not finished.</string>
 
 
     <!-- X -->
@@ -169,6 +175,16 @@
     <!-- Y -->
 
     <!-- Z -->
+
+
+    <!-- short day -->
+    <string name="monDay">Mon</string>
+    <string name="tuesDay">Tue</string>
+    <string name="wednesDay">Wed</string>
+    <string name="thursDay">Thu</string>
+    <string name="friDay">Fri</string>
+    <string name="saturDay">Sat</string>
+    <string name="sunDay">Sun</string>
 
     <string-array name="fqPDataArray">
         <item>Every 1 minute</item>
@@ -204,7 +220,12 @@
         <item>2 days</item>
         <item>3 days</item>
     </string-array>
-
+    <string-array name="selectWorkingArray">
+        <item>@string/water</item>
+        <item>@string/foggy</item>
+        <item>@string/openSlat</item>
+        <item>@string/closeSlat</item>
+    </string-array>
 
 
 </resources>

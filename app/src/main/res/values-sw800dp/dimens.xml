@@ -55,5 +55,7 @@
     <dimen name="dayOfMonthImageSize">4dp</dimen>
     <dimen name="dayOfMonthImageMarginTop">@dimen/PaddingSpaceXXL</dimen>
 
+    <dimen name="bgDay">72dp</dimen>
+
 
 </resources>

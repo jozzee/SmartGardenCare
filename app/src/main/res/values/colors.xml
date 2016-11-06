@@ -293,4 +293,6 @@
 
     <color name="White">#FFFFFF</color>
     <color name="Black">#000000</color>
+    <color name="Primary_Text">#212121</color>
+    <color name="Hint_Text">#B6B6B6</color>
 </resources>

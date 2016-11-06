@@ -64,7 +64,8 @@
         </activity>
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.HistoryActivity" />
-        <activity android:name=".activity.DetailsActivity"></activity>
+        <activity android:name=".activity.DetailsActivity" />
+        <activity android:name=".activity.SetClockActivity"></activity>
     </application>
 
 </manifest>

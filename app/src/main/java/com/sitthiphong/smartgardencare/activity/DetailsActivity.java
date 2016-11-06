@@ -176,8 +176,8 @@ public class DetailsActivity extends AppCompatActivity implements
                 TextView t2 = (TextView) findViewById(R.id.point_title2);
                 t1.setText(getString(R.string.lightIn));
                 t2.setText(getString(R.string.lightOut));
-                val1.setText((bean.getLightIn() > 0) ? (String.valueOf(bean.getLightIn()) + " Lux") : getString(R.string.sensorError));
-                val2.setText((bean.getLightOut() > 0) ? (String.valueOf(bean.getLightOut()) + " Lux") : getString(R.string.sensorError));
+                val1.setText((bean.getLightIn() >= 0) ? (String.valueOf(bean.getLightIn()) + " Lux") : getString(R.string.sensorError));
+                val2.setText((bean.getLightOut() >= 0) ? (String.valueOf(bean.getLightOut()) + " Lux") : getString(R.string.sensorError));
                 std.setText(getString(R.string.value) + " " + getString(R.string.lightIntensity) + " " + getString(R.string.standard));
                 valStd.setText(String.valueOf(shareData.getLightStandard()) + " Lux");
 
@@ -310,7 +310,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
                 if (sensor.equals("moisture")) {
 
-                    if ((bean.getMos1() > 0) && (bean.getMos2() > 0)) {
+                    if ((bean.getMos1() >= 0) && (bean.getMos2() >= 0)) {
                         categories.add(getDateTime(bean.getTime() * 1000));
                         data1.add(bean.getMos1());
                         data2.add(bean.getMos2());
@@ -318,14 +318,14 @@ public class DetailsActivity extends AppCompatActivity implements
 
                 } else if (sensor.equals("temp")) {
 
-                    if ((bean.getTmp1() > 0) && (bean.getTmp2() > 0)) {
+                    if ((bean.getTmp1() >= 0) && (bean.getTmp2() >= 0)) {
                         categories.add(getDateTime(bean.getTime() * 1000));
                         data1.add(bean.getTmp1());
                         data2.add(bean.getTmp2());
                     }
 
                 } else if (sensor.equals("light")) {
-                    if ((bean.getLight_in() > 0) && (bean.getLight_out() > 0)) {
+                    if ((bean.getLight_in() >= 0) && (bean.getLight_out() >= 0)) {
                         categories.add(getDateTime(bean.getTime() * 1000));
                         data1.add(bean.getLight_in());
                         data2.add(bean.getLight_out());

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_set_time"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sitthiphong.smartgardencare.activity.SetClockActivity">
+
+    <include layout="@layout/app_bar">
+
+    </include>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/recycler_view"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.sitthiphong.smartgardencare.libs.FABScrollBehavior"
+        app:srcCompat="@drawable/ic_add" />
+
+    <RelativeLayout
+        android:id="@+id/layout_add_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/add_alarm"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_alarm_add" />
+
+        <TextView
+            android:id="@+id/tv_add_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_alarm"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:padding="@dimen/PaddingSpaceXL"
+            android:text="@string/setClock"
+            android:textSize="@dimen/FontSizeM" />
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

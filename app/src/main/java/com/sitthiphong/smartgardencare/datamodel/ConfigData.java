@@ -19,9 +19,20 @@ public class ConfigData {
     public static final String logDataListTopic =  "logDataList";
     public static final String rawDataListTopic =  "rawDataList";
     public static final String settingStandardTopic = "settingStandard";
+    public static final String alarmTopic = "alarm";
+
 
     public static final String TH_LANG = "th";
     public static final String EN_LANG = "en";
+
+    public static final String monDay = "Mon";
+    public static final String tuesDay = "Tue";
+    public static final String wednesDay = "Wed";
+    public static final String thursDay = "Thu";
+    public static final String friDay = "Fri";
+    public static final String saturDay = "Sat";
+    public static final String sunDay = "Sun";
+
 
 
 
@@ -48,6 +59,8 @@ public class ConfigData {
     public static final int AUTO_TYPE = 1;
     public static final int MANUAL_TYPE = 2;
     public static final int REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 123;
+
+
 
 
 

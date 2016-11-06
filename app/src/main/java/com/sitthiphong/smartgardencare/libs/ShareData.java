@@ -151,33 +151,41 @@ public class ShareData {
         spEditor.putBoolean(ConfigData.autoMode, autoMode);
         spEditor.commit();
     }
-    public int getMoistureStandard(){
-        return sp.getInt(ConfigData.mosStd,20);
+
+    public int getMoistureStandard() {
+        return sp.getInt(ConfigData.mosStd, 20);
     }
-    public void putMoistureStandard(int mosStd){
-        spEditor.putInt(ConfigData.mosStd,mosStd);
+
+    public void putMoistureStandard(int mosStd) {
+        spEditor.putInt(ConfigData.mosStd, mosStd);
         spEditor.commit();
     }
-    public int getTempStandard(){
-        return sp.getInt(ConfigData.tmpStd,40);
+
+    public int getTempStandard() {
+        return sp.getInt(ConfigData.tmpStd, 40);
     }
-    public void putTempStandard(int tmpStd){
-        spEditor.putInt(ConfigData.tmpStd,tmpStd);
+
+    public void putTempStandard(int tmpStd) {
+        spEditor.putInt(ConfigData.tmpStd, tmpStd);
         spEditor.commit();
     }
-    public int getLightStandard(){
-        return sp.getInt(ConfigData.ligStd,5000);
+
+    public int getLightStandard() {
+        return sp.getInt(ConfigData.ligStd, 5000);
     }
-    public void putLightStandard(int ligStd){
-        spEditor.putInt(ConfigData.ligStd,ligStd);
+
+    public void putLightStandard(int ligStd) {
+        spEditor.putInt(ConfigData.ligStd, ligStd);
         spEditor.commit();
     }
-    public void setLang(String lang){
-        spEditor.putString("language",lang);
+
+    public void setLang(String lang) {
+        spEditor.putString("language", lang);
         spEditor.commit();
     }
-    public String getLang(){
-        return sp.getString("language","en");
+
+    public String getLang() {
+        return sp.getString("language", "en");
     }
 
     public String getPreferencesAsObjString() {
@@ -190,19 +198,32 @@ public class ShareData {
         detailsObj.addProperty(ConfigData.autoMode, isAutoMode());
         return new Gson().toJson(detailsObj);
     }
-    public String getToken(){
-        return sp.getString(ConfigData.token,"");
+
+    public String getToken() {
+        return sp.getString(ConfigData.token, "");
 
     }
-    public void removeSendPrefer(){
+
+    public void removeSendPrefer() {
         spEditor.remove("sendPrefer");
         spEditor.commit();
     }
-    public boolean getSendPrefer(){
+
+    public boolean getSendPrefer() {
         return sp.getBoolean("sendPrefer", false);
     }
-    public void putSendPrefer(){
-        spEditor.putBoolean("sendPrefer",true);
+
+    public void putSendPrefer() {
+        spEditor.putBoolean("sendPrefer", true);
+        spEditor.commit();
+    }
+
+    public String getAlarmClockList() {
+        return sp.getString("alarmClock", "");
+    }
+
+    public void setAlarmClockList(String payload) {
+        spEditor.putString("alarmClock", payload);
         spEditor.commit();
     }
 

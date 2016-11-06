@@ -40,4 +40,30 @@
         <item name="colorButtonNormal">@color/Amber</item>
         <item name="android:textColor">@color/White</item>
     </style>
+
+    <style name="TextHint" parent="@android:style/TextAppearance">
+        <item name="android:textColorHint">@color/Hint_Text</item>
+        <item name="android:textColor">@color/Hint_Text</item>
+        <item name="android:textSize">@dimen/FontSizeSS</item>
+        <item name="android:maxLines">1</item>
+        <item name="colorPrimary">@color/Hint_Text</item>
+        <item name="colorAccent">@color/Hint_Text</item>
+    </style>
+    <style name="TextPrimary">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/Hint_Text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/FontSizeS</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="DatePickerThemeLight" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/DeepOrange</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+    </style>
+
 </resources>

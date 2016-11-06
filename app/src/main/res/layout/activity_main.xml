@@ -193,50 +193,12 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/controls_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/sensor_value_layout"
-                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/PaddingSpaceXL"
-                    android:paddingRight="@dimen/PaddingSpaceXL">
-
-                    <Button
-                        android:id="@+id/btn_water"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/water"
-                        android:textAllCaps="false"
-                        android:theme="@style/AppTheme.Button.Blue" />
-
-                    <Button
-                        android:id="@+id/btn_foggy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/foggy"
-                        android:textAllCaps="false"
-                        android:theme="@style/AppTheme.Button.DeepOrange" />
-
-                    <Button
-                        android:id="@+id/btn_slat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/openSlat"
-                        android:textAllCaps="false"
-                        android:theme="@style/AppTheme.Button.Amber" />
-
-                </LinearLayout>
-
                 <RelativeLayout
                     android:id="@+id/details_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/controls_layout"
+                    android:layout_below="@+id/sensor_value_layout"
+                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/PaddingSpaceXL"
                     android:paddingRight="@dimen/PaddingSpaceXL">
@@ -310,17 +272,162 @@
                         android:layout_below="@+id/slat_status"
                         android:background="#4D000000" />
 
-                    <Button
-                        android:id="@+id/history"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/line3"
-                        android:gravity="left|center"
-                        android:text="@string/history"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorAccent" />
+
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/controls_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/details_layout"
+                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/PaddingSpaceXL"
+                    android:paddingRight="@dimen/PaddingSpaceXL">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/btn_water"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/selector_btn_water" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_water"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/water" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/btn_foggy"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_btn_shower" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_foggy"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/foggy" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/btn_slat"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_btn_open_slat" />
+
+                        <TextView
+                            android:id="@+id/tv_slat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_slat"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/openSlat" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/controls_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/controls_layout"
+                    android:layout_marginBottom="@dimen/MarginSpaceXXL"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/PaddingSpaceXL"
+                    android:paddingRight="@dimen/PaddingSpaceXL">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/btn_set_clock"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/selector_btn_clock" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_set_clock"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/setClock" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/history"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_btn_history" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/history"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/history" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:id="@+id/btn_setting"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_btn_seeting" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_setting"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/PaddingSpaceSS"
+                            android:text="@string/setting" />
+                    </RelativeLayout>
+                </LinearLayout>
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>

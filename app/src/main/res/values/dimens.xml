@@ -63,4 +63,6 @@
     <dimen name="dayOfMonthPaddingBottom">0dp</dimen>
     <dimen name="dayOfMonthImageSize">4dp</dimen>
     <dimen name="dayOfMonthImageMarginTop">@dimen/PaddingSpaceXXL</dimen>
+
+    <dimen name="bgDay">40dp</dimen>
 </resources>

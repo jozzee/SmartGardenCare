@@ -1,7 +1,5 @@
 package com.sitthiphong.smartgardencare.activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -47,6 +45,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -57,11 +56,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.jozziga.microgear.Microgear;
 import com.jozziga.microgear.MicrogearEventListener;
 import com.sitthiphong.smartgardencare.BuildConfig;
 import com.sitthiphong.smartgardencare.R;
+import com.sitthiphong.smartgardencare.datamodel.AlarmClockBean;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.PublishBean;
@@ -74,6 +76,7 @@ import com.sitthiphong.smartgardencare.libs.MagDiscreteSeekBar;
 import com.sitthiphong.smartgardencare.libs.MagScreen;
 import com.sitthiphong.smartgardencare.libs.MyTextWatcher;
 import com.sitthiphong.smartgardencare.libs.ShareData;
+import com.sitthiphong.smartgardencare.listener.ClockListener;
 import com.sitthiphong.smartgardencare.listener.OnSaveSettingListener;
 import com.sitthiphong.smartgardencare.listener.SetStandListener;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
@@ -85,15 +88,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements
         OnSaveSettingListener,
-        SetStandListener.OnSetStandardListener {
+        SetStandListener.OnSetStandardListener,
+        ClockListener.OnSaveClockListener {
 
     private final String TAG = "MainActivity";
     private CoordinatorLayout rootLayout;
@@ -101,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements
     private SwipeRefreshLayout refreshLayout;
     private ImageView image, btnLoadIm;
     private RelativeLayout moistureLayout, tempLayout, lightLayout;
-    private TextView moistureValue, tempValue, lightValue, lsatUpdateValue, slatStatus, exception;
-    private Button btnWater, btnFoggy, btnSlat, history;
+    private TextView moistureValue, tempValue, lightValue, lsatUpdateValue, slatStatus, exception, tvSlat;
+    private ImageButton btnWater, btnFoggy, btnSlat, btnHistory, btnSetClock, btnSetting;
+
     private ProgressDialog progressDialog;
     private ProgressBar progressBar, progressBarImage;
     private Bitmap bitmap;
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean isReceiverRegistered;
     private boolean isConnectNetPie;
+
+    // private ClockListener.OnFinishSaveClockListener onFinishSaveClockListener = null;
 
 
     Handler handler = new Handler() {
@@ -233,6 +241,11 @@ public class MainActivity extends AppCompatActivity implements
                                         builder.append(getString(R.string.after) + " ");
                                         builder.append(String.valueOf(valAfter) + " Lux");
                                         alertDialog(getString(R.string.closeSlatSuccess), builder.toString());
+                                    }
+                                } else if (responseBean.getTopic().equals(ConfigData.alarmTopic)) {
+                                    shareData.setAlarmClockList(responseBean.getMessage());
+                                    if (SetClockActivity.onFinishSaveClockListener != null) {
+                                        SetClockActivity.onFinishSaveClockListener.onFinishSaveClockListener(1);
                                     }
                                 }
 
@@ -370,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements
                 String alias = tokenObj.get("alias").getAsString();
                 if (alias.equals("Raaspbery Pi - Python")) {
                     alertDialog(getString(R.string.raspberryPi), getString(R.string.onLine));
-                } else if(!alias.equals("android")){
+                } else if (!alias.equals("android")) {
                     alertDialog(alias, getString(R.string.onLine));
                 }
 
@@ -381,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements
                 String alias = tokenObj.get("alias").getAsString();
                 if (alias.equals("Raaspbery Pi - Python")) {
                     alertDialog(getString(R.string.raspberryPi), getString(R.string.offLine));
-                } else if(!alias.equals("android")) {
+                } else if (!alias.equals("android")) {
                     alertDialog(alias, getString(R.string.offLine));
                 }
 
@@ -593,12 +606,15 @@ public class MainActivity extends AppCompatActivity implements
         tempValue = (TextView) findViewById(R.id.temp_value);
         lightValue = (TextView) findViewById(R.id.light_value);
         lsatUpdateValue = (TextView) findViewById(R.id.time_value);
-        history = (Button) findViewById(R.id.history);
         slatStatus = (TextView) findViewById(R.id.slat_status_value);
+        tvSlat = (TextView) findViewById(R.id.tv_slat);
 
-        btnWater = (Button) findViewById(R.id.btn_water);
-        btnFoggy = (Button) findViewById(R.id.btn_foggy);
-        btnSlat = (Button) findViewById(R.id.btn_slat);
+        btnWater = (ImageButton) findViewById(R.id.btn_water);
+        btnFoggy = (ImageButton) findViewById(R.id.btn_foggy);
+        btnSlat = (ImageButton) findViewById(R.id.btn_slat);
+        btnHistory = (ImageButton) findViewById(R.id.history);
+        btnSetClock = (ImageButton) findViewById(R.id.btn_set_clock);
+        btnSetting = (ImageButton) findViewById(R.id.btn_setting);
 
 
         exception = (TextView) findViewById(R.id.exception);
@@ -650,7 +666,7 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        history.setOnClickListener(new View.OnClickListener() {
+        btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(), HistoryActivity.class));
@@ -672,10 +688,10 @@ public class MainActivity extends AppCompatActivity implements
         btnSlat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (btnSlat.getText().toString().trim().equals(getString(R.string.openSlat))) {
+                if (tvSlat.getText().toString().trim().equals(getString(R.string.openSlat))) {
                     controlsDevices("3", getString(R.string.onOpenSlat));
 
-                } else if (btnSlat.getText().toString().trim().equals(getString(R.string.closeSlat))) {
+                } else if (tvSlat.getText().toString().trim().equals(getString(R.string.closeSlat))) {
 
                     controlsDevices("4", getString(R.string.onCloseSlat));
                 }
@@ -694,6 +710,20 @@ public class MainActivity extends AppCompatActivity implements
                     new SaveIMTask().execute(bitmap);
                 }
 
+            }
+        });
+        btnSetClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), SetClockActivity.class));
+                SetClockActivity.onSaveClockListener = getSaveClockListener();
+            }
+        });
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingActivity.onSaveSettingListener = getSaveSettingListener();
+                startActivity(new Intent(getContext(), SettingActivity.class));
             }
         });
 
@@ -756,6 +786,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         }
+        startActivity(new Intent(getContext(), SetClockActivity.class));
     }
 
     private Context getContext() {
@@ -791,7 +822,7 @@ public class MainActivity extends AppCompatActivity implements
             public void run() {
                 if (rawDataBean != null) {
                     try {
-                        if (rawDataBean.getMoistureBean().getAverage() > 0) {
+                        if (rawDataBean.getMoistureBean().getAverage() >= 0) {
                             moistureValue.setText(String.valueOf(rawDataBean.getMoistureBean().getAverage()) + " %");
                             setAnimation(moistureValue);
 
@@ -799,14 +830,14 @@ public class MainActivity extends AppCompatActivity implements
                             moistureValue.setText(getString(R.string.sensorError));
                             setAnimation(moistureValue);
                         }
-                        if (rawDataBean.getTempBean().getAverage() > 0) {
+                        if (rawDataBean.getTempBean().getAverage() >= 0) {
                             tempValue.setText(String.valueOf(rawDataBean.getTempBean().getAverage()) + " °C");
                             setAnimation(tempValue);
                         } else {
                             tempValue.setText(getString(R.string.sensorError));
                             setAnimation(tempValue);
                         }
-                        if (rawDataBean.getLightBean().getLightIn() > 0) {
+                        if (rawDataBean.getLightBean().getLightIn() >= 0) {
                             lightValue.setText(String.valueOf(rawDataBean.getLightBean().getLightIn()) + " Lux");
                             setAnimation(lightValue);
                         } else {
@@ -829,10 +860,12 @@ public class MainActivity extends AppCompatActivity implements
 
         if (status == 0) {
             slatStatus.setText(getString(R.string.slatClose));
-            btnSlat.setText(getString(R.string.openSlat));
+            tvSlat.setText(getString(R.string.openSlat));
+            btnSlat.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.selector_btn_open_slat));
         } else if (status == 1) {
             slatStatus.setText(getString(R.string.slatOpen));
-            btnSlat.setText(getString(R.string.closeSlat));
+            tvSlat.setText(getString(R.string.closeSlat));
+            btnSlat.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.selector_btn_close_slat));
         }
     }
 
@@ -895,9 +928,19 @@ public class MainActivity extends AppCompatActivity implements
         publishStandard(object.toString());
     }
 
+    public ClockListener.OnSaveClockListener getSaveClockListener() {
+        return this;
+    }
+
+    @Override
+    public void onSaveClockListener(String clockSets) {
+        Log.e(TAG, "onSaveClockListener, clockSets: " + clockSets);
+        publishClock(clockSets);
+    }
+
     private String getDateTime(long time) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
             Date date = (new Date(time));
             return dateFormat.format(date);
         } catch (Exception e) {
@@ -1417,8 +1460,28 @@ public class MainActivity extends AppCompatActivity implements
             if (DetailsActivity.resultSetStandard != null) {
                 DetailsActivity.resultSetStandard.result(false, getString(R.string.noInternet));
             }
-
         }
+    }
+
+    public void publishClock(String payload) {
+        if (isConnectInternet(getContext())) {
+            if (isConnectNetPie) {
+                publishBean = new PublishBean(ConfigData.alarmTopic, payload);
+                Log.e(TAG, "publish alarm clock");
+                microgear.publish(ConfigData.alarmTopic, payload, 1, true);
+
+            } else {
+                if (SetClockActivity.onFinishSaveClockListener != null) {
+                    SetClockActivity.onFinishSaveClockListener.onFinishSaveClockListener(-1);
+                }
+            }
+
+        } else {
+            if (SetClockActivity.onFinishSaveClockListener != null) {
+                SetClockActivity.onFinishSaveClockListener.onFinishSaveClockListener(0);
+            }
+        }
+
     }
 
     public void publish(final String topic, String payload, String messageDialog) {
