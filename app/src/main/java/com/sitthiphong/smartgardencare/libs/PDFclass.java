@@ -60,15 +60,14 @@ public class PDFclass {
                 pdfFolder.mkdir();
                 Log.i("LOG_TAG", "Pdf Directory created");
             }
-            Log.e("TAG","path pdfFolder: "+pdfFolder.getAbsolutePath());
+            Log.e("TAG", "path pdfFolder: " + pdfFolder.getAbsolutePath());
             //Create time stamp
             Date date = new Date();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
-            Log.e("TAG","timeStamp: "+timeStamp);
+            Log.e("TAG", "timeStamp: " + timeStamp);
             File myFile = new File(pdfFolder.getAbsolutePath() + "/log Data " + timeStamp + ".pdf");
-            Log.e("TAG","path myFile: "+myFile.getAbsolutePath());
+            Log.e("TAG", "path myFile: " + myFile.getAbsolutePath());
             //OutputStream output = new FileOutputStream(myFile);
-
 
 
             BaseFont urName = BaseFont.createFont("assets/fonts/THSarabunNew.ttf", "TIS-620", BaseFont.EMBEDDED);
@@ -148,7 +147,7 @@ public class PDFclass {
                 //totalRe = totalRe + Double.parseDouble(custom.get("remain"));
                 String valBefore = String.valueOf(bean.getVal_berfore());
                 //totalEx = totalEx + Double.parseDouble(custom.get("expense"));
-                String Type = (bean.getType()==1)?"Auto":"Manual";
+                String Type = getTypeWorking(bean.getType());
                 //totalIn = totalIn + Double.parseDouble(custom.get("income"));
                 String valAfter = String.valueOf(bean.getVal_after());
                 //totalSave = totalSave + Double.parseDouble(custom.get("saving"));
@@ -199,6 +198,18 @@ public class PDFclass {
                 //close the writer
                 docWriter.close();
             }
+        }
+    }
+
+    private String getTypeWorking(int working) {
+        if (working == 1) {
+            return "Auto";
+        } else if (working == 2) {
+            return "Manual";
+        } else if (working == 3) {
+            return "Alarm Clock";
+        } else {
+            return "auto";
         }
     }
 
@@ -256,16 +267,17 @@ public class PDFclass {
         }
     }
 
-    public String getTimeDatabase(){
-        LogDataBean bean = logList.get((logList.size()-1));
+    public String getTimeDatabase() {
+        LogDataBean bean = logList.get((logList.size() - 1));
         String date = SimpleDateProvider.getInstance()
-                .format(new Date(bean.getTime() * 1000)) +" - ";
+                .format(new Date(bean.getTime() * 1000)) + " - ";
         bean = logList.get(0);
-        date+=SimpleDateProvider.getInstance()
+        date += SimpleDateProvider.getInstance()
                 .format(new Date(bean.getTime() * 1000));
         return date;
     }
-    public String getAction(int action){
+
+    public String getAction(int action) {
         String result;
         switch (action) {
             case 1:
@@ -278,26 +290,26 @@ public class PDFclass {
                 result = "Open Slat";
                 break;
             case 4:
-                result =  "Close Slat";
+                result = "Close Slat";
                 break;
             case 5:
-                result =  "Water";
+                result = "Water";
                 //arr[5] = getString(R.string.waterFalse);
                 break;
             case 6:
-                result =  "Water";
+                result = "Water";
                 //arr[5] = getString(R.string.noWateringArea);
                 break;
             case 7:
-                result =  "Shower";
+                result = "Shower";
                 //arr[5] = getString(R.string.waterFalse);
                 break;
             case 8:
-                result =  "Shower";
+                result = "Shower";
                 //arr[5] = getString(R.string.tempNotDecrease);
                 break;
             case 9:
-                result =  "Close Slat";
+                result = "Close Slat";
                 //arr[5] = getString(R.string.lightInNotDecrease);
                 break;
             default:
@@ -306,28 +318,29 @@ public class PDFclass {
         return result;
 
     }
-    public String getNote(int action){
+
+    public String getNote(int action) {
         String result;
         switch (action) {
             case 5:
                 //result = getString(R.string.water);
-                result =  "Water False!";
+                result = "Water False!";
                 break;
             case 6:
                 //result = getString(R.string.water);
-                result =  "No Watering Area";
+                result = "No Watering Area";
                 break;
             case 7:
                 //result = getString(R.string.shower);
-                result =  "Water False!";
+                result = "Water False!";
                 break;
             case 8:
                 //result = getString(R.string.shower);
-                result =  "Temp Not Decrease";
+                result = "Temp Not Decrease";
                 break;
             case 9:
                 //result = getString(R.string.acCloseSlat);
-                result =  "light in not Decrease";
+                result = "light in not Decrease";
                 break;
             default:
                 result = "-";

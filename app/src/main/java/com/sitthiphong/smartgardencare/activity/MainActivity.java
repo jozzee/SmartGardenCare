@@ -786,7 +786,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         }
-        startActivity(new Intent(getContext(), SetClockActivity.class));
+        //startActivity(new Intent(getContext(), SetClockActivity.class));
     }
 
     private Context getContext() {
@@ -1576,4 +1576,12 @@ public class MainActivity extends AppCompatActivity implements
             onSubscribeCallBack(result);
         }
     }
+
+    //SmartGardenCare
+    //SmartGardenCare
+
+    //L8LswNXzRY9nalS
+    //L8LswNXzRY9nalS
+    //KcysynAOjLxZ3BkGzqSq4WvSA
+    //KcysynAOjLxZ3BkGzqSq4WvSA
 }

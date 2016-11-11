@@ -39,7 +39,6 @@ public class MicrogearService extends Service {
             if (Microgear.microgeareventListener != null) {
                 Microgear.microgeareventListener.onError("Check format App id ,key and Secret");
             }
-
         }
 
     }
@@ -334,11 +333,13 @@ public class MicrogearService extends Service {
                                     if (Microgear.microgeareventListener != null) {
                                         Microgear.microgeareventListener.onError("No Internet connection");
                                     }
+
                                     this.sendMessageDelayed(Message.obtain(null, CONNECT), timeout);
                                 } else if (e.getReasonCode() == 5) {
                                     if (Microgear.microgeareventListener != null) {
                                         Microgear.microgeareventListener.onError("Thing is disable");
                                     }
+
                                     this.sendMessageDelayed(Message.obtain(null, CONNECT), timeout);
                                 } else if (e.getReasonCode() == 4) {
                                     Microgear.brokereventListener.reconnect();
@@ -376,8 +377,8 @@ public class MicrogearService extends Service {
                                 if (topic.isEmpty() == false) {
                                     status = true;
                                     subscribe(topic);
-	        					/*
-	        					 * Save this topic for re-subscription if needed.
+                                /*
+                                 * Save this topic for re-subscription if needed.
 	        					 */
                                     if (status) {
                                         topics.add("&present");
@@ -418,8 +419,8 @@ public class MicrogearService extends Service {
                                 if (topic.isEmpty() == false) {
                                     status = true;
                                     unsubscribe(topic);
-	        					/*
-	        					 * Save this topic for re-subscription if needed.
+                                /*
+                                 * Save this topic for re-subscription if needed.
 	        					 */
                                     if (status) {
                                         topics.remove("&present");

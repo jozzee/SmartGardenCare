@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,24 +43,23 @@ public class Microgear extends Activity {
     public static String appidvalue, keyvalue, secretvalue;
     public File tempFile;
     public File cDir;
-    static String Namedrive = null;
+    static String Namedrive=null;
     static ArrayList<Publish> PublishList = new ArrayList<Publish>();
     static ArrayList<String> SubscribeList = new ArrayList<String>();
     static ArrayList<String> UnsubscribeList = new ArrayList<String>();
-    static MicrogearEventListener microgeareventListener;
-    static BrokerEventListener brokereventListener;
+    static MicrogearEventListener microgeareventListener ;
+    static BrokerEventListener brokereventListener ;
 
-    public void resettoken() {
+    public void resettoken(){
         oauthNetpieLibrary.resettoken();
     }
-
     public Microgear(Context context) {
         this.context = context;
         intentFilter = new IntentFilter();
         intentFilter.addAction("com.example.MQTT.PushReceived");
     }
 
-    public void setCallback(MicrogearEventListener eventListener) {
+    public void setCallback(MicrogearEventListener eventListener){
         this.brokereventListener = new BrokerCallBack();
         this.microgeareventListener = eventListener;
     }
@@ -70,14 +68,13 @@ public class Microgear extends Activity {
         public String Topic;
         public String Message;
 
-        public Publish(String Topic, String Message) {
+        public Publish(String Topic,String Message){
             this.Topic = Topic;
             this.Message = Message;
         }
     }
-
-    public void connect(String appid, String key, String secret, String alias) {
-        connect(appid, key, secret);
+    public void connect(String appid, String key, String secret,String alias) {
+        connect( appid, key, secret);
         setalias(alias);
     }
 
@@ -96,29 +93,21 @@ public class Microgear extends Activity {
             if (isConnectingToInternet()) {
 
                 String a = oauthNetpieLibrary.create(appid, key, secret, tempFile.toString());
-                //Log.e("JOZZZzzz","a: "+a);
                 if (a.equals("yes")) {
-                    //Log.e("JOZZZzzz","yes");
                     brokerconnect(appid, key, secret);
                     context.bindService(new Intent(context, MicrogearService.class), serviceConnection, 0);
                 } else if (a.equals("id")) {
-                    if (microgeareventListener != null) {
-                        microgeareventListener.onError("App id Invalid");
-                    }
+                    microgeareventListener.onError("App id Invalid");
                     disconnect();
                 } else if (a.equals("secretandid")) {
-                    if (microgeareventListener != null) {
-                        microgeareventListener.onError("App id,Key or Secret Invalid");
-                    }
+                    microgeareventListener.onError("App id,Key or Secret Invalid");
                     disconnect();
                 } else {
-                    //Log.e("JOZZZzzz","ไม่ตรงอะไรซักอย่าง");
                     brokerconnect(appid, key, secret);
                     context.bindService(new Intent(context, MicrogearService.class), serviceConnection, 0);
-                    if (microgeareventListener != null) {
-                        microgeareventListener.onError("Please Check your App id,Key,Secret");
-                    }
                 }
+
+
             } else {
                 microgeareventListener.onError("No internet connection");
             }
@@ -188,7 +177,7 @@ public class Microgear extends Activity {
                 e.printStackTrace();
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e){
 
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -198,7 +187,7 @@ public class Microgear extends Activity {
 
     public void publish(final String topic, final String message) {
         if (isConnectingToInternet()) {
-            if (Checktopic(topic) != null) {
+            if (Checktopic(topic)!=null) {
                 if (topic.isEmpty() || message.isEmpty()) {
                     microgeareventListener.onError("Topic and Message Require");
                 } else {
@@ -216,7 +205,7 @@ public class Microgear extends Activity {
                                 e.printStackTrace();
                                 microgeareventListener.onError("Publish Fail");
                             } catch (NullPointerException e) {
-                                Publish publish = new Publish(Checktopic(topic), message);
+                                Publish publish = new Publish(Checktopic(topic),message);
                                 PublishList.add(publish);
                             }
                         }
@@ -230,7 +219,7 @@ public class Microgear extends Activity {
 
     public void publish(final String topic, final String message, final Integer qos, final Boolean retain) {
         if (isConnectingToInternet()) {
-            if (Checktopic(topic) != null) {
+            if (Checktopic(topic)!=null) {
                 if (topic.isEmpty() || message.isEmpty()) {
                     microgeareventListener.onError("Topic and Message Require");
                 } else {
@@ -249,7 +238,7 @@ public class Microgear extends Activity {
                                 e.printStackTrace();
                                 microgeareventListener.onError("Publish Fail");
                             } catch (NullPointerException e) {
-                                Publish publish = new Publish(Checktopic(topic), message);
+                                Publish publish = new Publish(Checktopic(topic),message);
                                 PublishList.add(publish);
 
                             }
@@ -266,7 +255,7 @@ public class Microgear extends Activity {
     public void subscribe(final String topicforsubscribe) {
         if (isConnectingToInternet()) {
             if (!topicforsubscribe.isEmpty()) {
-                if (Checktopic(topicforsubscribe) != null) {
+                if (Checktopic(topicforsubscribe)!=null) {
                     new Thread(new Runnable() {
                         public void run() {
                             Bundle data = new Bundle();
@@ -295,7 +284,7 @@ public class Microgear extends Activity {
     public void unsubscribe(final String topicforunsubscribe) {
         if (isConnectingToInternet()) {
             if (!topicforunsubscribe.isEmpty()) {
-                if (Checktopic(topicforunsubscribe) != null) {
+                if (Checktopic(topicforunsubscribe)!=null) {
                     new Thread(new Runnable() {
                         public void run() {
                             Bundle data = new Bundle();
@@ -369,7 +358,7 @@ public class Microgear extends Activity {
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             } catch (NullPointerException e) {
-                                Publish publish = new Publish(topicforsendchat, message);
+                                Publish publish = new Publish(topicforsendchat,message);
                                 PublishList.add(publish);
                                 //eventListener.mError.onException("Please Connect");
                             }
@@ -418,9 +407,10 @@ public class Microgear extends Activity {
         Pattern p = Pattern.compile("[^A-Za-z0-9/_]");
         if (!p.matcher(Topic).find() && !Topic.isEmpty()) {
             Pattern p1 = Pattern.compile("[\\._/]");
-            if (p1.matcher(Topic).find()) {
+            if(p1.matcher(Topic).find()){
                 return Topic.substring(1);
-            } else {
+            }
+            else{
                 return Topic;
             }
         } else {
@@ -428,6 +418,7 @@ public class Microgear extends Activity {
             return null;
         }
     }
+
 
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -451,13 +442,14 @@ public class Microgear extends Activity {
         }
     };
 
-    class BrokerCallBack implements BrokerEventListener {
+    class BrokerCallBack implements BrokerEventListener{
         @Override
         public void reconnect() {
             oauthNetpieLibrary.resettoken();
-            connect(appidvalue, keyvalue, secretvalue);
+            connect(appidvalue,keyvalue,secretvalue);
         }
     }
+
 
 
 }
