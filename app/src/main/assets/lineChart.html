@@ -22,6 +22,78 @@
 
 			$( document ).ready(function() {
 					//createChart(testDataObject);
+					Highcharts.chart('container', {
+ credits: {
+						enabled: false
+					},
+    chart: {
+        type: 'columnrange',
+        inverted: true
+    },
+
+    title: {
+    text: '',
+    style: {
+        display: 'none'
+    }
+},
+
+
+
+    xAxis: {
+    		type: 'datetime',
+    		categories: ['Backpack', 'Diamond', 'Copper', 'Standard', 'Sillver', 'Platinum', 		                       'Gold', 'Titanium','Backpack','Copper']
+
+    },
+
+    yAxis: {
+
+        title: {
+            text: '',
+    				style: {
+        				display: 'none'
+    				}
+        }
+    },
+
+    tooltip: {
+        valueSuffix: ''
+    },
+
+    plotOptions: {
+        columnrange: {
+            dataLabels: {
+                enabled: true,
+                formatter: function () {
+                    return this.y;
+                }
+            },
+        }
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    series: [{
+        name: 'Policys',
+        data: [
+            { low: Date.UTC(2017, 01, 01), high: Date.UTC(2017, 04, 01), color: '#41C381' },
+            { low: Date.UTC(2017, 03, 01), high: Date.UTC(2017, 07, 01), color: '#FFD157' },
+            {  },
+            { low: Date.UTC(2017, 01, 01), high: Date.UTC(2017, 05, 01), color: '#39BEEE' },
+            {  },
+            { low: Date.UTC(2017, 03, 01), high: Date.UTC(2017, 11, 01), color: '#41C381' },
+            { low: Date.UTC(2017, 02, 01), high: Date.UTC(2017, 08, 01), color: '#39BEEE' },
+            { low: Date.UTC(2017, 04, 01), high: Date.UTC(2017, 10, 01), color: '#41C381' },
+            { low: Date.UTC(2017, 02, 01), high: Date.UTC(2017, 05, 01), color: '#41C381' },
+            { low: Date.UTC(2017, 05, 01), high: Date.UTC(2017, 12, 01), color: '#FC0F1D' }
+
+        ]
+    }]
+
+});
+
 			});
 			function createChart(jsonObj){
 				//var colorSet = jsonObj["colorSet"];
