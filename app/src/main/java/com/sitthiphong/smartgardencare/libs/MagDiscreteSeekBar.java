@@ -1,15 +1,12 @@
 package com.sitthiphong.smartgardencare.libs;
 
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.activity.DetailsActivity;
-import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.listener.SetStandListener;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;

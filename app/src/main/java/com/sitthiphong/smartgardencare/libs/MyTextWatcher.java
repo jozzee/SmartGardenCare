@@ -1,8 +1,9 @@
 package com.sitthiphong.smartgardencare.libs;
 
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Created by Sitthiphong on 10/18/2016 AD.

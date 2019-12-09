@@ -4,8 +4,9 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -59,7 +60,7 @@ public class GcmRegisterService extends IntentService {
             // otherwise your server should have already received the token.
             sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, true).apply();
             // [END register_for_gcm]
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.d(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.

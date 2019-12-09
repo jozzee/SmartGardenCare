@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sitthiphong.smartgardencare.activity.SettingActivity">
+
     <include layout="@layout/app_bar">
 
     </include>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollview_setting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,24 +47,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/appId"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/appId"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/app_id_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/app_id_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="Smart Garden"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="Smart Garden"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line1"
@@ -88,24 +89,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/appKey"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/appKey"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/key_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/key_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="key"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="key"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line2"
@@ -130,24 +131,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/appSecret"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/appSecret"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/secret_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/secret_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="Secret"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="Secret"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line3"
@@ -184,24 +185,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/sendData"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/sendData"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/fqPData_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/fqPData_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="every 1 minute"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="every 1 minute"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line4"
@@ -226,24 +227,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/sendImage"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/sendImage"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/fqPImage_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/fqPImage_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="every 1 hour"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="every 1 hour"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line5"
@@ -268,24 +269,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/insertData"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/insertData"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/fqIData_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/fqIData_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="every 1 hour"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="every 1 hour"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line6"
@@ -310,24 +311,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/frequencyShower"
-                    android:textSize="@dimen/FontSizeM"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
+                    android:text="@string/frequencyShower"
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/fqShower_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/fqShower_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="10 minute"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="10 minute"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line7"
@@ -343,35 +344,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fqShower_layout"
-                android:paddingTop="@dimen/PaddingSpaceL"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:elevation="8dp">
+                android:elevation="8dp"
+                android:paddingTop="@dimen/PaddingSpaceL">
 
                 <TextView
                     android:id="@+id/ageData_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
+                    android:paddingLeft="@dimen/PaddingSpaceL"
                     android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
                     android:text="@string/ageData"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/FontSizeM"
-                    android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/ageData_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ageData_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="3 days"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="3 days"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <View
                     android:id="@+id/line8"
@@ -387,58 +388,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ageData_layout"
-                android:paddingTop="@dimen/PaddingSpaceL"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:elevation="8dp">
+                android:elevation="8dp"
+                android:paddingTop="@dimen/PaddingSpaceL">
 
                 <TextView
                     android:id="@+id/auto_mode_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
+                    android:paddingLeft="@dimen/PaddingSpaceL"
                     android:paddingTop="4dp"
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:paddingBottom="4dp"
                     android:text="@string/autoMode"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/FontSizeM"
-                    android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:textSize="@dimen/FontSizeM" />
 
                 <TextView
                     android:id="@+id/auto_mode_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/auto_mode_title"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="@dimen/MarginSpace"
-                    android:text="on"
-                    android:textSize="@dimen/FontSizeS"
+                    android:layout_marginBottom="16dp"
                     android:paddingLeft="@dimen/PaddingSpaceL"
-                    android:paddingRight="@dimen/PaddingSpaceL"/>
+                    android:paddingRight="@dimen/PaddingSpaceL"
+                    android:text="on"
+                    android:textSize="@dimen/FontSizeS" />
 
                 <Switch
                     android:id="@+id/swAutoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/auto_mode_value"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/auto_mode_value"
                     android:layout_marginRight="16dp" />
 
                 <View
                     android:id="@+id/line9"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_alignParentBottom="true"
                     android:layout_below="@+id/swAutoMode"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="@dimen/MarginSpace"
                     android:background="#4D000000" />
             </RelativeLayout>
 
 
         </RelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-</android.support.design.widget.CoordinatorLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

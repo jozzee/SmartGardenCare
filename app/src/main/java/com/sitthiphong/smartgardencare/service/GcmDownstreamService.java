@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
@@ -39,7 +37,7 @@ import java.util.List;
 public class GcmDownstreamService extends GcmListenerService {
     private static final String TAG = "DcmDownstreamService";
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     @Override
     public void onMessageReceived(String from, Bundle data) {
         // TODO Do something here
@@ -264,7 +262,6 @@ public class GcmDownstreamService extends GcmListenerService {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void sendForegroundNotification(String message) {
         Intent showTaskIntent = new Intent(this, MainActivity.class);
         showTaskIntent.setAction(Intent.ACTION_MAIN);
@@ -334,7 +331,10 @@ public class GcmDownstreamService extends GcmListenerService {
     public boolean isForeground(String myPackage) {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
-        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
+        ComponentName componentInfo = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            componentInfo = runningTaskInfo.get(0).topActivity;
+        }
         return componentInfo.getPackageName().equals(myPackage);
     }
 

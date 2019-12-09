@@ -1,6 +1,5 @@
 package com.sitthiphong.smartgardencare.listener;
 
-import com.google.gson.JsonObject;
 
 /**
  * Created by Sitthiphong on 10/23/2016 AD.

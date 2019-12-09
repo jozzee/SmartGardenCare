@@ -1,19 +1,19 @@
 package com.sitthiphong.smartgardencare.activity;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
@@ -21,8 +21,6 @@ import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.libs.ShareData;
 import com.sitthiphong.smartgardencare.listener.OnSaveSettingListener;
-
-import java.util.HashMap;
 
 public class SettingActivity extends AppCompatActivity {
     private final String TAG = "SettingActivity";

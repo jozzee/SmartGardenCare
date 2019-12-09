@@ -21,17 +21,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,19 +40,26 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.jozziga.microgear.Microgear;
-import com.jozziga.microgear.MicrogearEventListener;
 import com.sitthiphong.smartgardencare.BuildConfig;
 import com.sitthiphong.smartgardencare.R;
-import com.sitthiphong.smartgardencare.datamodel.AlarmClockBean;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.ImageBean;
 import com.sitthiphong.smartgardencare.datamodel.PublishBean;
@@ -82,17 +78,17 @@ import com.sitthiphong.smartgardencare.listener.SetStandListener;
 import com.sitthiphong.smartgardencare.service.GcmRegisterService;
 import com.sitthiphong.smartgardencare.service.RestApiNetPie;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+
+import io.netpie.microgear.Microgear;
+import io.netpie.microgear.MicrogearEventListener;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
     private Runnable publishTask;
 
     private MicroGearCallBack callBack;
-    private Microgear microgear = new Microgear(this);
+    private Microgear microgear;//= new Microgear(this);
 
     private boolean isReceiverRegistered;
     private boolean isConnectNetPie;
@@ -578,8 +574,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void init() {
         Log.i(TAG, "init");
-        rootLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        rootLayout = findViewById(R.id.root_layout);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
 
@@ -588,38 +584,38 @@ public class MainActivity extends AppCompatActivity implements
         MagScreen magScreen = new MagScreen(this, metrics);
 
 
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout = findViewById(R.id.refresh_layout);
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
 
-        image = (ImageView) findViewById(R.id.image_garden);
+        image = findViewById(R.id.image_garden);
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
                 magScreen.getWidthGardenImage(), magScreen.getHeightGardenImage());
         image.setLayoutParams(param);
-        btnLoadIm = (ImageView) findViewById(R.id.btn_load_im);
+        btnLoadIm = findViewById(R.id.btn_load_im);
         btnLoadIm.setVisibility(View.GONE);
 
-        moistureLayout = (RelativeLayout) findViewById(R.id.moisture_layout);
-        tempLayout = (RelativeLayout) findViewById(R.id.temp_layout);
-        lightLayout = (RelativeLayout) findViewById(R.id.light_layout);
+        moistureLayout = findViewById(R.id.moisture_layout);
+        tempLayout = findViewById(R.id.temp_layout);
+        lightLayout = findViewById(R.id.light_layout);
 
-        moistureValue = (TextView) findViewById(R.id.moisture_value);
-        tempValue = (TextView) findViewById(R.id.temp_value);
-        lightValue = (TextView) findViewById(R.id.light_value);
-        lsatUpdateValue = (TextView) findViewById(R.id.time_value);
-        slatStatus = (TextView) findViewById(R.id.slat_status_value);
-        tvSlat = (TextView) findViewById(R.id.tv_slat);
+        moistureValue = findViewById(R.id.moisture_value);
+        tempValue = findViewById(R.id.temp_value);
+        lightValue = findViewById(R.id.light_value);
+        lsatUpdateValue = findViewById(R.id.time_value);
+        slatStatus = findViewById(R.id.slat_status_value);
+        tvSlat = findViewById(R.id.tv_slat);
 
-        btnWater = (ImageButton) findViewById(R.id.btn_water);
-        btnFoggy = (ImageButton) findViewById(R.id.btn_foggy);
-        btnSlat = (ImageButton) findViewById(R.id.btn_slat);
-        btnHistory = (ImageButton) findViewById(R.id.history);
-        btnSetClock = (ImageButton) findViewById(R.id.btn_set_clock);
-        btnSetting = (ImageButton) findViewById(R.id.btn_setting);
+        btnWater = findViewById(R.id.btn_water);
+        btnFoggy = findViewById(R.id.btn_foggy);
+        btnSlat = findViewById(R.id.btn_slat);
+        btnHistory = findViewById(R.id.history);
+        btnSetClock = findViewById(R.id.btn_set_clock);
+        btnSetting = findViewById(R.id.btn_setting);
 
 
-        exception = (TextView) findViewById(R.id.exception);
-        progressBar = (ProgressBar) findViewById(R.id.progress);
-        progressBarImage = (ProgressBar) findViewById(R.id.progress_image);
+        exception = findViewById(R.id.exception);
+        progressBar = findViewById(R.id.progress);
+        progressBarImage = findViewById(R.id.progress_image);
 
         exception.setVisibility(View.GONE);
         refreshLayout.setVisibility(View.GONE);
@@ -1045,6 +1041,10 @@ public class MainActivity extends AppCompatActivity implements
         cancel = (Button) findViewById(R.id.btnCancel);
         login = (Button) findViewById(R.id.btnLogin);
 
+        appId.setText("SmartGardenCare");
+        key.setText("L8LswNXzRY9nalS");
+        secret.setText("KcysynAOjLxZ3BkGzqSq4WvSA");
+
 
         appId.addTextChangedListener(new MyTextWatcher(appIdLayout));
         key.addTextChangedListener(new MyTextWatcher(keyLayout));
@@ -1255,6 +1255,11 @@ public class MainActivity extends AppCompatActivity implements
             bundle.putString("error", error);
             msg.setData(bundle);
             handler.sendMessage(msg);
+        }
+
+        @Override
+        public void onInfo(String info) {
+
         }
 
     }

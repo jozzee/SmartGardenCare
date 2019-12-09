@@ -1,12 +1,12 @@
 package com.sitthiphong.smartgardencare.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sitthiphong.smartgardencare.R;
 import com.sitthiphong.smartgardencare.datamodel.ConfigData;
@@ -47,26 +47,26 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
                 holder.type.setText(context.getString(R.string.autoMode));
             } else if (bean.getType() == ConfigData.MANUAL_TYPE) {
                 holder.type.setText(context.getString(R.string.manualMode));
-            } else if(bean.getType() == 3){
+            } else if (bean.getType() == 3) {
                 holder.type.setText(context.getString(R.string.alarmClock));
             }
 
             switch (bean.getWorking()) {
                 case 1:
                     holder.working.setText(context.getString(R.string.water));
-                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"%"));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context, bean, "%"));
                     break;
                 case 2:
                     holder.working.setText(context.getString(R.string.foggy));
-                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"°C"));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context, bean, "°C"));
                     break;
                 case 3:
                     holder.working.setText(context.getString(R.string.openSlat));
-                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"Lux"));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context, bean, "Lux"));
                     break;
                 case 4:
                     holder.working.setText(context.getString(R.string.closeSlat));
-                    holder.beforeAndAfter.setText(getBeforeAndAfter(context,bean,"Lux"));
+                    holder.beforeAndAfter.setText(getBeforeAndAfter(context, bean, "Lux"));
                     break;
                 default:
                     break;
@@ -123,15 +123,10 @@ public class LogDataAdapter extends RecyclerView.Adapter<LogDataAdapter.LogDataV
 
         public LogDataViewHolder(View itemView) {
             super(itemView);
-            working = (TextView) itemView.findViewById(R.id.tv_working);
-            time = (TextView) itemView.findViewById(R.id.tv_time);
-            type = (TextView) itemView.findViewById(R.id.tv_type);
-            beforeAndAfter = (TextView) itemView.findViewById(R.id.tv_val_before_after);
-
-
+            working = itemView.findViewById(R.id.tv_working);
+            time = itemView.findViewById(R.id.tv_time);
+            type = itemView.findViewById(R.id.tv_type);
+            beforeAndAfter = itemView.findViewById(R.id.tv_val_before_after);
         }
-
-
     }
-
 }

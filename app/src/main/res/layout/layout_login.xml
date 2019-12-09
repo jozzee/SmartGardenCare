@@ -45,43 +45,43 @@
             android:text="@string/setNetpie"
             android:textSize="@dimen/FontSizeM" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/TextInputLayoutAppID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAppID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/appId"
                 android:inputType="textAutoComplete"
                 android:textSize="@dimen/FontSizeL" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/TextInputLayoutAppKey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAppKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/appKey"
                 android:inputType="textAutoComplete"
                 android:textSize="@dimen/FontSizeL" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/TextInputLayoutAppSecret"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAppSecret"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="textAutoComplete"
                 android:textSize="@dimen/FontSizeL" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <Button
@@ -97,8 +97,8 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayoutFillSetupNetPie"
         android:layout_below="@+id/linearLayoutFillSetupNetPie"
+        android:layout_alignLeft="@+id/linearLayoutFillSetupNetPie"
         android:layout_marginLeft="@dimen/MarginSpaceXXL"
         android:layout_marginTop="@dimen/MarginSpaceL"
         android:text="@string/cancel"
@@ -110,10 +110,10 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/linearLayoutFillSetupNetPie"
         android:layout_below="@+id/linearLayoutFillSetupNetPie"
-        android:layout_marginRight="@dimen/MarginSpaceXXL"
+        android:layout_alignRight="@+id/linearLayoutFillSetupNetPie"
         android:layout_marginTop="@dimen/MarginSpaceL"
+        android:layout_marginRight="@dimen/MarginSpaceXXL"
         android:text="@string/login"
         android:textColor="@color/White"
         android:textSize="@dimen/FontSizeM" />
@@ -121,10 +121,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/version"
-        android:textColor="@color/White"
-        android:layout_marginBottom="@dimen/MarginSpace"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/MarginSpace"
+        android:text="@string/version"
+        android:textColor="@color/White" />
 
 </RelativeLayout>

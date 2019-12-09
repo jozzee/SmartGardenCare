@@ -4,13 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +14,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -44,7 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class DetailsActivity extends AppCompatActivity implements
         SetStandListener.SetWaitDialog,
@@ -381,7 +381,6 @@ public class DetailsActivity extends AppCompatActivity implements
 
                     webView.loadUrl("javascript:createChart(" + jsonObject.toString() + ");");
                     //webView.setVisibility(View.VISIBLE);
-
                 }
             });
 
@@ -442,15 +441,15 @@ public class DetailsActivity extends AppCompatActivity implements
         }
 
         if (result) {
-            showDialog(getString(R.string.success),getString(R.string.saveSettingSuccess));
+            showDialog(getString(R.string.success), getString(R.string.saveSettingSuccess));
             seekBar.setNewValue();
 
         } else {
             seekBar.setOldValue();
             if (error.equals(getString(R.string.noInternet))) {
                 notificationSnackBar(rootLayout, error);
-            }else{
-                showDialog(getString(R.string.exception),error);
+            } else {
+                showDialog(getString(R.string.exception), error);
             }
         }
         if (progressDialog != null) {
@@ -483,6 +482,7 @@ public class DetailsActivity extends AppCompatActivity implements
         setStandardHandle.postDelayed(setStandardRunnable, 20000); //20 second
 
     }
+
     public void showDialog(String title, String message) {
         new MaterialDialog.Builder(getContext())
                 .title(title)

@@ -1,12 +1,8 @@
 package com.sitthiphong.smartgardencare.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -16,6 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -151,19 +151,19 @@ public class AlarmClockAdapter extends RecyclerView.Adapter<AlarmClockAdapter.Al
         public AlarmClockViewHolder(View itemView) {
             super(itemView);
 
-            time = (TextView) itemView.findViewById(R.id.tv_clock);
-            openClock = (Switch) itemView.findViewById(R.id.sw_open_clock);
-            working = (TextView) itemView.findViewById(R.id.tv_working);
-            repeat = (CheckBox) itemView.findViewById(R.id.cb_repeat);
-            layoutDays = (LinearLayout) itemView.findViewById(R.id.layout_days);
-            monDay = (TextView) itemView.findViewById(R.id.monDay);
-            tuesDay = (TextView) itemView.findViewById(R.id.tuesDay);
-            wednesDay = (TextView) itemView.findViewById(R.id.wednesDay);
-            thursDay = (TextView) itemView.findViewById(R.id.thursDay);
-            friDay = (TextView) itemView.findViewById(R.id.friDay);
-            saturDay = (TextView) itemView.findViewById(R.id.saturDay);
-            sunDay = (TextView) itemView.findViewById(R.id.sunDay);
-            btnDeleteClock = (ImageButton) itemView.findViewById(R.id.btn_delete_time);
+            time = itemView.findViewById(R.id.tv_clock);
+            openClock = itemView.findViewById(R.id.sw_open_clock);
+            working = itemView.findViewById(R.id.tv_working);
+            repeat = itemView.findViewById(R.id.cb_repeat);
+            layoutDays = itemView.findViewById(R.id.layout_days);
+            monDay = itemView.findViewById(R.id.monDay);
+            tuesDay = itemView.findViewById(R.id.tuesDay);
+            wednesDay = itemView.findViewById(R.id.wednesDay);
+            thursDay = itemView.findViewById(R.id.thursDay);
+            friDay = itemView.findViewById(R.id.friDay);
+            saturDay = itemView.findViewById(R.id.saturDay);
+            sunDay = itemView.findViewById(R.id.sunDay);
+            btnDeleteClock = itemView.findViewById(R.id.btn_delete_time);
 
             time.setOnClickListener(new View.OnClickListener() {
 
@@ -226,7 +226,7 @@ public class AlarmClockAdapter extends RecyclerView.Adapter<AlarmClockAdapter.Al
                     }
                     alarmClockList.set(getAdapterPosition(), alarmClockBean);
 
-                    if(!onBind){
+                    if (!onBind) {
                         notifyDataSetChanged();
                         updateChange();
                     }
@@ -377,15 +377,17 @@ public class AlarmClockAdapter extends RecyclerView.Adapter<AlarmClockAdapter.Al
 
     }
 
-    private void updateChange(){
-        if(haveChangeListener != null){
+    private void updateChange() {
+        if (haveChangeListener != null) {
             haveChangeListener.haveChangeListener();
         }
     }
+
     public interface OnRemoveClockListener {
         public void onRemoveClockListener();
     }
-    public interface HaveChangeListener{
+
+    public interface HaveChangeListener {
         public void haveChangeListener();
     }
 }

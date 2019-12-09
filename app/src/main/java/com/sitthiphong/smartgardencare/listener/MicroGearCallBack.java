@@ -1,12 +1,11 @@
 package com.sitthiphong.smartgardencare.listener;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.jozziga.microgear.MicrogearEventListener;
-import com.sitthiphong.smartgardencare.datamodel.ConfigData;
 import com.sitthiphong.smartgardencare.datamodel.RawDataBean;
+
+import io.netpie.microgear.MicrogearEventListener;
 
 
 /**
@@ -104,6 +103,11 @@ public class MicroGearCallBack implements MicrogearEventListener {
             msg.setData(bundle);
             handler.sendMessage(msg);
             Log.i("exception", "Exception : " + error);*/
+
+    }
+
+    @Override
+    public void onInfo(String info) {
 
     }
 

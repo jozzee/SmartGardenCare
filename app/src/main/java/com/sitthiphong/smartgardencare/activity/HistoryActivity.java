@@ -4,22 +4,23 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
@@ -59,32 +60,32 @@ public class HistoryActivity extends AppCompatActivity {
         shareData = new ShareData(this);
         shareData.createSharePreference();
 
-        rootLayout = (CoordinatorLayout) findViewById(R.id.root_layout);  //set RootLayout
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        rootLayout = findViewById(R.id.root_layout);  //set RootLayout
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.history);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setVisibility(View.GONE);
 
-        exception = (TextView) findViewById(R.id.exception);
+        exception = findViewById(R.id.exception);
         exception.setVisibility(View.GONE);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress);
+        progressBar = findViewById(R.id.progress);
         progressBar.setVisibility(View.VISIBLE);
-        myFab = (FloatingActionButton) findViewById(R.id.btn_fab);
+        myFab = findViewById(R.id.btn_fab);
         myFab.setVisibility(View.GONE);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (checkPermissionsWriteExternalStorage()) {
                     //new SaveIMTask().execute(imBean.getBitmap());
                     //createPdf();
-                    PDFclass pdFClass = new PDFclass(getContext(),adapter.getLogList());
+                    PDFclass pdFClass = new PDFclass(getContext(), adapter.getLogList());
                     pdFClass.createPDF();
                 }
             }
@@ -113,7 +114,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void onSubscribeCallBack(SubscribeBean result) {
-        if(result != null){
+        if (result != null) {
             if (!result.getPayload().equals("")) {
                 progressBar.setVisibility(View.GONE);
                 exception.setVisibility(View.GONE);
@@ -130,7 +131,6 @@ public class HistoryActivity extends AppCompatActivity {
                 exception.setVisibility(View.VISIBLE);
             }
         }
-
 
 
     }
@@ -165,12 +165,12 @@ public class HistoryActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
             // Received permission result for READ_PHONE_STATE permission.est.");
             // Check if the only required permission has been granted
-            Log.e(TAG,"grantResults[0]: "+grantResults[0]);
-            Log.e(TAG,"grantResults.length: "+grantResults.length);
+            Log.e(TAG, "grantResults[0]: " + grantResults[0]);
+            Log.e(TAG, "grantResults.length: " + grantResults.length);
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 // READ_PHONE_STATE permission has been granted, proceed with displaying IMEI Number
                 //alertAlert(getString(R.string.permision_available_read_phone_state));
-                PDFclass pdFClass = new PDFclass(getContext(),adapter.getLogList());
+                PDFclass pdFClass = new PDFclass(getContext(), adapter.getLogList());
                 pdFClass.createPDF();
             } else {
                 notificationSnackBar(rootLayout, getString(R.string.permissionDenied));
@@ -184,7 +184,8 @@ public class HistoryActivity extends AppCompatActivity {
     public void notificationSnackBar(View v, String message) {
         Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
     }
-    private Context getContext(){
+
+    private Context getContext() {
         return this;
     }
 
@@ -217,6 +218,4 @@ public class HistoryActivity extends AppCompatActivity {
 
         }
     }
-
-
 }
